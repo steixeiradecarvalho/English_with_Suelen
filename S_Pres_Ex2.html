@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Course</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Arial', sans-serif; /* Modern font */
+            background-color: #f8f9fa; /* Light, clean background */
+            color: #343a40; /* Dark, readable text */
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Ensure footer sticks to bottom */
+            margin: 0; /* Remove default margins */
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            flex: 1; /* Allow container to expand */
+        }
+
+        h1, h2, h3 {
+            color: #007bff; /* Blue headings */
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        a:hover {
+            color: #0056b3;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Exercise Styles */
+        .exercise-box {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .question {
+            margin-bottom: 15px;
+        }
+
+        .sentence {
+            margin-bottom: 5px;
+        }
+
+        select, input[type="text"] {
+            padding: 8px;
+            margin: 0 5px;
+            border: 1px solid #ced4da; /* Light gray border */
+            border-radius: 5px;
+            transition: border-color 0.3s;
+        }
+
+        select:focus, input[type="text"]:focus {
+            border-color: #80bdff; /* Highlight on focus */
+            outline: none;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* Subtle blue shadow */
+        }
+
+        .results {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            display: none;
+            background-color: #f2f2f2; /* Light gray background for results */
+        }
+
+        .correct {
+            color: #28a745; /* Green for correct answers */
+        }
+
+        .incorrect {
+            color: #dc3545; /* Red for incorrect answers */
+        }
+
+        .example {
+            color: #6c757d; /* Gray for example text */
+            font-style: italic;
+            margin-bottom: 10px;
+        }
+
+        /* Presentation Styles */
+        .carousel-container {
+            max-width: 800px;
+            margin: 20px auto;
+        }
+
+        .carousel {
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .slide {
+            display: none;
+            width: 100%;
+            text-align: center;
+        }
+
+        .slide.active {
+            display: block;
+            animation: fade 0.5s;
+        }
+
+        .slide img {
+            width: 100%;
+            height: auto;
+            max-height: 600px;
+            object-fit: contain;
+        }
+        
+        .prev, .next {
+            cursor: pointer;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: auto;
+            padding: 16px;
+            color: white;
+            font-weight: bold;
+            font-size: 24px;
+            transition: 0.3s;
+            background-color: rgba(0,0,0,0.3);
+            border-radius: 0 3px 3px 0;
+            user-select: none;
+        }
+            .next {
+            right: 0;
+            border-radius: 3px 0 0 3px;
+        }
+
+        .prev:hover, .next:hover {
+            background-color: rgba(0,0,0,0.8);
+        }
+
+        .dots-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .dot {
+            cursor: pointer;
+            height: 12px;
+            width: 12px;
+            margin: 0 4px;
+            background-color: #bbb;
+            border-radius: 50%;
+            display: inline-block;
+            transition: background-color 0.3s;
+        }
+
+        .dot.active, .dot:hover {
+            background-color: #717171;
+        }
+
+        @keyframes fade {
+            from {opacity: .4}
+            to {opacity: 1}
+        }
+
+        /* Navigation Styles */
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px; /* Space above navigation */
+        }
+
+        .nav-button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+
+        .nav-button:hover {
+            background-color: #0056b3;
+        }
+
+        .disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
+        .disabled:hover {
+            background-color: #cccccc;
+        }
+
+        /* Footer Style */
+        footer {
+            background-color: #343a40;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            margin-top: 20px; /* Space above footer */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!--  XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX -->
+        <div class="exercise-box">
+            <h2>Simple Present</h2>
+            <p>Complete os espaços com o verbo entre parêntesis.</p>
+            
+            <div class="example"><u>Dica:</u><br> Na afirmativa, quando for <strong>He / She / It</strong> (1ª pessoa), colocar o <strong>“S”</strong> no verbo</div>
+            
+            <div id="questions">
+                <div class="question">
+                    I play → She 
+                    <input type="text" id="q1">
+                    .      <span style="background-color: #f3f3a0;">jogar/ tocar/ brincar</span>
+                </div>
+                <div class="question">
+                    They eat → He 
+                    <input type="text" id="q2">
+                    .     <span style="background-color: #f3f3a0;">comer</span>
+                </div>
+                <div class="question">
+                    We sing → He
+                    <input type="text" id="q3">
+                    .      <span style="background-color: #f3f3a0;">cantar</span>
+                </div>
+                <div class="question">
+                    I talk → She
+                    <input type="text" id="q4">
+                    .      <span style="background-color: #f3f3a0;">falar</span>
+                </div>
+                <div class="question">
+                    We buy → He
+                    <input type="text" id="q5">
+                    .     <span style="background-color: #f3f3a0;">comprar</span>
+                </div>
+                <div class="question">
+                    I watch → She
+                    <input type="text" id="q6">
+                    .      <span style="background-color: #f3f3a0;">assistir</span>
+                </div>
+                <div class="question">
+                    They go → He
+                    <input type="text" id="q7">
+                    .     <span style="background-color: #f3f3a0;">ir</span>
+                </div>
+                <div class="question">
+                    I like → She
+                    <input type="text" id="q8">
+                    .      <span style="background-color: #f3f3a0;">gostar</span>
+                </div>
+                <!-- Adicione mais perguntas conforme necessário -->
+            </div>
+    
+            <button onclick="checkAnswers()">Check answers</button>
+            
+            <div id="result" class="results"></div>
+        </div>
+        <div class="navigation">
+            <a href="S_Pres_Ex1.html" class="nav-button">← Exercício Anterior</a>
+            <a href="S_Pres_Ex3.html" class="nav-button">Próximo Exercício →</a>
+        </div>
+        <!--  XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX -->
+    </div>
+    <script>
+        const correctAnswers = {
+            q1: "plays",
+            q2: "eats",
+            q3: "sings",
+            q4: "talks",
+            q5: "buys",
+            q6: "watches",
+            q7: "goes",
+            q8: "likes"
+        };
+        
+        function checkAnswers() {
+            let score = 0;
+            const totalQuestions = Object.keys(correctAnswers).length;
+            
+            for (const questionId in correctAnswers) {
+                const userAnswer = document.getElementById(questionId).value.trim().toLowerCase();
+                const correctAnswer = correctAnswers[questionId];
+                const questionElement = document.getElementById(questionId).parentElement;
+
+                if (userAnswer === correctAnswer) {
+                    score++;
+                    questionElement.classList.add('correct');
+                    questionElement.classList.remove('incorrect');
+                } else {
+                    questionElement.classList.add('incorrect');
+                    questionElement.classList.remove('correct');
+                }
+            }
+
+            const resultDiv = document.getElementById('result');
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = `
+                <h3>Your result: ${score}/${totalQuestions}</h3>
+                <p>Correct answers:</p>
+                <ul>
+                    ${Object.entries(correctAnswers).map(([id, answer]) => {
+                        const sentence = document.getElementById(id).parentElement.textContent;
+                        const dotIndex = sentence.indexOf(".");
+                        const originalText = sentence.substring(0, dotIndex).trim(); // Texto original até o ponto
+                        return `<li>${originalText} <strong>${answer}</strong>.</li>`; // Resposta + ponto final
+                    }).join('')}
+                </ul>
+            `;
+        }
+    </script>
+    <footer>
+      &copy; 2023 Your English Course
+    </footer>
+</body>
+</html>
