@@ -1,408 +1,340 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>English Course</title>
+    <title>Curso de Inglês Básico 1</title>
     <style>
-        /* Estilos gerais */
-        body {
+        /* Mantendo os estilos existentes */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
             font-family: 'Arial', sans-serif;
-            background-color: #f8f9fa;
-            color: #343a40;
+        }
+
+        .header {
             display: flex;
             flex-direction: column;
-            min-height: 100vh;
-            margin: 0;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 20px auto;
+            align-items: center;
             padding: 20px;
-            flex: 1;
-        }
-
-        h1,
-        h2,
-        h3 {
-            color: #007bff;
-        }
-
-        a {
-            color: #007bff;
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-
-        a:hover {
-            color: #0056b3;
-        }
-
-        button {
-            background-color: #007bff;
+            background: linear-gradient(135deg, #2c3e50, #3498db);
             color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s;
         }
 
-        button:hover {
-            background-color: #0056b3;
-        }
-
-        /* Estilos do exercício */
-        .exercise-box {
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        .logo {
+            max-width: 150px;
             margin-bottom: 20px;
         }
 
-        .question {
-            margin-bottom: 15px;
+        .course-title {
+            font-size: 2em;
+            margin-bottom: 10px;
+            text-align: center;
         }
 
-        .sentence {
+        .lesson-title {
+            font-size: 1.2em;
+            color: #ecf0f1;
+            text-align: center;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            min-height: 100vh;
+        }
+
+        .lesson-menu {
+            background: #f8f9fa;
+            padding: 20px;
+            border-right: 2px solid #3498db;
+        }
+
+        /* Novo estilo para o container do menu item */
+        .menu-item-container {
+            margin: 8px 0;
+            background: #e9ecef;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .menu-item {
+            padding: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .menu-item:hover {
+            background: #3498db;
+            color: white;
+            transform: translateX(10px);
+        }
+
+        /* Estilos para a barra de progresso */
+        .progress-bar {
+            height: 4px;
+            background: #ddd;
+            margin-top: 4px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #2ecc71;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .completed {
+            position: relative;
+        }
+
+        .completed::after {
+            content: "✓";
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #2ecc71;
+            font-weight: bold;
+        }
+
+        /* Mantendo os estilos existentes */
+        .content-area {
+            padding: 30px;
+            background: #fff;
+        }
+
+        .content-section {
+            display: none;
+        }
+
+        .active-section {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Barra de progresso geral */
+        .overall-progress {
+            background: #fff;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .overall-progress-title {
+            font-size: 0.9em;
+            color: #666;
             margin-bottom: 5px;
         }
 
-        select,
-        input[type="text"] {
-            padding: 8px;
-            margin: 0 5px;
-            border: 1px solid #ced4da;
-            border-radius: 5px;
-            transition: border-color 0.3s;
-        }
-
-        select:focus,
-        input[type="text"]:focus {
-            border-color: #80bdff;
-            outline: none;
-            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-        }
-
-        .results {
-            margin-top: 20px;
-            padding: 15px;
-            border-radius: 5px;
-            display: none;
-            background-color: #f2f2f2;
-        }
-
-        .correct {
-            color: #28a745;
-        }
-
-        .incorrect {
-            color: #dc3545;
-        }
-
-        .example {
-            color: #6c757d;
-            font-style: italic;
-            margin-bottom: 10px;
-        }
-
-        /* Estilos do carrossel */
-        .carousel-container {
-            max-width: 800px;
-            margin: 20px auto;
-            position: relative; /* Para posicionar os controles */
-        }
-
-        .carousel {
-            position: relative;
+        .overall-progress-bar {
+            height: 8px;
+            background: #ddd;
+            border-radius: 4px;
             overflow: hidden;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
-        .slide {
-            display: none;
-            width: 100%;
-            text-align: center;
+        .overall-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #2ecc71, #27ae60);
+            width: 0%;
+            transition: width 0.3s ease;
         }
 
-        .slide.active {
-            display: block;
-            animation: fade 0.5s;
-        }
-
-        .slide img {
-            width: 100%;
-            height: auto;
-            max-height: 600px;
-            object-fit: contain;
-        }
-
-        .carrossel-controls {
-            position: relative; /* Remove o posicionamento absoluto */
-            top: auto; /* Reseta a propriedade top */
-            left: auto; /* Reseta a propriedade left */
-            transform: none; /* Reseta a transformação */
-            display: flex;
-            justify-content: center; /* Centraliza os botões horizontalmente */
-            margin-top: 15px; /* Espaçamento acima dos botões */
-        }
-
-        .prev,
-        .next {
-            cursor: pointer;
-            color: white;
-            font-weight: bold;
-            font-size: 24px;
-            transition: 0.3s;
-            background-color: #007bff;
-            padding: 10px 20px;
-            border-radius: 5px;
-            text-decoration: none;
-            margin: 0 5px; /* Espaçamento entre os botões */
-        }
-
-        .prev:hover,
-        .next:hover {
-            background-color: #0056b3;
-            transform: scale(1.05);
-        }
-
-
-        .dots-container {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .dot {
-            cursor: pointer;
-            height: 12px;
-            width: 12px;
-            margin: 0 4px;
-            background-color: #bbb;
-            border-radius: 50%;
-            display: inline-block;
-            transition: background-color 0.3s;
-        }
-
-        .dot.active,
-        .dot:hover {
-            background-color: #717171;
-        }
-
-        @keyframes fade {
-            from {
-                opacity: .4
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
             }
-
-            to {
-                opacity: 1
+            
+            .lesson-menu {
+                border-right: none;
+                border-bottom: 2px solid #3498db;
             }
-        }
-
-        /* Estilos de navegação */
-        .navigation {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
-        }
-
-        .nav-button {
-            background-color: #007bff;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            text-decoration: none;
-            font-size: 14px;
-            transition: background-color 0.3s;
-        }
-
-        .nav-button:hover {
-            background-color: #0056b3;
-        }
-
-        .disabled {
-            background-color: #cccccc;
-            cursor: not-allowed;
-        }
-
-        .disabled:hover {
-            background-color: #cccccc;
-        }
-
-        /* Estilos do rodapé */
-        footer {
-            background-color: #343a40;
-            color: white;
-            text-align: center;
-            padding: 10px 0;
-            margin-top: 20px;
         }
     </style>
 </head>
-
 <body>
+    <header class="header">
+        <img src="logo.png" alt="Logo do Curso" class="logo">
+        <h1 class="course-title">Curso de Inglês - O início da sua jornada - Básico 1</h1>
+        <h2 class="lesson-title" id="currentLesson">Selecione uma lição</h2>
+    </header>
+
     <div class="container">
-        <div class="carrossel-container">
-            <h2>Simple Present</h2>
-            <div class="carrossel">
-                <div class="slide active">
-                    <img src="Simple Present_1.png" alt="Slide 1">
+        <nav class="lesson-menu">
+            <div class="menu-item-container">
+                <div class="menu-item" data-lesson="greeting" onclick="showContent('greeting')">
+                    Greeting
+                    <div class="progress-bar"><div class="progress-fill"></div></div>
                 </div>
-                <div class="slide">
-                    <img src="Simple Present_2.png" alt="Slide 2">
+            </div>
+            <div class="menu-item-container">
+                <div class="menu-item" data-lesson="magic1" onclick="showContent('magic1')">
+                    Palavras Mágicas I
+                    <div class="progress-bar"><div class="progress-fill"></div></div>
                 </div>
-                <div class="slide">
-                    <img src="Simple Present_3.png" alt="Slide 3">
+            </div>
+            <div class="menu-item-container">
+                <div class="menu-item" data-lesson="magic2" onclick="showContent('magic2')">
+                    Palavras Mágicas II
+                    <div class="progress-bar"><div class="progress-fill"></div></div>
                 </div>
-                <div class="slide">
-                    <img src="Simple Present_4.png" alt="Slide 4">
+            </div>
+            <div class="menu-item-container">
+                <div class="menu-item" data-lesson="articles" onclick="showContent('articles')">
+                    Artigos e Pronomes
+                    <div class="progress-bar"><div class="progress-fill"></div></div>
                 </div>
-                <div class="slide">
-                    <img src="Simple Present_5.png" alt="Slide 5">
+            </div>
+            <div class="menu-item-container">
+                <div class="menu-item" data-lesson="adjectives" onclick="showContent('adjectives')">
+                    Adjetivos e Verbos
+                    <div class="progress-bar"><div class="progress-fill"></div></div>
                 </div>
-                <div class="slide">
-                    <img src="Simple Present_6.png" alt="Slide 6">
+            </div>
+            <div class="menu-item-container">
+                <div class="menu-item" data-lesson="tobe" onclick="showContent('tobe')">
+                    Verbo "To be"
+                    <div class="progress-bar"><div class="progress-fill"></div></div>
                 </div>
-                <div class="slide">
-                    <img src="Simple Present_7.png" alt="Slide 7">
+            </div>
+            <div class="menu-item-container">
+                <div class="menu-item" data-lesson="present" onclick="showContent('present')">
+                    Simple Present
+                    <div class="progress-bar"><div class="progress-fill"></div></div>
                 </div>
-                <div class="slide">
-                    <img src="Simple Present_8.png" alt="Slide 8">
+            </div>
+            <div class="menu-item-container">
+                <div class="menu-item" data-lesson="questions" onclick="showContent('questions')">
+                    WH Questions
+                    <div class="progress-bar"><div class="progress-fill"></div></div>
                 </div>
-                <div class="slide">
-                    <img src="Simple Present_9.png" alt="Slide 9">
+            </div>
+            <div class="menu-item-container">
+                <div class="menu-item" data-lesson="prepositions" onclick="showContent('prepositions')">
+                    Preposições
+                    <div class="progress-bar"><div class="progress-fill"></div></div>
                 </div>
-                <div class="slide">
-                    <img src="Simple Present_10.png"alt="Slide 10">
+            </div>
+            <div class="menu-item-container">
+                <div class="menu-item" data-lesson="summary" onclick="showContent('summary')">
+                    Resumo
+                    <div class="progress-bar"><div class="progress-fill"></div></div>
                 </div>
             </div>
 
-            <div class="carrossel-controls">
-                <a class="prev" onclick="mudarSlide(-1)">❮</a>
-                <a class="next" onclick="mudarSlide(1)">❯</a>
+            <!-- Barra de progresso geral -->
+            <div class="overall-progress">
+                <div class="overall-progress-title">Progresso Geral do Curso</div>
+                <div class="overall-progress-bar">
+                    <div class="overall-progress-fill"></div>
+                </div>
+            </div>
+        </nav>
+
+        <main class="content-area">
+            <div id="greeting" class="content-section">
+                <h3>Greeting</h3>
+                <p>Conteúdo da lição sobre saudações...</p>
+                <!-- Botão para marcar a lição como concluída -->
+                <button onclick="completeLecture('greeting')">Marcar como concluída</button>
             </div>
 
-            <div class="dots-container" id="dots-container"></div>
-        </div>
+            <div id="default-content" class="content-section active-section">
+                <h3>Bem-vindo ao Curso!</h3>
+                <p>Selecione uma lição no menu à esquerda para começar.</p>
+            </div>
+        </main>
     </div>
+
     <script>
-        let slideIndex = 1;
-        let autoAdvance = null;
-        const totalSlides = document.getElementsByClassName("slide").length;
+        // Objeto para armazenar o progresso das lições
+        const lectureProgress = {
+            greeting: 0,
+            magic1: 0,
+            magic2: 0,
+            articles: 0,
+            adjectives: 0,
+            tobe: 0,
+            present: 0,
+            questions: 0,
+            prepositions: 0,
+            summary: 0
+        };
 
-        document.addEventListener('DOMContentLoaded', function () {
-            criarDots();
-            mostrarSlide(slideIndex);
-            iniciarAutoAdvance();
-        });
+        // Função para atualizar o progresso de uma lição específica
+        function updateLectureProgress(lectureId, progress) {
+            lectureProgress[lectureId] = progress;
+            
+            // Atualiza a barra de progresso da lição
+            const menuItem = document.querySelector(`[data-lesson="${lectureId}"]`);
+            const progressFill = menuItem.querySelector('.progress-fill');
+            progressFill.style.width = `${progress}%`;
 
-        function mudarSlide(n) {
-            const newIndex = slideIndex + n;
-
-            // Verificar se está no último slide e tentando avançar
-            if (newIndex > totalSlides) {
-                if (slideIndex === totalSlides) {
-                    window.location.href = 'S_Pres_Ex1.html';
-                    return;
-                }
-            }
-
-            mostrarSlide(newIndex);
-            resetAutoAdvance();
-        }
-
-        function slideAtual(n) {
-            mostrarSlide(n);
-            resetAutoAdvance();
-        }
-
-        function mostrarSlide(n) {
-            const slides = document.getElementsByClassName("slide");
-            const dots = document.getElementsByClassName("dot");
-
-            // Verificar limites dos slides
-            if (n > totalSlides) n = 1;
-            if (n < 1) n = totalSlides;
-
-            slideIndex = n;
-
-            // Remover eventos de clique anteriores
-            for (let i = 0; i < slides.length; i++) {
-                slides[i].classList.remove("active");
-                slides[i].onclick = null; // Remove qualquer evento de clique existente
-                if (dots[i]) dots[i].classList.remove("active");
-            }
-
-            slides[slideIndex - 1].classList.add("active");
-            if (dots[slideIndex - 1]) dots[slideIndex - 1].classList.add("active");
-
-            // Adicionar evento de clique apenas no último slide ativo
-            if (slideIndex === totalSlides) {
-                slides[slideIndex - 1].onclick = () => {
-                    if (slideIndex === totalSlides) {
-                        mudarSlide(1);
-                    }
-                };
-                slides[slideIndex - 1].style.cursor = 'pointer'; // Mostrar cursor de clique
+            // Adiciona ou remove a marca de conclusão
+            if (progress === 100) {
+                menuItem.classList.add('completed');
             } else {
-                slides[slideIndex - 1].style.cursor = 'default'; // Cursor normal
+                menuItem.classList.remove('completed');
             }
 
-            // Redirecionar se chegar ao final pelo auto-advance
-            if (slideIndex === totalSlides) {
-                setTimeout(() => {
-                    window.location.href = 'S_Pres_Ex1.html';
-                }, 30000);
+            // Atualiza o progresso geral
+            updateOverallProgress();
+        }
+
+        // Função para atualizar o progresso geral do curso
+        function updateOverallProgress() {
+            const totalLectures = Object.keys(lectureProgress).length;
+            const completedProgress = Object.values(lectureProgress).reduce((sum, progress) => sum + progress, 0);
+            const overallProgress = completedProgress / (totalLectures * 100) * 100;
+
+            const overallProgressFill = document.querySelector('.overall-progress-fill');
+            overallProgressFill.style.width = `${overallProgress}%`;
+        }
+
+        // Função para marcar uma lição como concluída
+        function completeLecture(lectureId) {
+            updateLectureProgress(lectureId, 100);
+            
+            // Salva o progresso no localStorage
+            localStorage.setItem('courseProgress', JSON.stringify(lectureProgress));
+        }
+
+        function showContent(contentId) {
+            // Esconde todos os conteúdos
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active-section');
+            });
+
+            // Mostra o conteúdo selecionado
+            const selectedContent = document.getElementById(contentId);
+            if(selectedContent) {
+                selectedContent.classList.add('active-section');
             }
+
+            // Atualiza o título da lição
+            document.getElementById('currentLesson').textContent = 
+                event.target.textContent.trim();
         }
 
-        // Criar pontos de navegação
-        function criarDots() {
-            const dotsContainer = document.getElementById("dots-container");
-            const slides = document.getElementsByClassName("slide");
-
-            for (let i = 0; i < slides.length; i++) {
-                const dot = document.createElement("span");
-                dot.classList.add("dot");
-                dot.onclick = () => slideAtual(i + 1);
-                dotsContainer.appendChild(dot);
+        // Carrega o progresso salvo ao iniciar
+        window.onload = function() {
+            const savedProgress = localStorage.getItem('courseProgress');
+            if (savedProgress) {
+                const progress = JSON.parse(savedProgress);
+                Object.keys(progress).forEach(lectureId => {
+                    updateLectureProgress(lectureId, progress[lectureId]);
+                });
             }
-        }
-
-        // Auto-avanço a cada 30 segundos
-        function iniciarAutoAdvance() {
-            autoAdvance = setInterval(() => mudarSlide(1), 30000);
-        }
-
-        // Resetar timer ao interagir
-        function resetAutoAdvance() {
-            clearInterval(autoAdvance);
-            iniciarAutoAdvance();
-        }
-
-        // Pausar ao passar o mouse
-        document.querySelector('.carrossel').addEventListener('mouseenter', () => {
-            clearInterval(autoAdvance);
-        });
-
-        // Retomar auto-avanço
-        document.querySelector('.carrossel').addEventListener('mouseleave', () => {
-            iniciarAutoAdvance();
-        });
-
-        // Iniciar auto-avanço
-        iniciarAutoAdvance();
+        };
     </script>
-    <footer>
-        &copy; 2025 English with Suelen Course
-    </footer>
 </body>
-
 </html>

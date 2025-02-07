@@ -1,34 +1,30 @@
-Quase sem espaço de armazenamento … A assinatura de armazenamento do Google One foi cancelada porque sua forma de pagamento falhou
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>English Course</title>
     <style>
-        /* Estilos gerais */
+        /* General Styles */
         body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f8f9fa;
-            color: #343a40;
+            font-family: 'Arial', sans-serif; /* Modern font */
+            background-color: #f8f9fa; /* Light, clean background */
+            color: #343a40; /* Dark, readable text */
             display: flex;
             flex-direction: column;
-            min-height: 100vh;
-            margin: 0;
+            min-height: 100vh; /* Ensure footer sticks to bottom */
+            margin: 0; /* Remove default margins */
         }
 
         .container {
             max-width: 800px;
             margin: 20px auto;
             padding: 20px;
-            flex: 1;
+            flex: 1; /* Allow container to expand */
         }
 
-        h1,
-        h2,
-        h3 {
-            color: #007bff;
+        h1, h2, h3 {
+            color: #007bff; /* Blue headings */
         }
 
         a {
@@ -56,7 +52,7 @@ Quase sem espaço de armazenamento … A assinatura de armazenamento do Google O
             background-color: #0056b3;
         }
 
-        /* Estilos do exercício */
+        /* Exercise Styles */
         .exercise-box {
             background-color: white;
             padding: 20px;
@@ -73,20 +69,18 @@ Quase sem espaço de armazenamento … A assinatura de armazenamento do Google O
             margin-bottom: 5px;
         }
 
-        select,
-        input[type="text"] {
+        select, input[type="text"] {
             padding: 8px;
             margin: 0 5px;
-            border: 1px solid #ced4da;
+            border: 1px solid #ced4da; /* Light gray border */
             border-radius: 5px;
             transition: border-color 0.3s;
         }
 
-        select:focus,
-        input[type="text"]:focus {
-            border-color: #80bdff;
+        select:focus, input[type="text"]:focus {
+            border-color: #80bdff; /* Highlight on focus */
             outline: none;
-            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* Subtle blue shadow */
         }
 
         .results {
@@ -94,28 +88,27 @@ Quase sem espaço de armazenamento … A assinatura de armazenamento do Google O
             padding: 15px;
             border-radius: 5px;
             display: none;
-            background-color: #f2f2f2;
+            background-color: #f2f2f2; /* Light gray background for results */
         }
 
         .correct {
-            color: #28a745;
+            color: #28a745; /* Green for correct answers */
         }
 
         .incorrect {
-            color: #dc3545;
+            color: #dc3545; /* Red for incorrect answers */
         }
 
         .example {
-            color: #6c757d;
+            color: #6c757d; /* Gray for example text */
             font-style: italic;
             margin-bottom: 10px;
         }
 
-        /* Estilos do carrossel */
+        /* Presentation Styles */
         .carousel-container {
             max-width: 800px;
             margin: 20px auto;
-            position: relative; /* Para posicionar os controles */
         }
 
         .carousel {
@@ -142,20 +135,11 @@ Quase sem espaço de armazenamento … A assinatura de armazenamento do Google O
             max-height: 600px;
             object-fit: contain;
         }
-
-        .carrossel-controls {
-            position: relative; /* Remove o posicionamento absoluto */
-            top: auto; /* Reseta a propriedade top */
-            left: auto; /* Reseta a propriedade left */
-            transform: none; /* Reseta a transformação */
-            display: flex;
-            justify-content: center; /* Centraliza os botões horizontalmente */
-            margin-top: 15px; /* Espaçamento acima dos botões */
-        }
-
-        .prev,
-        .next {
+        
+        .prev, .next {
             cursor: pointer;
+            position: static; /* Remove o posicionamento absoluto */
+            display: inline-block; /* Coloca as setas lado a lado */
             color: white;
             font-weight: bold;
             font-size: 24px;
@@ -163,16 +147,19 @@ Quase sem espaço de armazenamento … A assinatura de armazenamento do Google O
             background-color: #007bff;
             padding: 10px 20px;
             border-radius: 5px;
+            margin: 15px 5px 0;
             text-decoration: none;
-            margin: 0 5px; /* Espaçamento entre os botões */
         }
 
-        .prev:hover,
-        .next:hover {
+        .prev:hover, .next:hover {
             background-color: #0056b3;
             transform: scale(1.05);
         }
 
+        .carrossel-controls {
+            text-align: center; /* Centraliza as setas */
+            margin-top: 15px;
+        }
 
         .dots-container {
             text-align: center;
@@ -190,26 +177,20 @@ Quase sem espaço de armazenamento … A assinatura de armazenamento do Google O
             transition: background-color 0.3s;
         }
 
-        .dot.active,
-        .dot:hover {
+        .dot.active, .dot:hover {
             background-color: #717171;
         }
 
         @keyframes fade {
-            from {
-                opacity: .4
-            }
-
-            to {
-                opacity: 1
-            }
+            from {opacity: .4}
+            to {opacity: 1}
         }
 
-        /* Estilos de navegação */
+        /* Navigation Styles */
         .navigation {
             display: flex;
             justify-content: space-between;
-            margin-top: 20px;
+            margin-top: 20px; /* Space above navigation */
         }
 
         .nav-button {
@@ -237,142 +218,124 @@ Quase sem espaço de armazenamento … A assinatura de armazenamento do Google O
             background-color: #cccccc;
         }
 
-        /* Estilos do rodapé */
+        /* Footer Style */
         footer {
             background-color: #343a40;
             color: white;
             text-align: center;
             padding: 10px 0;
-            margin-top: 20px;
+            margin-top: 20px; /* Space above footer */
         }
     </style>
 </head>
-
 <body>
     <div class="container">
         <div class="carrossel-container">
-            <h2>Simple Present</h2>
+            <h2>Palavras Mágicas I</h2>
+            <!-- p>sub-cabeçalho</p -->
             <div class="carrossel">
+                <!-- Slides -->
                 <div class="slide active">
-                    <img src="Simple Present_1.png" alt="Slide 1">
+                    <img src="P_MagI_1.png" alt="Slide 1">
                 </div>
                 <div class="slide">
-                    <img src="Simple Present_2.png" alt="Slide 2">
+                    <img src="P_MagI_2.png" alt="Slide 2">
                 </div>
                 <div class="slide">
-                    <img src="Simple Present_3.png" alt="Slide 3">
+                    <img src="P_MagI_3.png" alt="Slide 3">
                 </div>
                 <div class="slide">
-                    <img src="Simple Present_4.png" alt="Slide 4">
+                    <img src="P_MagI_4.png" alt="Slide 4">
                 </div>
                 <div class="slide">
-                    <img src="Simple Present_5.png" alt="Slide 5">
+                    <img src="P_MagI_5.png" alt="Slide 5">
                 </div>
                 <div class="slide">
-                    <img src="Simple Present_6.png" alt="Slide 6">
+                    <img src="P_MagI_6.png" alt="Slide 6">
                 </div>
                 <div class="slide">
-                    <img src="Simple Present_7.png" alt="Slide 7">
+                    <img src="P_MagI_7.png" alt="Slide 7">
                 </div>
                 <div class="slide">
-                    <img src="Simple Present_8.png" alt="Slide 8">
-                </div>
-                <div class="slide">
-                    <img src="Simple Present_9.png" alt="Slide 9">
-                </div>
-                <div class="slide">
-                    <img src="Simple Present_10.png"alt="Slide 10">
+                    <img src="P_MagI_8.png" alt="Slide 8">
                 </div>
             </div>
-
-            <div class="carrossel-controls">
-                <a class="prev" onclick="mudarSlide(-1)">❮</a>
-                <a class="next" onclick="mudarSlide(1)">❯</a>
-            </div>
-
+    
+            <!-- Controles de navegação -->
+            <a class="prev" onclick="mudarSlide(-1)">❮</a>
+            <a class="next" onclick="mudarSlide(1)">❯</a>
+    
+            <!-- Pontos de navegação -->
             <div class="dots-container" id="dots-container"></div>
         </div>
     </div>
     <script>
         let slideIndex = 1;
-        let autoAdvance = null;
-        const totalSlides = document.getElementsByClassName("slide").length;
+    let autoAdvance = null;
+    const totalSlides = document.getElementsByClassName("slide").length;
 
-        document.addEventListener('DOMContentLoaded', function () {
-            criarDots();
-            mostrarSlide(slideIndex);
-            iniciarAutoAdvance();
-        });
+    document.addEventListener('DOMContentLoaded', function() {
+        criarDots();
+        mostrarSlide(slideIndex);
+        iniciarAutoAdvance();
+    });
 
-        function mudarSlide(n) {
-            const newIndex = slideIndex + n;
-
-            // Verificar se está no último slide e tentando avançar
-            if (newIndex > totalSlides) {
-                if (slideIndex === totalSlides) {
-                    window.location.href = 'S_Pres_Ex1.html';
-                    return;
-                }
-            }
-
-            mostrarSlide(newIndex);
-            resetAutoAdvance();
-        }
-
-        function slideAtual(n) {
-            mostrarSlide(n);
-            resetAutoAdvance();
-        }
-
-        function mostrarSlide(n) {
-            const slides = document.getElementsByClassName("slide");
-            const dots = document.getElementsByClassName("dot");
-
-            // Verificar limites dos slides
-            if (n > totalSlides) n = 1;
-            if (n < 1) n = totalSlides;
-
-            slideIndex = n;
-
-            // Remover eventos de clique anteriores
-            for (let i = 0; i < slides.length; i++) {
-                slides[i].classList.remove("active");
-                slides[i].onclick = null; // Remove qualquer evento de clique existente
-                if (dots[i]) dots[i].classList.remove("active");
-            }
-
-            slides[slideIndex - 1].classList.add("active");
-            if (dots[slideIndex - 1]) dots[slideIndex - 1].classList.add("active");
-
-            // Adicionar evento de clique apenas no último slide ativo
+    function mudarSlide(n) {
+        const newIndex = slideIndex + n;
+        
+        // Verificar se está no último slide e tentando avançar
+        if (newIndex > totalSlides) {
             if (slideIndex === totalSlides) {
-                slides[slideIndex - 1].onclick = () => {
-                    if (slideIndex === totalSlides) {
-                        mudarSlide(1);
-                    }
-                };
-                slides[slideIndex - 1].style.cursor = 'pointer'; // Mostrar cursor de clique
-            } else {
-                slides[slideIndex - 1].style.cursor = 'default'; // Cursor normal
-            }
-
-            // Redirecionar se chegar ao final pelo auto-advance
-            if (slideIndex === totalSlides) {
-                setTimeout(() => {
-                    window.location.href = 'S_Pres_Ex1.html';
-                }, 30000);
+                window.location.href = 'S_Pres_Ex1.html';
+                return;
             }
         }
+        
+        mostrarSlide(newIndex);
+        resetAutoAdvance();
+    }
+
+    function slideAtual(n) {
+        mostrarSlide(n);
+        resetAutoAdvance();
+    }
+
+    function mostrarSlide(n) {
+        const slides = document.getElementsByClassName("slide");
+        const dots = document.getElementsByClassName("dot");
+        
+        // Verificar limites dos slides
+        if (n > totalSlides) n = 1;
+        if (n < 1) n = totalSlides;
+        
+        slideIndex = n;
+
+        // Atualizar exibição
+        for (let i = 0; i < slides.length; i++) {
+            slides[i].classList.remove("active");
+            if (dots[i]) dots[i].classList.remove("active");
+        }
+        
+        slides[slideIndex-1].classList.add("active");
+        if (dots[slideIndex-1]) dots[slideIndex-1].classList.add("active");
+
+        // Redirecionar se chegar ao final pelo auto-advance
+        if (slideIndex === totalSlides) {
+            setTimeout(() => {
+                window.location.href = 'S_Pres_Ex1.html';
+            }, 30000); // Mesmo tempo do auto-advance (30s)
+        }
+    }
 
         // Criar pontos de navegação
         function criarDots() {
             const dotsContainer = document.getElementById("dots-container");
             const slides = document.getElementsByClassName("slide");
-
+            
             for (let i = 0; i < slides.length; i++) {
                 const dot = document.createElement("span");
                 dot.classList.add("dot");
-                dot.onclick = () => slideAtual(i + 1);
+                dot.onclick = () => slideAtual(i+1);
                 dotsContainer.appendChild(dot);
             }
         }
@@ -402,8 +365,7 @@ Quase sem espaço de armazenamento … A assinatura de armazenamento do Google O
         iniciarAutoAdvance();
     </script>
     <footer>
-        &copy; 2025 English with Suelen Course
+      &copy; 2023 World Teaching School
     </footer>
 </body>
-
 </html>

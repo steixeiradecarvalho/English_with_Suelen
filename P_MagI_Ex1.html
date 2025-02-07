@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caça-Palavras de Cores</title>
+    <style>
+        :root {
+            --bg-color: #f0f4ff;
+            --cell-size: 35px;
+            --font-size: 24px;
+        }
+
+        body {
+            font-family: 'Comic Neue', cursive;
+            background: linear-gradient(135deg, #ffcccc, #ccffff);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .game-title {
+            color: #ff6b6b;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            margin: 20px 0;
+            animation: bounce 1s infinite alternate;
+        }
+
+        .game-container {
+            background: rgba(255,255,255,0.9);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .word-grid {
+            display: grid;
+            gap: 2px;
+            background: #fff;
+            border: 3px solid #4CAF50;
+            border-radius: 10px;
+            padding: 5px;
+        }
+
+        .cell {
+            width: var(--cell-size);
+            height: var(--cell-size);
+            border: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--font-size);
+            cursor: pointer;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        .cell.selected {
+            background: #fff3b0 !important;
+            transform: scale(1.1);
+        }
+
+        .cell.found {
+            background: #c8e6c9 !important;
+            animation: pop 0.5s;
+        }
+
+        .word-list {
+            margin-top: 2rem;
+            columns: 2;
+            gap: 1rem;
+        }
+
+        .word-item {
+            padding: 5px;
+            font-size: 1.2em;
+            color: #666;
+            transition: all 0.3s;
+        }
+
+        .word-item.found {
+            color: #4CAF50;
+            text-decoration: line-through;
+            transform: scale(1.1);
+        }
+
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-10px); }
+        }
+
+        @keyframes pop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        .reset-btn {
+            background: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.2em;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s;
+        }
+
+        .reset-btn:hover {
+            transform: scale(1.05);
+            background: #45a049;
+        }
+
+        .congrats {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3em;
+            color: #ff6b6b;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            display: none;
+            animation: bounce 1s infinite;
+        }
+    </style>
+</head>
+<body>
+    <h1 class="game-title">🎨 Caça-Palavras de Cores 🖍️</h1>
+    
+    <div class="game-container">
+        <div id="wordGrid" class="word-grid"></div>
+        <div class="word-list" id="wordList"></div>
+    </div>
+
+    <button class="reset-btn" onclick="generateNewGame()">Novo Jogo 🔄</button>
+    <div class="congrats" id="congrats">Parabéns! 🎉</div>
+
+    <script>
+        const colorsPT = ["Amarelo", "Azul", "Preto", "Verde", "Vermelho", "Rosa", "Laranja", "Cinza", "Branco", "Marrom", "Roxo"];
+        const colorsEN = ["YELLOW", "BLUE", "BLACK", "GREEN", "RED", "PINK", "ORANGE", "GRAY", "WHITE", "BROWN", "PURPLE"];
+
+        const gridSize = 15;
+        let grid = [];
+        let selectedCells = [];
+        let foundWords = [];
+
+        function createGrid() {
+            const gridElement = document.getElementById('wordGrid');
+            gridElement.style.gridTemplateColumns = `repeat(${gridSize}, var(--cell-size))`; // Correção aqui
+
+            for (let i = 0; i < gridSize; i++) {
+                for (let j = 0; j < gridSize; j++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'cell';
+                    cell.dataset.row = i;
+                    cell.dataset.col = j;
+                    cell.addEventListener('mousedown', startSelection);
+                    cell.addEventListener('mouseover', addToSelection);
+                    gridElement.appendChild(cell);
+                }
+            }
+        }
+
+        function placeWords() {
+            colorsEN.forEach(word => {
+                let placed = false;
+                while(!placed) {
+                    const dir = Math.random() < 0.5 ? 'horizontal' : 'vertical';
+                    const row = Math.floor(Math.random() * (gridSize - word.length));
+                    const col = Math.floor(Math.random() * (gridSize - word.length));
+                    
+                    if(canPlaceWord(word, row, col, dir)) {
+                        placeWord(word, row, col, dir);
+                        placed = true;
+                    }
+                }
+            });
+        }
+
+        function canPlaceWord(word, row, col, dir) {
+            for(let i = 0; i < word.length; i++) {
+                const r = dir === 'vertical' ? row + i : row;
+                const c = dir === 'horizontal' ? col + i : col;
+                if(grid[r][c] !== ' ') return false;
+            }
+            return true;
+        }
+
+        function placeWord(word, row, col, dir) {
+            for(let i = 0; i < word.length; i++) {
+                const r = dir === 'vertical' ? row + i : row;
+                const c = dir === 'horizontal' ? col + i : col;
+                grid[r][c] = word[i];
+            }
+        }
+
+        function startSelection(e) {
+            selectedCells = [e.target];
+            e.target.classList.add('selected');
+        }
+
+        function addToSelection(e) {
+            if (e.buttons === 1 && selectedCells.length > 0) {
+                const lastCell = selectedCells[selectedCells.length - 1];
+                const row = parseInt(e.target.dataset.row);
+                const col = parseInt(e.target.dataset.col);
+                const lastRow = parseInt(lastCell.dataset.row);
+                const lastCol = parseInt(lastCell.dataset.col);
+
+                const dr = Math.abs(row - lastRow);
+                const dc = Math.abs(col - lastCol);
+
+                if ((dr <= 1 && dc <= 1) && (dr + dc <= 1)) { // Permite apenas células adjacentes (horizontal ou vertical)
+                    if (!selectedCells.includes(e.target)) { // Impede adicionar a mesma célula duas vezes
+                        selectedCells.push(e.target);
+                        e.target.classList.add('selected');
+                    }
+                }
+            }
+        }
+
+        function checkSelection() {
+            const selectedWord = selectedCells.map(cell => cell.textContent).join('');
+            const reversedWord = [...selectedCells].reverse().map(cell => cell.textContent).join('');
+            
+            colorsEN.forEach((word, index) => {
+                if((selectedWord === word || reversedWord === word) && !foundWords.includes(word)) {
+                    foundWords.push(word);
+                    selectedCells.forEach(cell => cell.classList.add('found'));
+                    document.querySelectorAll('.word-item')[index].classList.add('found');
+                    
+                    if(foundWords.length === colorsEN.length) {
+                        document.getElementById('congrats').style.display = 'block';
+                    }
+                }
+            });
+            
+            selectedCells.forEach(cell => cell.classList.remove('selected'));
+            selectedCells = [];
+        }
+
+        function generateNewGame() {
+            grid = Array(gridSize).fill().map(() => Array(gridSize).fill(' ')); // Inicializa o grid corretamente
+            foundWords = [];
+            document.getElementById('wordGrid').innerHTML = '';
+            document.getElementById('congrats').style.display = 'none';
+
+            placeWords();
+            fillEmptySpaces();
+            createGrid();
+            setupWordList();
+
+             // Preenche as células do grid com as letras após o grid ser criado
+            for (let i = 0; i < gridSize; i++) {
+                for (let j = 0; j < gridSize; j++) {
+                    const cell = document.querySelector(`.cell[data-row="${i}"][data-col="${j}"]`);
+                    if (cell) {
+                        cell.textContent = grid[i][j];
+                    }
+                }
+            }
+        }
+
+        function fillEmptySpaces() {
+            const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            for(let i = 0; i < gridSize; i++) {
+                for(let j = 0; j < gridSize; j++) {
+                    if(grid[i][j] === ' ') {
+                        grid[i][j] = letters[Math.floor(Math.random() * letters.length)];
+                    }
+                }
+            }
+        }
+
+        function setupWordList() {
+            const wordList = document.getElementById('wordList');
+            wordList.innerHTML = colorsPT.map(color => 
+                `<div class="word-item">${color} 🎨</div>`
+            ).join('');
+        }
+
+        document.addEventListener('mouseup', checkSelection);
+        generateNewGame();
+    </script>
+</body>
+</html>
