@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercício: Passado Simples</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            padding: 20px;
+            max-width: 800px;
+            margin: auto;
+        }
+        h1 {
+            color: #4682B4;
+        }
+        .question {
+            margin: 20px 0;
+            font-size: 1.2em;
+        }
+        .question input {
+            width: 100px;
+            padding: 5px;
+            font-size: 1em;
+        }
+        .submit-button, .back-button {
+            background-color: #32CD32;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1em;
+            margin-top: 20px;
+        }
+        .submit-button:hover, .back-button:hover {
+            background-color: #28a745;
+        }
+        .back-button {
+            display: none;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 1.3em;
+            font-weight: bold;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Complete as frases com o verbo correto no Passado Simples</h1>
+    
+    <div id="exercise">
+        <div class="question">
+            1. Last year, I <input type="text" id="q1" placeholder="verb"> to Paris for vacation.
+        </div>
+        <div class="question">
+            2. She <input type="text" id="q2" placeholder="verb"> a delicious cake for her birthday party.
+        </div>
+        <div class="question">
+            3. They <input type="text" id="q3" placeholder="verb"> the entire book in one week.
+        </div>
+        <div class="question">
+            4. We <input type="text" id="q4" placeholder="verb"> a beautiful sunset at the beach.
+        </div>
+        <div class="question">
+            5. The dog <input type="text" id="q5" placeholder="verb"> loudly when it heard a noise.
+        </div>
+    </div>
+
+    <button class="submit-button">Ver Resultado</button>
+    <button class="back-button">Voltar ao Menu</button>
+
+    <div class="result" id="result"></div>
+
+    <script>
+        window.addEventListener('message', async (event) => {
+            if (event.origin !== window.location.origin) return;
+            
+            const { messageId, ...data } = event.data;
+            
+            try {
+                // Processa a mensagem
+                const response = await processMessage(data);
+                
+                // Envia resposta de volta
+                window.parent.postMessage({
+                    messageId,
+                    type: 'response',
+                    data: response
+                }, window.location.origin);
+                
+            } catch (error) {
+                window.parent.postMessage({
+                    messageId,
+                    type: 'error',
+                    error: error.message
+                }, window.location.origin);
+            }
+        });
+
+        function sendMessageToParent(type, data) {
+            window.parent.postMessage({
+                type: type,
+                data: data
+            }, window.location.origin);
+        }
+
+       // Em exercicio_teste1-2.html
+        function completeExercise(score) {
+            window.parent.postMessage({
+                type: 'artifactComplete',
+                data: { score: score }
+            }, window.location.origin);
+        }
+
+        const correctAnswers = {
+            q1: 'went',
+            q2: 'baked',
+            q3: 'read',
+            q4: 'saw',
+            q5: 'barked'
+        };
+
+        function calculateScore() {
+            let score = 0;
+            let totalQuestions = Object.keys(correctAnswers).length;
+
+            for (const question in correctAnswers) {
+                const userAnswer = document.getElementById(question).value.trim().toLowerCase();
+                if (userAnswer === correctAnswers[question]) {
+                    score += 1;
+                }
+            }
+
+            return Math.round((score / totalQuestions) * 100);
+        }
+
+        function showResult(score) {
+            const resultElement = document.getElementById('result');
+            if (score >= 70) {
+                resultElement.innerHTML = `Parabéns! Você acertou ${score}% das respostas.`;
+                resultElement.style.color = 'green';
+            } else {
+                resultElement.innerHTML = `Você acertou ${score}%. Tente novamente!`;
+                resultElement.style.color = 'red';
+            }
+
+            resultElement.style.display = 'block';
+            document.querySelector('.submit-button').style.display = 'none';
+            document.querySelector('.back-button').style.display = 'block';
+        }
+
+        document.querySelector('.submit-button').addEventListener('click', () => {
+            try {
+                const score = calculateScore();
+                showResult(score);
+                completeExercise(score);
+            } catch (error) {
+                sendMessageToParent('error', { error: error.message });
+            }
+        });
+
+        document.querySelector('.back-button').addEventListener('click', () => {
+            sendMessageToParent('returnToMenu', {});
+        });
+    </script>
+</body>
+</html>

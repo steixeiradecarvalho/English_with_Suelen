@@ -2,339 +2,114 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Curso de Inglês Básico 1</title>
+    <title>Módulos do Curso de Inglês</title>
     <style>
-        /* Mantendo os estilos existentes */
-        * {
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5dc;
+            color: #333;
+            line-height: 1.6;
             margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Arial', sans-serif;
-        }
-
-        .header {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
             padding: 20px;
-            background: linear-gradient(135deg, #2c3e50, #3498db);
-            color: white;
         }
-
-        .logo {
-            max-width: 150px;
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        .module {
             margin-bottom: 20px;
-        }
-
-        .course-title {
-            font-size: 2em;
-            margin-bottom: 10px;
-            text-align: center;
-        }
-
-        .lesson-title {
-            font-size: 1.2em;
-            color: #ecf0f1;
-            text-align: center;
-        }
-
-        .container {
-            display: grid;
-            grid-template-columns: 250px 1fr;
-            min-height: 100vh;
-        }
-
-        .lesson-menu {
-            background: #f8f9fa;
-            padding: 20px;
-            border-right: 2px solid #3498db;
-        }
-
-        /* Novo estilo para o container do menu item */
-        .menu-item-container {
-            margin: 8px 0;
-            background: #e9ecef;
-            border-radius: 5px;
-            overflow: hidden;
-        }
-
-        .menu-item {
-            padding: 12px;
-            cursor: pointer;
-            transition: all 0.3s;
-            position: relative;
-        }
-
-        .menu-item:hover {
-            background: #3498db;
-            color: white;
-            transform: translateX(10px);
-        }
-
-        /* Estilos para a barra de progresso */
-        .progress-bar {
-            height: 4px;
-            background: #ddd;
-            margin-top: 4px;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: #2ecc71;
-            width: 0%;
-            transition: width 0.3s ease;
-        }
-
-        .completed {
-            position: relative;
-        }
-
-        .completed::after {
-            content: "✓";
-            position: absolute;
-            right: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #2ecc71;
-            font-weight: bold;
-        }
-
-        /* Mantendo os estilos existentes */
-        .content-area {
-            padding: 30px;
-            background: #fff;
-        }
-
-        .content-section {
-            display: none;
-        }
-
-        .active-section {
-            display: block;
-            animation: fadeIn 0.5s;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        /* Barra de progresso geral */
-        .overall-progress {
-            background: #fff;
             padding: 15px;
-            margin-top: 20px;
+            background-color: rgba(255, 255, 255, 0.7);
             border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
-
-        .overall-progress-title {
-            font-size: 0.9em;
-            color: #666;
-            margin-bottom: 5px;
+        .module-title {
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-bottom: 10px;
         }
-
-        .overall-progress-bar {
-            height: 8px;
-            background: #ddd;
-            border-radius: 4px;
-            overflow: hidden;
+        .orange-text {
+            color: #d35400;
         }
-
-        .overall-progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #2ecc71, #27ae60);
-            width: 0%;
-            transition: width 0.3s ease;
+        .green-text {
+            color: #27ae60;
         }
-
-        @media (max-width: 768px) {
-            .container {
-                grid-template-columns: 1fr;
-            }
-            
-            .lesson-menu {
-                border-right: none;
-                border-bottom: 2px solid #3498db;
-            }
+        a {
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
-    <header class="header">
-        <img src="logo.png" alt="Logo do Curso" class="logo">
-        <h1 class="course-title">Curso de Inglês - O início da sua jornada - Básico 1</h1>
-        <h2 class="lesson-title" id="currentLesson">Selecione uma lição</h2>
-    </header>
+    <h1>Módulos do Curso de Inglês</h1>
 
-    <div class="container">
-        <nav class="lesson-menu">
-            <div class="menu-item-container">
-                <div class="menu-item" data-lesson="greeting" onclick="showContent('greeting')">
-                    Greeting
-                    <div class="progress-bar"><div class="progress-fill"></div></div>
-                </div>
-            </div>
-            <div class="menu-item-container">
-                <div class="menu-item" data-lesson="magic1" onclick="showContent('magic1')">
-                    Palavras Mágicas I
-                    <div class="progress-bar"><div class="progress-fill"></div></div>
-                </div>
-            </div>
-            <div class="menu-item-container">
-                <div class="menu-item" data-lesson="magic2" onclick="showContent('magic2')">
-                    Palavras Mágicas II
-                    <div class="progress-bar"><div class="progress-fill"></div></div>
-                </div>
-            </div>
-            <div class="menu-item-container">
-                <div class="menu-item" data-lesson="articles" onclick="showContent('articles')">
-                    Artigos e Pronomes
-                    <div class="progress-bar"><div class="progress-fill"></div></div>
-                </div>
-            </div>
-            <div class="menu-item-container">
-                <div class="menu-item" data-lesson="adjectives" onclick="showContent('adjectives')">
-                    Adjetivos e Verbos
-                    <div class="progress-bar"><div class="progress-fill"></div></div>
-                </div>
-            </div>
-            <div class="menu-item-container">
-                <div class="menu-item" data-lesson="tobe" onclick="showContent('tobe')">
-                    Verbo "To be"
-                    <div class="progress-bar"><div class="progress-fill"></div></div>
-                </div>
-            </div>
-            <div class="menu-item-container">
-                <div class="menu-item" data-lesson="present" onclick="showContent('present')">
-                    Simple Present
-                    <div class="progress-bar"><div class="progress-fill"></div></div>
-                </div>
-            </div>
-            <div class="menu-item-container">
-                <div class="menu-item" data-lesson="questions" onclick="showContent('questions')">
-                    WH Questions
-                    <div class="progress-bar"><div class="progress-fill"></div></div>
-                </div>
-            </div>
-            <div class="menu-item-container">
-                <div class="menu-item" data-lesson="prepositions" onclick="showContent('prepositions')">
-                    Preposições
-                    <div class="progress-bar"><div class="progress-fill"></div></div>
-                </div>
-            </div>
-            <div class="menu-item-container">
-                <div class="menu-item" data-lesson="summary" onclick="showContent('summary')">
-                    Resumo
-                    <div class="progress-bar"><div class="progress-fill"></div></div>
-                </div>
-            </div>
-
-            <!-- Barra de progresso geral -->
-            <div class="overall-progress">
-                <div class="overall-progress-title">Progresso Geral do Curso</div>
-                <div class="overall-progress-bar">
-                    <div class="overall-progress-fill"></div>
-                </div>
-            </div>
-        </nav>
-
-        <main class="content-area">
-            <div id="greeting" class="content-section">
-                <h3>Greeting</h3>
-                <p>Conteúdo da lição sobre saudações...</p>
-                <!-- Botão para marcar a lição como concluída -->
-                <button onclick="completeLecture('greeting')">Marcar como concluída</button>
-            </div>
-
-            <div id="default-content" class="content-section active-section">
-                <h3>Bem-vindo ao Curso!</h3>
-                <p>Selecione uma lição no menu à esquerda para começar.</p>
-            </div>
-        </main>
+    <div class="module">
+        <div class="module-title">1. Greeting</div>
+        <div class="orange-text">Greeting</div>
     </div>
 
-    <script>
-        // Objeto para armazenar o progresso das lições
-        const lectureProgress = {
-            greeting: 0,
-            magic1: 0,
-            magic2: 0,
-            articles: 0,
-            adjectives: 0,
-            tobe: 0,
-            present: 0,
-            questions: 0,
-            prepositions: 0,
-            summary: 0
-        };
+    <div class="module">
+        <div class="module-title">2. Palavras Mágicas I (Cores, Números, Roupas, Comidas, Acessórios, Animais)</div>
+        <div class="orange-text">Palavras Magicas X (refazer apresentação)</div>
+        <div class="orange-text">Exercicio 1 (caça-palavras - cores)</div>
+        <div class="orange-text">Exercicios 2 (leão e o Tesouro)</div>
+        <div class="orange-text">Exercicio 3 (leão na cozinha)</div>
+        <div class="orange-text">Exercicios 4 (leão e a festa na floresta)</div>
+    </div>
 
-        // Função para atualizar o progresso de uma lição específica
-        function updateLectureProgress(lectureId, progress) {
-            lectureProgress[lectureId] = progress;
-            
-            // Atualiza a barra de progresso da lição
-            const menuItem = document.querySelector(`[data-lesson="${lectureId}"]`);
-            const progressFill = menuItem.querySelector('.progress-fill');
-            progressFill.style.width = `${progress}%`;
+    <div class="module">
+        <div class="module-title">3. Palavras Mágicas II (Mêses, Ano, Estações)</div>
+        <div class="orange-text">Palavras Magicas II (refazer apresentação)</div>
+        <div><a class="green-text" href="./palavras_II/P_MagII_Ex1.html">Exercicio 1 (escrever frases)</a></div>
+        <div><a class="green-text" href="./palavras_II/P_MagII_Ex2.html">Exercicios 2 (listening)</a></div>
+        <div><a class="green-text" href="./palavras_II/P_MagII_Ex3.html">Exercicio 3 (caça-palavras de meses)</a></div>
+        <div><a class="green-text" href="./palavras_II/P_MagII_Ex4.html">Exercicios 4 (jogo da forca)</a></div>
+    </div>
 
-            // Adiciona ou remove a marca de conclusão
-            if (progress === 100) {
-                menuItem.classList.add('completed');
-            } else {
-                menuItem.classList.remove('completed');
-            }
+    <div class="module">
+        <div class="module-title">4. Artigos definidos e indefinidos e pronomes objetivos</div>
+    </div>
 
-            // Atualiza o progresso geral
-            updateOverallProgress();
-        }
+    <div class="module">
+        <div class="module-title">5. Adjetivos e verbos mais usados</div>
+    </div>
 
-        // Função para atualizar o progresso geral do curso
-        function updateOverallProgress() {
-            const totalLectures = Object.keys(lectureProgress).length;
-            const completedProgress = Object.values(lectureProgress).reduce((sum, progress) => sum + progress, 0);
-            const overallProgress = completedProgress / (totalLectures * 100) * 100;
+    <div class="module">
+        <div class="module-title">6. Verbo "To be"</div>
+        <div class="orange-text">Verbo To Be Explicação Presente (refazer apresentação)</div>
+        <div>Listening Exercicios 1 (listening)</div>
+        <div><a class="green-text" href="./tobe/tobe_ex1.html">Verbo To be Exercicio 1 (teste de múltipla escolha)</a></div>
+        <div><a class="green-text" href="./tobe/tobe_ex2.html">Verbo To Be Exercicio 2 - (preenchimento de lacuna)</a></div>
+        <div><a class="green-text" href="./tobe/tobe_ex3.html">Verbo To Be Exercicio 3 (quiz)</a></div>
+        <div class="orange-text">Jogo</div>
+    </div>
 
-            const overallProgressFill = document.querySelector('.overall-progress-fill');
-            overallProgressFill.style.width = `${overallProgress}%`;
-        }
+    <div class="module">
+        <div class="module-title">7. Simple Present</div>
+        <div class="orange-text">Simple Present</div>
+        <div><a class="green-text" href="./sim_pres/S_Pres_Ex1.html">Exercicio 1</a></div>
+        <div><a class="green-text" href="./sim_pres/S_Pres_Ex2.html">Exercicio 2</a></div>
+        <div><a class="green-text" href="./sim_pres/S_Pres_Ex3.html">Exercício 3</a></div>
+        <div class="orange-text">Complete com o Auxiliar correto e com o verbo na forma correta</div>
+        <div>Ouça é complete com o Auxiliar correto</div>
+        <div><a class="green-text" href="./sim_pres/S_Pres_jogo.html">Jogos</a></div>
+    </div>
 
-        // Função para marcar uma lição como concluída
-        function completeLecture(lectureId) {
-            updateLectureProgress(lectureId, 100);
-            
-            // Salva o progresso no localStorage
-            localStorage.setItem('courseProgress', JSON.stringify(lectureProgress));
-        }
+    <div class="module">
+        <div class="module-title">8. WH Questions (com Auxiliar e Verbo "To be")</div>
+        <div class="orange-text">WH Question</div>
+        <div class="orange-text">Exercicio 1</div>
+        <div class="orange-text">Exercicio 2</div>
+        <div class="orange-text">Exercicio 3</div>
+    </div>
 
-        function showContent(contentId) {
-            // Esconde todos os conteúdos
-            document.querySelectorAll('.content-section').forEach(section => {
-                section.classList.remove('active-section');
-            });
+    <div class="module">
+        <div class="module-title">9. Preposições</div>
+    </div>
 
-            // Mostra o conteúdo selecionado
-            const selectedContent = document.getElementById(contentId);
-            if(selectedContent) {
-                selectedContent.classList.add('active-section');
-            }
-
-            // Atualiza o título da lição
-            document.getElementById('currentLesson').textContent = 
-                event.target.textContent.trim();
-        }
-
-        // Carrega o progresso salvo ao iniciar
-        window.onload = function() {
-            const savedProgress = localStorage.getItem('courseProgress');
-            if (savedProgress) {
-                const progress = JSON.parse(savedProgress);
-                Object.keys(progress).forEach(lectureId => {
-                    updateLectureProgress(lectureId, progress[lectureId]);
-                });
-            }
-        };
-    </script>
+    <div class="module">
+        <div class="module-title">10. Resumo</div>
+    </div>
 </body>
 </html>

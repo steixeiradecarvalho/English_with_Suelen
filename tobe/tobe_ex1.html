@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Exercícios de Inglês - Verbo To Be</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #ff6b6b;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .exercise {
+            display: none;
+            margin-bottom: 30px;
+            animation: fadeIn 0.5s;
+        }
+
+        .exercise.active {
+            display: block;
+        }
+
+        .question-container {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+
+        .question-text {
+            flex: 1;
+        }
+
+        .question-image {
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .question {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            color: #2d3436;
+        }
+
+        .translation {
+            color: #636e72;
+            font-style: italic;
+            margin-bottom: 20px;
+        }
+
+        .options {
+            display: grid;
+            gap: 10px;
+        }
+
+        .option {
+            background-color: #fff;
+            border: 2px solid #dfe6e9;
+            border-radius: 10px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1em;
+        }
+
+        .option:hover {
+            background-color: #f0f2f5;
+            transform: translateY(-2px);
+        }
+
+        .option.correct {
+            background-color: #00b894;
+            color: white;
+            border-color: #00b894;
+        }
+
+        .option.wrong {
+            background-color: #ff7675;
+            color: white;
+            border-color: #ff7675;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .nav-button {
+            background-color: #74b9ff;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+        }
+
+        .nav-button:hover {
+            background-color: #0984e3;
+            transform: translateY(-2px);
+        }
+
+        .nav-button:disabled {
+            background-color: #b2bec3;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .progress {
+            height: 10px;
+            background-color: #dfe6e9;
+            border-radius: 5px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: #74b9ff;
+            transition: width 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .score {
+            text-align: center;
+            font-size: 1.2em;
+            color: #2d3436;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Exercícios de Inglês - Verbo To Be</h1>
+        <div class="progress">
+            <div class="progress-bar" style="width: 0%"></div>
+        </div>
+        <div class="score">Pontuação: <span id="score">0</span> de <span id="total">0</span></div>
+        <div id="exercises"></div>
+        <div class="navigation">
+            <button id="prevBtn" class="nav-button" disabled>Anterior</button>
+            <button id="nextBtn" class="nav-button">Próximo</button>
+        </div>
+    </div>
+
+    <script>
+        const exercises = [
+            {
+                question: "I _____ a student",
+                translation: "Eu sou estudante",
+                options: ["is", "am", "is not", "are not"],
+                correct: 1,
+                image: "./tobe_ex1-1.png"
+            },
+            {
+                question: "She _____ my little sister",
+                translation: "Ela é minha irmã menor",
+                options: ["am", "is", "am not", "are"],
+                correct: 1,
+                image: "./tobe_ex1-2.png"
+            },
+            {
+                question: "It _____ a book",
+                translation: "É um livro",
+                options: ["is", "are", "aren't", "am not"],
+                correct: 0,
+                image: "./tobe_ex1-3.png"
+            },
+            {
+                question: "It _____ a book",
+                translation: "É um livro",
+                options: ["are", "is", "isn't", "is not", "am"],
+                correct: 1,
+                image: "./tobe_ex1-4.png"
+            },
+            {
+                question: "_____ she your mother?",
+                translation: "Ela é sua mãe?",
+                options: ["is", "are", "am", "are not"],
+                correct: 0,
+                image: "./tobe_ex1-5.png"
+            },
+            {
+                question: "He _____ nice",
+                translation: "Ele não é legal",
+                options: ["isn't", "is", "are", "aren't"],
+                correct: 0,
+                image: "./tobe_ex1-6.png"
+            }
+        ];
+
+        let currentExercise = 0;
+        let score = 0;
+        let answeredQuestions = new Set();
+
+        const exercisesContainer = document.getElementById('exercises');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const progressBar = document.querySelector('.progress-bar');
+        const scoreElement = document.getElementById('score');
+        const totalElement = document.getElementById('total');
+
+        function createExercises() {
+            exercises.forEach((exercise, index) => {
+                const exerciseDiv = document.createElement('div');
+                exerciseDiv.className = `exercise ${index === 0 ? 'active' : ''}`;
+                
+                exerciseDiv.innerHTML = `
+                    <div class="question-container">
+                        <div class="question-text">
+                            <div class="question">${exercise.question}</div>
+                            <div class="translation">${exercise.translation}</div>
+                            <div class="options">
+                                ${exercise.options.map((option, i) => `
+                                    <button class="option" data-index="${i}">${option}</button>
+                                `).join('')}
+                            </div>
+                        </div>
+                        <img src="${exercise.image}" alt="Exercise illustration" class="question-image">
+                    </div>
+                `;
+                
+                exercisesContainer.appendChild(exerciseDiv);
+            });
+
+            totalElement.textContent = exercises.length;
+            updateNavigation();
+        }
+
+        function showExercise(index) {
+            document.querySelectorAll('.exercise').forEach(ex => ex.classList.remove('active'));
+            document.querySelectorAll('.exercise')[index].classList.add('active');
+            currentExercise = index;
+            updateNavigation();
+            updateProgress();
+        }
+
+        function updateNavigation() {
+            prevBtn.disabled = currentExercise === 0;
+            nextBtn.disabled = currentExercise === exercises.length - 1;
+        }
+
+        function updateProgress() {
+            const progress = ((currentExercise + 1) / exercises.length) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
+
+        function handleAnswer(optionIndex) {
+            if (answeredQuestions.has(currentExercise)) return;
+
+            const currentOptions = document.querySelectorAll('.exercise.active .option');
+            const correct = exercises[currentExercise].correct;
+
+            currentOptions.forEach(option => option.disabled = true);
+
+            if (optionIndex === correct) {
+                currentOptions[optionIndex].classList.add('correct');
+                score++;
+            } else {
+                currentOptions[optionIndex].classList.add('wrong');
+                currentOptions[correct].classList.add('correct');
+            }
+
+            answeredQuestions.add(currentExercise);
+            scoreElement.textContent = score;
+        }
+
+        // Event Listeners
+        exercisesContainer.addEventListener('click', (e) => {
+            if (e.target.classList.contains('option')) {
+                const optionIndex = parseInt(e.target.dataset.index);
+                handleAnswer(optionIndex);
+            }
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (currentExercise > 0) {
+                showExercise(currentExercise - 1);
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentExercise < exercises.length - 1) {
+                showExercise(currentExercise + 1);
+            }
+        });
+
+        // Initialize
+        createExercises();
+    </script>
+</body>
+</html>

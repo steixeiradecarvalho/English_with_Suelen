@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercício</title>
+    <style>
+       body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            max-width: 100%;
+            width: 100%;
+        }
+        .game-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 600px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(15, 1fr);
+            gap: 1px;
+            background-color: #ddd;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 600px;
+        }
+        .cell {
+            aspect-ratio: 1 / 1;
+            background-color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            cursor: pointer;
+            user-select: none;
+            font-size: calc(8px + 1vw);
+        }
+        .cell.selected {
+            background-color: #ffff99;
+        }
+        .word-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 10px;
+            width: 100%;
+            max-width: 600px;
+        }
+        .word {
+            padding: 10px;
+            background-color: #e0e0e0;
+            border-radius: 3px;
+            text-align: center;
+            font-size: calc(10px + 0.5vw);
+        }
+        .word.found {
+            background-color: #90EE90;
+            text-decoration: line-through;
+        }
+        @media (min-width: 768px) {
+            .game-area {
+                flex-direction: row;
+                justify-content: space-between;
+                max-width: 900px;
+            }
+            .grid {
+                margin-right: 20px;
+                margin-bottom: 0;
+                max-width: 65%;
+            }
+            .word-list {
+                grid-template-columns: 1fr;
+                max-width: 30%;
+            }
+        }
+    </style>
+</head>
+<body>
+        
+    <div id="exercise" class="exercise-container">
+        <div class="container">
+            <div class="game-area">
+                <div class="grid" id="grid"></div>
+                <div class="word-list" id="word-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <button class="submit-button">Ok</button>
+
+    <div class="result" id="result"></div>
+
+    <script>
+        window.addEventListener('message', async (event) => {
+            if (event.origin !== window.location.origin) return;
+            
+            const { messageId, ...data } = event.data;
+            
+            try {
+                const response = await processMessage(data);
+                
+                window.parent.postMessage({
+                    messageId,
+                    type: 'response',
+                    data: response
+                }, window.location.origin);
+                
+            } catch (error) {
+                window.parent.postMessage({
+                    messageId,
+                    type: 'error',
+                    error: error.message
+                }, window.location.origin);
+            }
+        });
+
+        function sendMessageToParent(type, data) {
+            window.parent.postMessage({ type, data }, window.location.origin);
+        }
+
+        function completeExercise(score) {
+            sendMessageToParent('artifactComplete', { score });
+        }
+
+        function calculateScore() {
+            // IMPLEMENTE AQUI O CÁLCULO DA PONTUAÇÃO PARA O EXERCÍCIO ESPECÍFICO
+            pontos =10;
+            return pontos;
+        }
+
+        function showResult(score) {
+            const resultElement = document.getElementById('result');
+            if (score >= 70) {
+                resultElement.innerHTML = `Parabéns! Você acertou ${score}% das respostas.`;
+                resultElement.style.color = 'green';
+            } else {
+                resultElement.innerHTML = `Você acertou ${score}%. Tente novamente!`;
+                resultElement.style.color = 'red';
+            }
+        }
+
+        document.querySelector('.submit-button').addEventListener('click', () => {
+            try {
+                const score = calculateScore();
+                showResult(score);
+                completeExercise(score);
+            } catch (error) {
+                sendMessageToParent('error', { error: error.message });
+            }
+        });
+
+        const words = [
+            {pt: 'Amarelo', en: 'YELLOW'},
+            {pt: 'Azul', en: 'BLUE'},
+            {pt: 'Preto', en: 'BLACK'},
+            {pt: 'Verde', en: 'GREEN'},
+            {pt: 'Vermelho', en: 'RED'},
+            {pt: 'Rosa', en: 'PINK'},
+            {pt: 'Laranja', en: 'ORANGE'},
+            {pt: 'Cinza', en: 'GRAY'},
+            {pt: 'Branco', en: 'WHITE'},
+            {pt: 'Marrom', en: 'BROWN'},
+            {pt: 'Roxo', en: 'PURPLE'}
+        ];
+
+        const grid = [
+            ['Y', 'E', 'L', 'L', 'O', 'W', 'H', 'I', 'T', 'E', 'R', 'E', 'D', 'F', 'G'],
+            ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', 'A', 'S', 'D', 'F', 'G'],
+            ['Z', 'X', 'C', 'V', 'B', 'L', 'A', 'C', 'K', 'L', 'M', 'N', 'B', 'V', 'C'],
+            ['X', 'Z', 'B', 'L', 'U', 'E', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'P'],
+            ['O', 'R', 'A', 'N', 'G', 'E', 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O'],
+            ['P', 'U', 'R', 'P', 'L', 'E', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
+            ['M', 'N', 'B', 'V', 'C', 'X', 'Z', 'G', 'R', 'E', 'E', 'N', 'M', 'Q', 'W'],
+            ['E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', 'A', 'S', 'D', 'F', 'G', 'H', 'J'],
+            ['K', 'L', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', 'Q', 'W', 'E', 'R', 'T', 'Y'],
+            ['U', 'I', 'O', 'P', 'I', 'N', 'K', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K'],
+            ['L', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', 'Q', 'W', 'E', 'R', 'T', 'Y', 'U'],
+            ['I', 'O', 'P', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'Z', 'X', 'C'],
+            ['V', 'B', 'N', 'M', 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', 'A'],
+            ['S', 'D', 'F', 'G', 'R', 'A', 'Y', 'H', 'J', 'K', 'L', 'Z', 'X', 'C', 'V'],
+            ['B', 'R', 'O', 'W', 'N', 'B', 'N', 'M', 'Q', 'W', 'E', 'R', 'T', 'Y', 'U']
+        ];
+
+        const gridElement = document.getElementById('grid');
+        const wordListElement = document.getElementById('word-list');
+
+        let selectedCells = [];
+        let foundWords = new Set();
+
+        function initializeGrid() {
+            for (let i = 0; i < grid.length; i++) {
+                for (let j = 0; j < grid[i].length; j++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'cell';
+                    cell.textContent = grid[i][j];
+                    cell.dataset.row = i;
+                    cell.dataset.col = j;
+                    cell.addEventListener('mousedown', startSelection);
+                    cell.addEventListener('mouseover', continueSelection);
+                    cell.addEventListener('mouseup', endSelection);
+                    cell.addEventListener('touchstart', startSelection);
+                    cell.addEventListener('touchmove', continueTouchSelection);
+                    cell.addEventListener('touchend', endSelection);
+                    gridElement.appendChild(cell);
+                }
+            }
+        }
+
+        function initializeWordList() {
+            words.forEach(word => {
+                const wordElement = document.createElement('div');
+                wordElement.className = 'word';
+                wordElement.textContent = word.pt;
+                wordElement.dataset.en = word.en;
+                wordListElement.appendChild(wordElement);
+            });
+        }
+
+        function startSelection(e) {
+            e.preventDefault();
+            selectedCells = [e.target];
+            e.target.classList.add('selected');
+        }
+
+        function continueSelection(e) {
+            if (e.buttons === 1 && !selectedCells.includes(e.target)) {
+                selectedCells.push(e.target);
+                e.target.classList.add('selected');
+            }
+        }
+
+        function continueTouchSelection(e) {
+            e.preventDefault();
+            const touch = e.touches[0];
+            const cell = document.elementFromPoint(touch.clientX, touch.clientY);
+            if (cell && cell.classList.contains('cell') && !selectedCells.includes(cell)) {
+                selectedCells.push(cell);
+                cell.classList.add('selected');
+            }
+        }
+
+        function endSelection() {
+            const selectedWord = selectedCells.map(cell => cell.textContent).join('');
+            const wordElement = Array.from(wordListElement.children).find(el => el.dataset.en === selectedWord);
+
+            if (wordElement && !foundWords.has(selectedWord)) {
+                wordElement.classList.add('found');
+                foundWords.add(selectedWord);
+                selectedCells.forEach(cell => cell.style.backgroundColor = '#90EE90');
+            } else {
+                selectedCells.forEach(cell => cell.classList.remove('selected'));
+            }
+
+            selectedCells = [];
+
+            if (foundWords.size === words.length) {
+                alert('Parabéns! Você encontrou todas as palavras!');
+            }
+        }
+        
+
+        initializeGrid();
+        initializeWordList();
+    </script>
+</body>
+</html>

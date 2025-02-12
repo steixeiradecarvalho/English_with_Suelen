@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #f0f0f0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      background: white;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      text-align: center;
+      max-width: 800px;
+      width: 100%;
+    }
+
+    .game-scene {
+      width: 100%;
+      height: 300px;
+      margin: 20px 0;
+      border-radius: 10px;
+      position: relative;
+      transition: background 0.5s ease;
+      overflow: hidden;
+    }
+
+    .hangman {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .word-display {
+      font-size: 2.5em;
+      margin: 20px 0;
+      letter-spacing: 10px;
+      font-family: monospace;
+    }
+
+    .keyboard {
+      display: grid;
+      grid-template-columns: repeat(9, 1fr);
+      gap: 5px;
+      margin: 20px auto;
+      max-width: 600px;
+    }
+
+    .key {
+      padding: 10px;
+      font-size: 1.2em;
+      border: none;
+      border-radius: 5px;
+      background: #e0e0e0;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .key:hover {
+      background: #d0d0d0;
+    }
+
+    .key:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .key.used {
+      background: #c0c0c0;
+    }
+
+    .message {
+      font-size: 1.5em;
+      margin: 20px 0;
+      min-height: 1.5em;
+    }
+
+    .restart-btn {
+      padding: 10px 20px;
+      font-size: 1.2em;
+      background: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      display: none;
+    }
+
+    .restart-btn:hover {
+      background: #45a049;
+    }
+
+    .scene {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      transition: opacity 0.5s ease;
+    }
+
+    .scene svg {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Hangman - Months</h1>
+    <div class="game-scene" id="gameScene">
+      <div class="scene" id="scene"></div>
+      <div class="hangman" id="hangman"></div>
+    </div>
+    <div class="word-display" id="wordDisplay"></div>
+    <div class="message" id="message"></div>
+    <div class="keyboard" id="keyboard"></div>
+    <button class="restart-btn" id="restartBtn">Play Again</button>
+  </div>
+
+  <script>
+    const months = [
+      'JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE',
+      'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER'
+    ];
+
+    const scenes = [
+      { bg: '#87CEEB', color: '#333' }, // Day scene
+      { bg: '#FFB6C1', color: '#333' }, // Dawn scene
+      { bg: '#4169E1', color: '#fff' }, // Evening scene
+      { bg: '#191970', color: '#fff' }, // Night scene
+      { bg: '#8B0000', color: '#fff' }, // Dark scene
+      { bg: '#000000', color: '#fff' }  // Game over scene
+    ];
+
+    let currentWord = '';
+    let guessedLetters = new Set();
+    let mistakes = 0;
+    const maxMistakes = 6;
+
+    function initializeGame() {
+      currentWord = months[Math.floor(Math.random() * months.length)];
+      guessedLetters.clear();
+      mistakes = 0;
+      updateDisplay();
+      createKeyboard();
+      updateScene();
+      document.getElementById('restartBtn').style.display = 'none';
+      document.getElementById('message').textContent = '';
+    }
+
+    function createKeyboard() {
+      const keyboard = document.getElementById('keyboard');
+      keyboard.innerHTML = '';
+      for (let i = 65; i <= 90; i++) {
+        const letter = String.fromCharCode(i);
+        const button = document.createElement('button');
+        button.textContent = letter;
+        button.className = 'key';
+        button.onclick = () => makeGuess(letter);
+        keyboard.appendChild(button);
+      }
+    }
+
+    function updateDisplay() {
+      const display = document.getElementById('wordDisplay');
+      display.textContent = currentWord
+        .split('')
+        .map(letter => guessedLetters.has(letter) ? letter : '_')
+        .join(' ');
+    }
+
+    function updateScene() {
+      const scene = document.getElementById('scene');
+      const sceneIndex = Math.min(mistakes, scenes.length - 1);
+      const currentScene = scenes[sceneIndex];
+      
+      document.getElementById('gameScene').style.background = currentScene.bg;
+      document.getElementById('wordDisplay').style.color = currentScene.color;
+      
+      // Create SVG scene
+      const svg = `
+        <svg viewBox="0 0 800 400">
+          <!-- Sol ou Lua -->
+          <circle cx="700" cy="100" r="40" fill="${mistakes < 3 ? '#FFD700' : '#FFFFFF'}" />
+          
+          <!-- Montanhas -->
+          <path d="M0 300 L200 150 L400 300" fill="#4b6043" />
+          <path d="M300 300 L500 200 L700 300" fill="#3b4d34" />
+          
+          <!-- Grama -->
+          <rect x="0" y="300" width="800" height="100" fill="#355e3b" />
+          
+          <!-- Forca -->
+          <line x1="100" y1="300" x2="100" y2="100" stroke="brown" stroke-width="10"/>
+          <line x1="100" y1="100" x2="250" y2="100" stroke="brown" stroke-width="10"/>
+          <line x1="100" y1="150" x2="150" y2="100" stroke="brown" stroke-width="10"/>
+          <line x1="250" y1="100" x2="250" y2="150" stroke="brown" stroke-width="10"/>
+          
+          <!-- Boneco -->
+          ${mistakes > 0 ? '<circle cx="250" cy="175" r="25" fill="none" stroke="#000" stroke-width="5"/>' : ''}
+          ${mistakes > 1 ? '<line x1="250" y1="200" x2="250" y2="250" stroke="#000" stroke-width="5"/>' : ''}
+          ${mistakes > 2 ? '<line x1="250" y1="220" x2="220" y2="240" stroke="#000" stroke-width="5"/>' : ''}
+          ${mistakes > 3 ? '<line x1="250" y1="220" x2="280" y2="240" stroke="#000" stroke-width="5"/>' : ''}
+          ${mistakes > 4 ? '<line x1="250" y1="250" x2="220" y2="280" stroke="#000" stroke-width="5"/>' : ''}
+          ${mistakes > 5 ? '<line x1="250" y1="250" x2="280" y2="280" stroke="#000" stroke-width="5"/>' : ''}
+        </svg>
+      `;
+      
+      scene.innerHTML = svg;
+    }
+
+    function makeGuess(letter) {
+        if (guessedLetters.has(letter)) return;
+        
+        guessedLetters.add(letter);
+        
+        const buttons = document.getElementsByClassName('key');
+        Array.from(buttons).forEach(button => {
+            if(button.textContent === letter) {
+                button.classList.add('used');
+                button.disabled = true;
+            }
+        });
+        
+        if (!currentWord.includes(letter)) {
+            mistakes++;
+            updateScene();
+        }
+        
+        updateDisplay();
+        checkGameStatus();
+    }
+
+
+    function checkGameStatus() {
+      const won = currentWord.split('').every(letter => guessedLetters.has(letter));
+      const lost = mistakes >= maxMistakes;
+      
+      if (won || lost) {
+        const message = document.getElementById('message');
+        message.textContent = won ? 'Congratulations! You won!' : `Game Over! The word was ${currentWord}`;
+        message.style.color = won ? '#4CAF50' : '#f44336';
+        
+        document.getElementById('restartBtn').style.display = 'inline-block';
+        document.querySelectorAll('.key').forEach(key => key.disabled = true);
+      }
+    }
+
+
+
+    document.getElementById('restartBtn').onclick = initializeGame;
+    
+    // Start the game
+    initializeGame();
+  </script>
+</body>
+</html>

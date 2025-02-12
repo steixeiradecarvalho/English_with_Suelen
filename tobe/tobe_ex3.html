@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Show - Verb To Be</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background-image: url('images/fundoquizz.png');
+            background-size: cover;
+            background-repeat: no-repeat;
+            font-family: 'Arial', sans-serif;
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .quiz-container {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.2);
+            max-width: 800px;
+            width: 90%;
+            text-align: center;
+        }
+
+        .question-box {
+            margin: 20px 0;
+            padding: 20px;
+            border: 2px solid #4CAF50;
+            border-radius: 10px;
+            background: white;
+        }
+
+        .question-text {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+
+        .options-container {
+            display: grid;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .option {
+            padding: 15px;
+            border: 2px solid #4CAF50;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #f8f8f8;
+        }
+
+        .option:hover {
+            background: #4CAF50;
+            color: white;
+            transform: scale(1.02);
+        }
+
+        .correct {
+            background: #8BC34A !important;
+            border-color: #689F38;
+        }
+
+        .wrong {
+            background: #FF5722 !important;
+            border-color: #E64A19;
+        }
+
+        .question-image {
+            max-width: 200px;
+            margin: 20px auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .score-board {
+            font-size: 1.2em;
+            margin: 20px 0;
+            color: #4CAF50;
+            font-weight: bold;
+        }
+
+        .timer {
+            font-size: 1.5em;
+            color: #FF9800;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <div class="score-board">Pontuação: <span id="score">0</span></div>
+        <div class="timer" id="timer">30</div>
+        
+        <div id="questionContainer">
+            <!-- As questões serão inseridas aqui pelo JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "1) The Girl _____ my daughter",
+                options: ["Is", "Are"],
+                correct: 0,
+                image: "images/question1.jpeg"
+            },
+            {
+                question: "2) ____ it my classroom?",
+                options: ["Am", "Is"],
+                correct: 1,
+                image: "images/question2.jpeg"
+            },
+            {
+                question: "3) She ____ nice",
+                options: ["aren't", "Is"],
+                correct: 1,
+                image: "images/question3.jpeg"
+            },
+            {
+                question: "4) I ______ a Student",
+                options: ["am", "is"],
+                correct: 0,
+                image: "images/question4.jpeg"
+            },
+            {
+                question: "5) He ____ my Father",
+                options: ["Is", "Are"],
+                correct: 0,
+                image: "images/question5.jpeg"
+            },
+            {
+                question: "6) ____ you at home",
+                options: ["Is not", "Are"],
+                correct: 1,
+                image: "images/question6.jpeg"
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let timeLeft = 30;
+        let timerId;
+
+        function showQuestion() {
+            const q = questions[currentQuestion];
+            const questionHTML = `
+                <div class="question-box">
+                    <div class="question-text">${q.question}</div>
+                    <img src="${q.image}" class="question-image" alt="Ilustração da questão">
+                    <div class="options-container">
+                        ${q.options.map((option, index) => `
+                            <div class="option" onclick="checkAnswer(${index})">${option}</div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+            document.getElementById('questionContainer').innerHTML = questionHTML;
+            startTimer();
+        }
+
+        function startTimer() {
+            timeLeft = 30;
+            document.getElementById('timer').textContent = timeLeft;
+            if(timerId) clearInterval(timerId);
+            
+            timerId = setInterval(() => {
+                timeLeft--;
+                document.getElementById('timer').textContent = timeLeft;
+                if(timeLeft <= 0) nextQuestion();
+            }, 1000);
+        }
+
+        function checkAnswer(selectedIndex) {
+            clearInterval(timerId);
+            const options = document.querySelectorAll('.option');
+            
+            options.forEach((option, index) => {
+                if(index === questions[currentQuestion].correct) {
+                    option.classList.add('correct');
+                } else if(index === selectedIndex) {
+                    option.classList.add('wrong');
+                }
+            });
+
+            if(selectedIndex === questions[currentQuestion].correct) {
+                score += 10;
+                document.getElementById('score').textContent = score;
+            }
+
+            setTimeout(nextQuestion, 2000);
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            if(currentQuestion < questions.length) {
+                showQuestion();
+            } else {
+                endGame();
+            }
+        }
+
+        function endGame() {
+            document.getElementById('questionContainer').innerHTML = `
+                <div class="question-box">
+                    <h2>Quiz Concluído!</h2>
+                    <p>Sua pontuação final: ${score}/60</p>
+                    <button onclick="location.reload()" class="option">Jogar Novamente</button>
+                </div>
+            `;
+        }
+
+        // Iniciar o quiz
+        showQuestion();
+    </script>
+</body>
+</html>

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Exercise - To Be</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #FF6B6B;
+            --secondary-color: #4ECDC4;
+            --accent-color: #FFE66D;
+            --text-color: #2C3E50;
+            --light-bg: #F7F9FC;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, var(--light-bg), var(--secondary-color));
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+
+        .instructions {
+            background-color: var(--accent-color);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            font-size: 1.2em;
+            text-align: center;
+        }
+
+        .text-container {
+            background: var(--light-bg);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .text-content {
+            font-size: 1.1em;
+            line-height: 1.6;
+            color: var(--text-color);
+            margin: 0 50px;
+            padding: 10px 0;
+        }
+
+        input {
+            border: 2px solid var(--secondary-color);
+            border-radius: 4px;
+            padding: 5px 10px;
+            margin: 0 5px;
+            width: 80px;
+        }
+
+        .control-buttons {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+        }
+
+        .btn {
+            background: none;
+            border: none;
+            font-size: 2.2em;
+            cursor: pointer;
+            transition: transform 0.2s;
+            color: var(--primary-color);
+            padding: 10px;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: white;
+            border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .translation {
+            display: none;
+            margin-top: 10px;
+            color: var(--primary-color);
+            font-style: italic;
+            text-align: center;
+            padding: 10px;
+            background-color: white;
+            border-radius: 8px;
+        }
+
+        .correct {
+            background-color: #98FB98;
+        }
+
+        .incorrect {
+            background-color: #FFB6C1;
+        }
+
+        .exercise-wrapper {
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>English Exercise</h1>
+        <div class="instructions">
+            Ouça o Texto e complete com as partes que estão faltando
+        </div>
+
+        <div class="text-container">
+            <div class="exercise-wrapper">
+                <div class="control-buttons">
+                    <button class="btn play-audio" data-audio="tobe_ex1-1.mp3">
+                        <i class="fas fa-play"></i>
+                    </button>
+                    <button class="btn show-translation">
+                        <i class="fas fa-language"></i>
+                    </button>
+                </div>
+                <div class="text-content">
+                    My name IS Mary. I AM a very happy person. My mother IS a doctor, and my father is a vet. My family and I 
+                    <input type="text" data-answer="are" class="answer"> very happy.
+                </div>
+                <div class="translation">
+                    Meu nome é Mary. Eu sou uma pessoa muito feliz. Minha mãe é médica e meu pai é veterinário. Minha família e eu somos muito felizes.
+                </div>
+            </div>
+        </div>
+
+        <div class="text-container">
+            <div class="exercise-wrapper">
+                <div class="control-buttons">
+                    <button class="btn play-audio" data-audio="tobe_ex1-2.mp3">
+                        <i class="fas fa-play"></i>
+                    </button>
+                    <button class="btn show-translation">
+                        <i class="fas fa-language"></i>
+                    </button>
+                </div>
+                <div class="text-content">
+                    He IS my brother. He Is my best friend, too. We 
+                    <input type="text" data-answer="are" class="answer"> in the same school. My friends and my brother 
+                    <input type="text" data-answer="are" class="answer"> in the park now.
+                </div>
+                <div class="translation">
+                    Ele é meu irmão. Ele também é meu melhor amigo. Nós estamos na mesma escola. Meus amigos e meu irmão estão no parque agora.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Controle de áudio
+            const audioButtons = document.querySelectorAll('.play-audio');
+            audioButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const audio = new Audio(this.dataset.audio);
+                    audio.play();
+                });
+            });
+
+            // Mostrar/ocultar traduções
+            const translationButtons = document.querySelectorAll('.show-translation');
+            translationButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const translation = this.parentElement.parentElement.querySelector('.translation');
+                    translation.style.display = translation.style.display === 'none' ? 'block' : 'none';
+                });
+            });
+
+            // Verificar respostas
+            const inputs = document.querySelectorAll('.answer');
+            inputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    const correctAnswer = this.dataset.answer.toLowerCase();
+                    const userAnswer = this.value.toLowerCase();
+                    
+                    if (userAnswer === correctAnswer) {
+                        this.classList.add('correct');
+                        this.classList.remove('incorrect');
+                    } else if (userAnswer.length >= correctAnswer.length) {
+                        this.classList.add('incorrect');
+                        this.classList.remove('correct');
+                    } else {
+                        this.classList.remove('correct', 'incorrect');
+                    }
+                });
+            });
+        });
+    </script>
+</div>
+</body>
+</html>

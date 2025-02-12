@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercício</title>
+    <style>
+        /* Estilos do exercício */
+        body {
+            font-family: 'Comic Neue', cursive;
+            background: linear-gradient(135deg, #f8c291, #6a89cc);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .game-container {
+            display: grid;
+            grid-template-columns: repeat(5, 100px);
+            gap: 10px;
+        }
+        .game-title {
+            font-size: 2em;
+            color: #ff6b6b;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .item {
+            width: 100px;
+            height: 100px;
+            background-color: white;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .item.found {
+            background-color: #c8e6c9;
+        }
+        .instructions {
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <h1>Exercício de Vocabulário</h1>
+    <div id="exercise">
+        <!-- Conteúdo do exercício aqui -->
+        <h1 class="game-title">O Leão e o Tesouro 🦁</h1>
+    <div class="game-container" id="gameContainer">
+        <!-- Os itens do tabuleiro vão aqui -->
+    </div>
+    <div class="instructions" id="instructions">
+        The Lion needs to find five red pants.
+    </div>
+    
+    <script>
+        const gameContainer = document.getElementById('gameContainer');
+        const instructions = document.getElementById('instructions');
+    
+        let currentGoal = 0;
+        let goals = [
+            { description: 'The Lion needs to find five red pants.', target: 'red_pants', count: 5 },
+            { description: 'The Lion needs to find twenty-two apples on the basket.', target: 'apple', count: 6 },
+            { description: 'The Lion needs to find a girl with a pink dress and a boy with a brown cap.', target: ['girl', 'boy'], count: 2 },
+            { description: 'The Lion needs to find people with sunglasses.', target: 'sunglasses', count: 5 }
+        ];
+    
+        let foundItems = 0;
+    
+        const items = [
+            { type: 'red_pants', icon: '👖' },
+            { type: 'apple', icon: '🍎' },
+            { type: 'girl', icon: '👧' },
+            { type: 'boy', icon: '👦' },
+            { type: 'sunglasses', icon: '😎' }
+        ];
+    
+        // Gerar o tabuleiro aleatoriamente
+        function generateBoard() {
+            gameContainer.innerHTML = '';
+            foundItems = 0;
+            const boardItems = [];
+    
+            // Adicionar muitos itens misturados
+            for (let i = 0; i < 50; i++) {
+                const randomItem = items[Math.floor(Math.random() * items.length)];
+                boardItems.push(randomItem);
+            }
+    
+            // Embaralhar o tabuleiro
+            boardItems.sort(() => Math.random() - 0.5);
+    
+            boardItems.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'item';
+                div.innerHTML = item.icon;
+                div.dataset.type = item.type;
+                div.addEventListener('click', () => checkItem(item.type, div));
+                gameContainer.appendChild(div);
+            });
+        }
+    
+        function checkItem(type, element) {
+            const goal = goals[currentGoal];
+    
+            if ((Array.isArray(goal.target) && goal.target.includes(type)) || type === goal.target) {
+                if (!element.classList.contains('found')) {
+                    element.classList.add('found');
+                    foundItems++;
+                }
+            }
+    
+            // Verificar se o objetivo foi atingido
+            if (foundItems === goal.count) {
+                currentGoal++;
+                if (currentGoal < goals.length) {
+                    instructions.textContent = goals[currentGoal].description;
+                    generateBoard(); // Gera um novo tabuleiro para o próximo objetivo
+                } else {
+                    instructions.textContent = 'Parabéns! O Leão encontrou todos os tesouros!';
+                }
+            }
+        }
+    
+        // Iniciar o jogo
+        generateBoard();
+    </script>
+    </div>
+    <button class="submit-button">Enviar Resposta</button>
+
+    <script>
+        // Função para enviar mensagens ao pai
+        function sendMessageToParent(type, data) {
+            window.parent.postMessage({
+                type: type,
+                data: data
+            }, window.location.origin);
+        }
+
+        // Função de conclusão do exercício
+        function completeExercise(score) {
+            sendMessageToParent('artifactComplete', { score: score });
+        }
+
+        // Função de relatório de erro
+        function reportError(error) {
+            sendMessageToParent('error', { error: error });
+        }
+
+        // Exemplo de lógica do exercício
+        function calculateScore() {
+            // Aqui você colocaria a lógica para calcular a pontuação
+            return 85;  // Exemplo: retorna uma pontuação de 85
+        }
+
+        // Listener para o botão de submissão
+        document.querySelector('.submit-button').addEventListener('click', () => {
+            try {
+                const score = calculateScore();  // Calcula a pontuação
+                completeExercise(score);  // Envia a pontuação para o programa principal
+            } catch (error) {
+                reportError(error.message);  // Relata erros, se houver
+            }
+        });
+    </script>
+</body>
+</html>

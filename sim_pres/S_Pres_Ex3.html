@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Course</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Arial', sans-serif; /* Modern font */
+            background-color: #f8f9fa; /* Light, clean background */
+            color: #343a40; /* Dark, readable text */
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Ensure footer sticks to bottom */
+            margin: 0; /* Remove default margins */
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            flex: 1; /* Allow container to expand */
+        }
+
+        h1, h2, h3 {
+            color: #007bff; /* Blue headings */
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        a:hover {
+            color: #0056b3;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Exercise Styles */
+        .exercise-box {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .question {
+            margin-bottom: 15px;
+        }
+
+        .sentence {
+            margin-bottom: 5px;
+        }
+
+        select, input[type="text"] {
+            padding: 8px;
+            margin: 0 5px;
+            border: 1px solid #ced4da; /* Light gray border */
+            border-radius: 5px;
+            transition: border-color 0.3s;
+        }
+
+        select:focus, input[type="text"]:focus {
+            border-color: #80bdff; /* Highlight on focus */
+            outline: none;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* Subtle blue shadow */
+        }
+
+        .results {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            display: none;
+            background-color: #f2f2f2; /* Light gray background for results */
+        }
+
+        .correct {
+            color: #28a745; /* Green for correct answers */
+        }
+
+        .incorrect {
+            color: #dc3545; /* Red for incorrect answers */
+        }
+
+        .example {
+            color: #6c757d; /* Gray for example text */
+            font-style: italic;
+            margin-bottom: 10px;
+        }
+
+        /* Presentation Styles */
+        .carousel-container {
+            max-width: 800px;
+            margin: 20px auto;
+        }
+
+        .carousel {
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .slide {
+            display: none;
+            width: 100%;
+            text-align: center;
+        }
+
+        .slide.active {
+            display: block;
+            animation: fade 0.5s;
+        }
+
+        .slide img {
+            width: 100%;
+            height: auto;
+            max-height: 600px;
+            object-fit: contain;
+        }
+        
+        .prev, .next {
+            cursor: pointer;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: auto;
+            padding: 16px;
+            color: white;
+            font-weight: bold;
+            font-size: 24px;
+            transition: 0.3s;
+            background-color: rgba(0,0,0,0.3);
+            border-radius: 0 3px 3px 0;
+            user-select: none;
+        }
+            .next {
+            right: 0;
+            border-radius: 3px 0 0 3px;
+        }
+
+        .prev:hover, .next:hover {
+            background-color: rgba(0,0,0,0.8);
+        }
+
+        .dots-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .dot {
+            cursor: pointer;
+            height: 12px;
+            width: 12px;
+            margin: 0 4px;
+            background-color: #bbb;
+            border-radius: 50%;
+            display: inline-block;
+            transition: background-color 0.3s;
+        }
+
+        .dot.active, .dot:hover {
+            background-color: #717171;
+        }
+
+        @keyframes fade {
+            from {opacity: .4}
+            to {opacity: 1}
+        }
+
+        /* Navigation Styles */
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px; /* Space above navigation */
+        }
+
+        .nav-button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+
+        .nav-button:hover {
+            background-color: #0056b3;
+        }
+
+        .disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
+        .disabled:hover {
+            background-color: #cccccc;
+        }
+
+        /* Footer Style */
+        footer {
+            background-color: #343a40;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            margin-top: 20px; /* Space above footer */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!--  XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX -->
+        <div class="exercise-box">
+            <h2>Simple Present Negation</h2>
+            <p>Complete com negativa <strong>don´t</strong> e <strong>doesn´t</strong></p>
+            <div class="example"><u>Dica:</u><br> Don´t → I, You, We, They<br> Doesn´t → He, she, It</div>
+            <div id="questions">
+                <div class="question">
+                    <div class="sentence">I
+                        <select id="q1-negation">
+                            <option value="">-- Select --</option>
+                            <option value="don't stay">don't stay</option>
+                            <option value="doesn't stay">doesn't stay</option>
+                        </select>
+                        in the club. (Eu não fico no clube)
+                    </div>
+                </div>
+                <div class="question">
+                    <div class="sentence">We
+                        <select id="q2-negation">
+                            <option value="">-- Select --</option>
+                            <option value="don't wash">don't wash</option>
+                            <option value="doesn't wash">doesn't wash</option>
+                        </select>
+                        your car. (Nós não lavamos seu carro)
+                    </div>
+                </div>
+                <div class="question">
+                    <div class="sentence">She
+                        <select id="q3-negation">
+                            <option value="">-- Select --</option>
+                            <option value="don't eat">don't eat</option>
+                            <option value="doesn't eat">doesn't eat</option>
+                        </select>
+                        apple. (Ela não come maçã)
+                    </div>
+                </div>
+                <div class="question">
+                    <div class="sentence">You
+                        <select id="q4-negation">
+                            <option value="">-- Select --</option>
+                            <option value="don't write">don't write</option>
+                            <option value="doesn't write">doesn't write</option>
+                        </select>
+                        a letter. (Você não escreve uma carta)
+                    </div>
+                </div>
+                <div class="question">
+                    <div class="sentence">The boy
+                        <select id="q5-negation">
+                            <option value="">-- Select --</option>
+                            <option value="don't travel">don't travel</option>
+                            <option value="doesn't travel">doesn't travel</option>
+                        </select>
+                        to France. (O menino não viaja para a França)
+                    </div>
+                </div>
+            </div>
+            <button onclick="checkAnswers()">Check answers</button>
+            <div id="result" class="results"></div>
+        </div>
+        <div class="navigation">
+            <a href="S_Pres_Ex2.html" class="nav-button">← Exercício Anterior</a>
+            <a href="S_Pres_Ex4.html" class="nav-button">Próximo Exercício →</a>
+        </div>
+        <!--  XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX -->
+    </div>
+    <script>
+        const correctAnswers = {
+            q1: "don't stay",
+            q2: "don't wash",
+            q3: "doesn't eat",
+            q4: "don't write",
+            q5: "doesn't travel"
+        };
+        function checkAnswers() {
+            let score = 0;
+            const totalQuestions = Object.keys(correctAnswers).length;
+            for (const questionId in correctAnswers) {
+                const negationSelect = document.getElementById(`${questionId}-negation`);
+                const questionElement = negationSelect.parentElement.parentElement;
+                const userAnswer = negationSelect.value;
+                const correctAnswer = correctAnswers[questionId];
+                if (userAnswer === correctAnswer) {
+                    score++;
+                    questionElement.classList.add('correct');
+                    questionElement.classList.remove('incorrect');
+                } else {
+                    questionElement.classList.add('incorrect');
+                    questionElement.classList.remove('correct');
+                }
+            }
+            const resultDiv = document.getElementById('result');
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = `
+                <h3>Resultado: ${score}/${totalQuestions}</h3>
+                <p>Respostas Corretas:</p>
+                <ul>
+                ${Object.entries(correctAnswers).map(([id, answer]) => {
+                    const questionElement = document.getElementById(`${id}-negation`);
+                    const beforeText = questionElement.previousSibling.textContent.trim();
+                    const afterText = questionElement.nextSibling.textContent.trim();
+                    return `<li>${beforeText} <strong>${answer}</strong> ${afterText}</li>`;
+                }).join('')}
+                </ul>
+            `;
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentPage = 1;
+            const totalPages = 5;
+            const prevButtons = document.querySelectorAll('.nav-button:first-child');
+            const nextButtons = document.querySelectorAll('.nav-button:last-child');
+            if (currentPage === 1) {
+                prevButtons.forEach(btn => {
+                    btn.classList.add('disabled');
+                    btn.href = '#';
+                });
+            }
+            if (currentPage === totalPages) {
+                nextButtons.forEach(btn => {
+                    btn.classList.add('disabled');
+                    btn.href = '#';
+                });
+            }
+        });
+    </script>
+    <footer>
+      &copy; 2023 Your English Course
+    </footer>
+</body>
+</html>

@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To Be Practice</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4A90E2;
+            --secondary: #F39C12;
+            --success: #2ECC71;
+            --danger: #E74C3C;
+            --light: #ECF0F1;
+            --dark: #2C3E50;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        h1, h2 {
+            color: var(--primary);
+            text-align: center;
+        }
+
+        .tip-box {
+            background-color: var(--light);
+            padding: 15px;
+            border-left: 4px solid var(--secondary);
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .exercise-section {
+            margin: 30px 0;
+        }
+
+        .question {
+            background: #f8f9fa;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            position: relative;
+            line-height: 1.6;
+        }
+
+        input {
+            border: 2px solid var(--primary);
+            padding: 5px 10px;
+            border-radius: 4px;
+            margin: 0 5px;
+            width: 80px;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+
+        input.correct {
+            border-color: var(--success);
+            background-color: rgba(46, 204, 113, 0.1);
+            color: var(--success);
+        }
+
+        input.incorrect {
+            border-color: var(--danger);
+            background-color: rgba(231, 76, 60, 0.1);
+            color: var(--danger);
+        }
+
+        .translation {
+            color: var(--dark);
+            font-style: italic;
+            margin-top: 5px;
+            display: none;
+            padding-left: 20px;
+        }
+
+        .btn {
+            background: none;
+            border: none;
+            color: var(--primary);
+            cursor: pointer;
+            font-size: 1.5em;
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .btn:hover {
+            color: var(--secondary);
+        }
+
+        .score-display {
+            text-align: center;
+            font-size: 1.2em;
+            margin: 20px 0;
+            padding: 10px;
+            background-color: var(--light);
+            border-radius: 8px;
+            color: var(--primary);
+        }
+
+        .feedback-icon {
+            margin-left: 5px;
+            display: none;
+        }
+
+        input.correct + .feedback-icon {
+            display: inline;
+            color: var(--success);
+        }
+
+        input.incorrect + .feedback-icon {
+            display: inline;
+            color: var(--danger);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Practicing To Be Verb</h1>
+        
+        <div class="tip-box">
+            <strong>Dica:</strong> Como o verbo To Be pode significar "ser" ou "estar", 
+            é importante analisar a tradução para escolher a forma correta.
+            Clique no ícone para ver a tradução.
+        </div>
+
+        <div class="exercise-section">
+            <h2>Part 1: Complete with the correct form (am/is/are)</h2>
+            <div id="affirmative-questions"></div>
+            <div class="score-display" id="score1"></div>
+        </div>
+
+        <div class="exercise-section">
+            <h2>Part 2: Complete with the negative contracted form (isn't/aren't/am not)</h2>
+            <div id="negative-questions"></div>
+            <div class="score-display" id="score2"></div>
+        </div>
+    </div>
+
+    <script>
+        const affirmativeQuestions = [
+            { text: ["Karen ", " my best friend."], translation: "Karen é minha melhor amiga", answer: "is" },
+            { text: ["John and Mary ", " classmates."], translation: "John e Maria são colegas de classe", answer: "are" },
+            { text: ["Christian ", " my brother."], translation: "Christian é meu irmão", answer: "is" },
+            { text: ["You ", " a good student."], translation: "Você é um bom estudante", answer: "are" },
+            { text: ["They ", " in the classroom."], translation: "Eles estão na sala de aula", answer: "are" },
+            { text: ["It ", " an orange."], translation: "É uma laranja", answer: "is" },
+            { text: ["John and Mary ", " cousin."], translation: "John e Mary são primos", answer: "are" },
+            { text: ["I ", " her teacher."], translation: "Eu sou professora dela", answer: "am" },
+            { text: ["It ", " a school bag."], translation: "É uma mochila escolar", answer: "is" },
+            { text: ["You ", " doctors."], translation: "Vocês são médicos", answer: "are" }
+        ];
+
+        const negativeQuestions = [
+            { text: ["He ", " nice."], translation: "Ele não é legal", answer: "isn't" },
+            { text: ["I ", " a vet."], translation: "Eu não sou veterinário", answer: "am not" },
+            { text: ["You ", " my uncle."], translation: "Você não é meu tio", answer: "aren't" },
+            { text: ["We ", " from London."], translation: "Nós não somos de Londres", answer: "aren't" },
+            { text: ["They ", " elephants."], translation: "Eles não são elefantes", answer: "aren't" },
+            { text: ["She ", " my sister."], translation: "Ela não é minha irmã", answer: "isn't" },
+            { text: ["Junior ", " at school."], translation: "Junior não está na escola", answer: "isn't" },
+            { text: ["They ", " friends."], translation: "Eles não são amigos", answer: "aren't" },
+            { text: ["Mary ", " at home."], translation: "Mary não está em casa", answer: "isn't" },
+            { text: ["This apartment ", " ugly."], translation: "Este apartamento não é feio", answer: "isn't" },
+            { text: ["We ", " very busy."], translation: "Nós não estamos muito ocupados", answer: "aren't" },
+            { text: ["Cats and dogs ", " people."], translation: "Gatos e Cachorros não são pessoas", answer: "aren't" },
+            { text: ["It ", " hot beach."], translation: "Não está calor na praia", answer: "isn't" },
+            { text: ["I ", " from France."], translation: "Eu não sou francês", answer: "am not" },
+            { text: ["They ", " from Italy."], translation: "Eles não são da Itália", answer: "aren't" },
+            { text: ["He ", " from Germany."], translation: "Ele não é Alemão", answer: "isn't" }
+        ];
+
+        function createQuestion(questionData, index, containerId) {
+            const div = document.createElement('div');
+            div.className = 'question';
+            const textParts = questionData.text;
+            
+            div.innerHTML = `
+                ${index + 1}) ${textParts[0]}
+                <input type="text" data-answer="${questionData.answer}" class="answer">
+                <i class="fas fa-check feedback-icon"></i>
+                ${textParts[1]}
+                <button class="btn show-translation">
+                    <i class="fas fa-language"></i>
+                </button>
+                <div class="translation">${questionData.translation}</div>
+            `;
+            document.getElementById(containerId).appendChild(div);
+        }
+
+        function checkAnswer(input) {
+            const correctAnswer = input.dataset.answer.toLowerCase();
+            const userAnswer = input.value.toLowerCase().trim();
+            
+            if (userAnswer === correctAnswer) {
+                input.className = 'answer correct';
+                input.nextElementSibling.className = 'fas fa-check feedback-icon';
+            } else if (userAnswer.length > 0) {
+                input.className = 'answer incorrect';
+                input.nextElementSibling.className = 'fas fa-times feedback-icon';
+            } else {
+                input.className = 'answer';
+                input.nextElementSibling.className = 'feedback-icon';
+            }
+        }
+
+        function initializeExercise() {
+            affirmativeQuestions.forEach((q, i) => createQuestion(q, i, 'affirmative-questions'));
+            negativeQuestions.forEach((q, i) => createQuestion(q, i, 'negative-questions'));
+
+            document.querySelectorAll('.show-translation').forEach(button => {
+                button.addEventListener('click', function() {
+                    const translation = this.nextElementSibling;
+                    translation.style.display = translation.style.display === 'none' ? 'block' : 'none';
+                });
+            });
+
+            document.querySelectorAll('.answer').forEach(input => {
+                input.addEventListener('input', function() {
+                    checkAnswer(this);
+                    updateScores();
+                });
+
+                // Adiciona verificação ao perder o foco
+                input.addEventListener('blur', function() {
+                    checkAnswer(this);
+                    updateScores();
+                });
+            });
+        }
+
+        function updateScores() {
+            const sections = [
+                { questionsSelector: '#affirmative-questions .answer', scoreId: 'score1' },
+                { questionsSelector: '#negative-questions .answer', scoreId: 'score2' }
+            ];
+
+            sections.forEach(section => {
+                const inputs = document.querySelectorAll(section.questionsSelector);
+                const correct = Array.from(inputs).filter(input => 
+                    input.value.toLowerCase().trim() === input.dataset.answer.toLowerCase()
+                ).length;
+                
+                document.getElementById(section.scoreId).textContent = 
+                    `Respostas corretas: ${correct}/${inputs.length}`;
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', initializeExercise);
+    </script>
+</div>
+</body>
+</html>
