@@ -11,6 +11,7 @@
             margin: 0 auto;
             padding: 20px;
             background-color: #f0f8ff;
+            min-height: 100vh; /* Ensure footer sticks to bottom */
         }
 
         .expressions-list {
@@ -139,11 +140,27 @@
             border-width: 0 6px 6px 6px;
             border-style: solid;
             border-color: transparent transparent #2c3e50 transparent;
-        }
+        }s
 
         .expressions-list li:hover .translation-popup {
             opacity: 1;
             visibility: visible;
+        }
+        /* Footer Style */
+        footer {
+            background-color: #343a40;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            margin-top: 20px; /* Space above footer */
+        }
+        /* Instruction Style */
+        .instruction {
+            font-size: 18px;
+            font-weight: bold;
+            color: #007bff;
+            text-align: center;
+            margin-bottom: 20px;
         }
     </style>
 </head>
@@ -166,7 +183,7 @@
             <div class="image-container">
                 <img src="./goodafternoon.jpeg" alt="Expression 1">
             </div>
-            <input type="text" class="answer-input" data-correct="Good Afternoon" placeholder="Type the correct expression...">
+            <input type="text" class="answer-input" data-correct="Good Afternoon" placeholder="Type the correct expression *...">
             <div class="feedback-message"></div>
         </div>
 
@@ -201,6 +218,10 @@
             <input type="text" class="answer-input" data-correct="What's your name?" placeholder="Type the correct expression...">
             <div class="feedback-message"></div>
         </div>
+        <div class="instruction">
+            * Escreva a expressão correta
+        </div>
+        
     </div>
 
     <script>
@@ -235,6 +256,9 @@
             });
         });
     </script>
+    <footer>
+        &copy; 2025 World Teaching School
+    </footer>
 </body>
 </html>
 

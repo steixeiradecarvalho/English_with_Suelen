@@ -1,26 +1,36 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Word Search - Months</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Arial', sans-serif;
       display: flex;
+      flex-direction: column;
       justify-content: center;
+      background: linear-gradient(135deg, #a8e063, #56ab2f);
       padding: 20px;
-      background-color: #f0f0f0;
+      min-height: 100vh;
+      margin: 0;
+      color: #333;
     }
 
     .container {
       background: white;
       padding: 20px;
       border-radius: 10px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
       max-width: 1000px;
+      margin: 0 auto;
     }
 
     h1 {
       text-align: center;
-      color: #333;
+      color: #2e8b57;
+      font-size: 36px;
+      margin-bottom: 20px;
     }
 
     .game-area {
@@ -31,16 +41,13 @@
 
     .grid {
       display: grid;
-      /* Corrigido: definir explicitamente as colunas */
       grid-template-columns: repeat(15, 30px);
-      /* Corrigido: definir explicitamente as linhas */
       grid-template-rows: repeat(15, 30px);
-      gap: 2px;
-      background: #f5f5f5;
-      padding: 10px;
+      gap: 4px;
+      background: #f1f1f1;
+      padding: 15px;
       border-radius: 8px;
-      /* Adicionado: evitar que o grid quebre */
-      width: fit-content;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
 
     .cell {
@@ -53,22 +60,26 @@
       font-size: 16px;
       border-radius: 4px;
       cursor: pointer;
-      user-select: none;
-      /* Adicionado: garantir que as células mantenham seu tamanho */
-      min-width: 30px;
-      min-height: 30px;
-      background: white;
+      background-color: white;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s, transform 0.2s ease;
+    }
+
+    .cell:hover {
+      background-color: #cce8cc;
+      transform: scale(1.1);
     }
 
     .cell.selected {
-      background-color: #e0e0e0;
+      background-color: #ffd700;
+      color: #fff;
     }
 
     .word-list {
-      background: #f5f5f5;
+      background: #fafafa;
       padding: 15px;
       border-radius: 8px;
-      min-width: 200px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
 
     .word-item {
@@ -78,22 +89,38 @@
       display: flex;
       align-items: center;
       gap: 8px;
+      font-weight: bold;
+      font-size: 18px;
+      transition: background-color 0.3s ease;
     }
 
     .word-item.found {
+      background-color: #4caf50;
       color: white;
     }
 
     .selected-word {
       margin-top: 20px;
       text-align: center;
-      font-size: 18px;
-      min-height: 27px;
+      font-size: 20px;
+      font-weight: bold;
+      min-height: 30px;
+      color: #333;
+    }
+
+    footer {
+      background-color: #343a40;
+      color: white;
+      text-align: center;
+      padding: 15px 0;
+      width: 100%;
+      position: fixed;
+      bottom: 0;
+      left: 0;
     }
   </style>
 </head>
 <body>
-  <!-- O resto do código HTML e JavaScript permanece igual -->
   <div class="container">
     <h1>Word Search - Months</h1>
     <div class="game-area">
@@ -106,8 +133,11 @@
     <div id="selected-word" class="selected-word"></div>
   </div>
 
+  <footer>
+    &copy; 2025 World Teaching School
+  </footer>
+
   <script>
-    // Todo o código JavaScript anterior permanece igual
     const months = [
       'JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE',
       'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER'
@@ -215,6 +245,7 @@
             const positions = wordPositions.get(word);
             if (positions.some(pos => pos.row === i && pos.col === j)) {
               cell.style.backgroundColor = colors[word];
+              cell.style.color = '#fff';
             }
           }
           

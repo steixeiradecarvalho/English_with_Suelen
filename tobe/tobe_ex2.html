@@ -20,7 +20,15 @@
             margin: 0;
             padding: 20px;
             background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
-            min-height: 100vh;
+            min-height: 100vh; /* Ensure footer sticks to bottom */
+        }
+
+        footer {
+            background-color: #343a40;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            margin-top: 20px; /* Space above footer */
         }
 
         .container {
@@ -134,6 +142,38 @@
                 padding: 10px;
             }
         }
+        .translation {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--light);
+            border: 1px solid var(--secondary);
+            border-radius: 4px;
+            padding: 5px 10px;
+            margin-top: 5px;
+            color: var(--dark);
+            font-style: italic;
+            white-space: nowrap;
+            z-index: 100;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: none;
+        }
+
+        .translation-icon {
+            cursor: pointer;
+            color: var(--primary);
+            margin-left: 8px;
+            transition: color 0.3s;
+        }
+
+        .translation-icon:hover {
+            color: var(--secondary);
+        }
+
+        .question {
+            position: relative;
+        }
     </style>
 </head>
 <body>
@@ -143,7 +183,7 @@
         <div class="tip-box">
             <strong>Dica:</strong> Como o verbo To Be pode significar "ser" ou "estar", 
             é importante analisar a tradução para escolher a forma correta.
-            Clique no ícone para ver a tradução.
+            Clique no ícone ao lado da frase para ver a tradução.
         </div>
 
         <div class="exercise-section">
@@ -202,12 +242,55 @@
                 <input type="text" data-answer="${questionData.answer}" class="answer">
                 <i class="fas fa-check feedback-icon"></i>
                 ${textParts[1]}
-                <button class="btn show-translation">
-                    <i class="fas fa-language"></i>
-                </button>
+                <i class="fas fa-language translation-icon" tabindex="0"></i>
                 <div class="translation">${questionData.translation}</div>
             `;
             document.getElementById(containerId).appendChild(div);
+        }
+
+        // Funções para mostrar/esconder traduções
+        function setupTranslationBehavior() {
+            document.querySelectorAll('.translation-icon').forEach(icon => {
+                const translation = icon.nextElementSibling;
+
+                // Mouse events
+                icon.addEventListener('mousedown', (e) => {
+                    e.preventDefault();
+                    translation.style.display = 'block';
+                });
+
+                icon.addEventListener('mouseup', () => {
+                    translation.style.display = 'none';
+                });
+
+                icon.addEventListener('mouseleave', () => {
+                    translation.style.display = 'none';
+                });
+
+                // Keyboard accessibility
+                icon.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        translation.style.display = 'block';
+                    }
+                });
+
+                icon.addEventListener('keyup', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        translation.style.display = 'none';
+                    }
+                });
+
+                // Touch devices
+                icon.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    translation.style.display = 'block';
+                });
+
+                icon.addEventListener('touchend', () => {
+                    translation.style.display = 'none';
+                });
+            });
         }
 
         function checkAnswer(input) {
@@ -230,25 +313,19 @@
             affirmativeQuestions.forEach((q, i) => createQuestion(q, i, 'affirmative-questions'));
             negativeQuestions.forEach((q, i) => createQuestion(q, i, 'negative-questions'));
 
-            document.querySelectorAll('.show-translation').forEach(button => {
-                button.addEventListener('click', function() {
-                    const translation = this.nextElementSibling;
-                    translation.style.display = translation.style.display === 'none' ? 'block' : 'none';
-                });
-            });
-
             document.querySelectorAll('.answer').forEach(input => {
                 input.addEventListener('input', function() {
                     checkAnswer(this);
                     updateScores();
                 });
 
-                // Adiciona verificação ao perder o foco
                 input.addEventListener('blur', function() {
                     checkAnswer(this);
                     updateScores();
                 });
             });
+
+            setupTranslationBehavior(); // Configura o novo comportamento
         }
 
         function updateScores() {
@@ -271,5 +348,9 @@
         document.addEventListener('DOMContentLoaded', initializeExercise);
     </script>
 </div>
+    <footer>
+    &copy; 2025 World Teaching School
+    </footer>
+    
 </body>
 </html>

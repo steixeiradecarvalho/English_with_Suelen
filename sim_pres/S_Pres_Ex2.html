@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>English Course</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         /* General Styles */
         body {
@@ -225,6 +226,34 @@
             padding: 10px 0;
             margin-top: 20px; /* Space above footer */
         }
+        /* ========== NOVOS ESTILOS PARA TRADUÇÃO ========== */
+        .translation-container {
+            display: inline-block;
+            position: relative;
+            margin-left: 8px;
+        }
+
+        .translation-icon {
+            color: #007bff;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 2px;
+        }
+
+        .translation {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 6px 12px;
+            font-size: 0.9em;
+            white-space: nowrap;
+            z-index: 100;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
     </style>
 </head>
 <body>
@@ -240,42 +269,66 @@
                 <div class="question">
                     I play → She 
                     <input type="text" id="q1">
-                    .      <span style="background-color: #f3f3a0;">jogar/ tocar/ brincar</span>
+                    <div class="translation-container">
+                        <i class="fas fa-language translation-icon"></i>
+                        <span class="translation">jogar/ tocar/ brincar</span>
+                    </div>
                 </div>
                 <div class="question">
                     They eat → He 
                     <input type="text" id="q2">
-                    .     <span style="background-color: #f3f3a0;">comer</span>
+                    <div class="translation-container">
+                        <i class="fas fa-language translation-icon"></i>
+                        <span class="translation">comer</span>
+                    </div> 
                 </div>
                 <div class="question">
                     We sing → He
                     <input type="text" id="q3">
-                    .      <span style="background-color: #f3f3a0;">cantar</span>
+                    <div class="translation-container">
+                        <i class="fas fa-language translation-icon"></i>
+                        <span class="translation">cantar</span>
+                    </div>
                 </div>
                 <div class="question">
                     I talk → She
                     <input type="text" id="q4">
-                    .      <span style="background-color: #f3f3a0;">falar</span>
+                    <div class="translation-container">
+                        <i class="fas fa-language translation-icon"></i>
+                        <span class="translation">falar</span>
+                    </div>                    
                 </div>
                 <div class="question">
                     We buy → He
                     <input type="text" id="q5">
-                    .     <span style="background-color: #f3f3a0;">comprar</span>
+                    <div class="translation-container">
+                        <i class="fas fa-language translation-icon"></i>
+                        <span class="translation">comprar</span>
+                    </div>                    
                 </div>
                 <div class="question">
                     I watch → She
                     <input type="text" id="q6">
-                    .      <span style="background-color: #f3f3a0;">assistir</span>
+                    <div class="translation-container">
+                        <i class="fas fa-language translation-icon"></i>
+                        <span class="translation">assistir</span>
+                    </div>
                 </div>
                 <div class="question">
                     They go → He
                     <input type="text" id="q7">
-                    .     <span style="background-color: #f3f3a0;">ir</span>
+                    <div class="translation-container">
+                        <i class="fas fa-language translation-icon"></i>
+                        <span class="translation">ir</span>
+                    </div>
                 </div>
                 <div class="question">
                     I like → She
                     <input type="text" id="q8">
-                    .      <span style="background-color: #f3f3a0;">gostar</span>
+                    <div class="translation-container">
+                        <i class="fas fa-language translation-icon"></i>
+                        <span class="translation">gostar</span>
+                    </div>
                 </div>
                 <!-- Adicione mais perguntas conforme necessário -->
             </div>
@@ -285,12 +338,28 @@
             <div id="result" class="results"></div>
         </div>
         <div class="navigation">
-            <a href="S_Pres_Ex1.html" class="nav-button">← Exercício Anterior</a>
-            <a href="S_Pres_Ex3.html" class="nav-button">Próximo Exercício →</a>
+            <a href="idex.html" class="nav-button">Prossiga...</a>
         </div>
         <!--  XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX -->
     </div>
     <script>
+         document.addEventListener('DOMContentLoaded', () => {
+            // Mostrar/ocultar traduções
+            document.querySelectorAll('.translation-icon').forEach(icon => {
+                icon.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const translation = icon.nextElementSibling;
+                    translation.style.display = translation.style.display === 'block' ? 'none' : 'block';
+                });
+            });
+
+            // Esconder ao clicar fora
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.translation-container')) {
+                    document.querySelectorAll('.translation').forEach(t => t.style.display = 'none');
+                }
+            });
+        });
         const correctAnswers = {
             q1: "plays",
             q2: "eats",
@@ -338,7 +407,7 @@
         }
     </script>
     <footer>
-      &copy; 2023 Your English Course
+      &copy; 2025 World Teaching School
     </footer>
 </body>
 </html>

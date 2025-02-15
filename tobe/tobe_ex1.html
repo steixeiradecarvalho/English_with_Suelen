@@ -13,8 +13,15 @@
         body {
             font-family: 'Comic Sans MS', cursive, sans-serif;
             background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
-            min-height: 100vh;
             padding: 20px;
+            min-height: 100vh; /* Ensure footer sticks to bottom */
+        }
+        footer {
+            background-color: #343a40;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            margin-top: 20px; /* Space above footer */
         }
 
         .container {
@@ -320,5 +327,8 @@
         // Initialize
         createExercises();
     </script>
+    <footer>
+        &copy; 2025 World Teaching School
+    </footer>
 </body>
 </html>

@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Caça-Palavras - Verbos em Inglês</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #ff7e5f, #feb47b);
+      text-align: center;
+      color: #fff;
+      min-height: 100vh; /* Ensure footer sticks to bottom */
+    }
+
+     /* Footer Style */
+     footer {
+        background-color: #343a40;
+        color: white;
+        text-align: center;
+        padding: 10px 0;
+        margin-top: 20px; /* Space above footer */
+    }
+
+    .container {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 3px;
+      background: rgba(0, 0, 0, 0.2);
+      padding: 10px;
+      border-radius: 10px;
+    }
+
+    .cell {
+      width: 40px;
+      height: 40px;
+      border: 2px solid #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      cursor: pointer;
+      user-select: none;
+      font-size: 1.2em;
+      background: rgba(255, 255, 255, 0.3);
+      transition: 0.3s;
+    }
+
+    .cell:hover {
+      background: #ffeb3b;
+      transform: scale(1.1);
+    }
+
+    .cell.selected {
+      background: #2196f3;
+      border-color: #ffeb3b;
+      color: #fff;
+      animation: pulse 0.5s infinite alternate;
+    }
+
+    @keyframes pulse {
+      from {
+        transform: scale(1);
+      }
+      to {
+        transform: scale(1.15);
+      }
+    }
+
+    .word-list {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 15px;
+      border-radius: 10px;
+    }
+
+    .found {
+      text-decoration: line-through;
+      color: #ffeb3b;
+      font-weight: bold;
+    }
+
+    h1 {
+      font-size: 2em;
+      text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+    }
+  </style>
+</head>
+<body>
+  <h1>Caça-Palavras - Verbos em Inglês</h1>
+  <div class="container">
+    <div id="grid" class="grid-container"></div>
+    <div class="word-list">
+      <h3>Palavras para encontrar:</h3>
+      <ul id="wordList"></ul>
+      <h3>Palavras encontradas: <span id="foundCount">0</span>/10</h3>
+      <ul id="foundList"></ul>
+    </div>
+  </div>
+
+  <script>
+    const words = ['WATCH', 'GO', 'WASH', 'SLEEP', 'DRIVE', 'GET', 'READ', 'WRITE', 'THINK', 'SEE'];
+    const size = 12;
+    let grid = Array(size).fill().map(() => Array(size).fill(''));
+    let selectedCells = [];
+    let foundWords = [];
+    
+    function randomLetter() {
+      return String.fromCharCode(65 + Math.floor(Math.random() * 26));
+    }
+    
+    function isValidPosition(x, y) {
+      return x >= 0 && x < size && y >= 0 && y < size;
+    }
+    
+    function tryPlaceWord(word) {
+      const directions = [
+        [0, 1], [1, 0], [1, 1],
+      ];
+      
+      for (let attempts = 0; attempts < 100; attempts++) {
+        const direction = directions[Math.floor(Math.random() * directions.length)];
+        const startX = Math.floor(Math.random() * size);
+        const startY = Math.floor(Math.random() * size);
+        
+        if (canPlaceWord(word, startX, startY, direction)) {
+          placeWord(word, startX, startY, direction);
+          return true;
+        }
+      }
+      return false;
+    }
+    
+    function canPlaceWord(word, startX, startY, [dx, dy]) {
+      if (!isValidPosition(startX + dx * (word.length - 1), startY + dy * (word.length - 1))) {
+        return false;
+      }
+      for (let i = 0; i < word.length; i++) {
+        const x = startX + dx * i;
+        const y = startY + dy * i;
+        if (grid[x][y] !== '' && grid[x][y] !== word[i]) {
+          return false;
+        }
+      }
+      return true;
+    }
+    
+    function placeWord(word, startX, startY, [dx, dy]) {
+      for (let i = 0; i < word.length; i++) {
+        const x = startX + dx * i;
+        const y = startY + dy * i;
+        grid[x][y] = word[i];
+      }
+    }
+    
+    function initializeGrid() {
+      words.forEach(word => tryPlaceWord(word));
+      for (let i = 0; i < size; i++) {
+        for (let j = 0; j < size; j++) {
+          if (grid[i][j] === '') {
+            grid[i][j] = randomLetter();
+          }
+        }
+      }
+      const gridElement = document.getElementById('grid');
+      for (let i = 0; i < size; i++) {
+        for (let j = 0; j < size; j++) {
+          const cell = document.createElement('div');
+          cell.className = 'cell';
+          cell.textContent = grid[i][j];
+          cell.dataset.x = i;
+          cell.dataset.y = j;
+          cell.addEventListener('click', handleCellClick);
+          gridElement.appendChild(cell);
+        }
+      }
+      const wordList = document.getElementById('wordList');
+      words.forEach(word => {
+        const li = document.createElement('li');
+        li.textContent = word;
+        li.id = `word-${word}`;
+        wordList.appendChild(li);
+      });
+    }
+    
+    function handleCellClick(event) {
+      const x = parseInt(event.target.dataset.x);
+      const y = parseInt(event.target.dataset.y);
+      const index = selectedCells.findIndex(([sx, sy]) => sx === x && sy === y);
+      if (index !== -1) {
+        selectedCells.splice(index, 1);
+        event.target.classList.remove('selected');
+      } else {
+        selectedCells.push([x, y]);
+        event.target.classList.add('selected');
+      }
+      checkWord();
+    }
+    
+    function checkWord() {
+      const selectedWord = selectedCells.map(([x, y]) => grid[x][y]).join('');
+      if (words.includes(selectedWord) && !foundWords.includes(selectedWord)) {
+        foundWords.push(selectedWord);
+        document.getElementById(`word-${selectedWord}`).classList.add('found');
+        document.getElementById('foundList').innerHTML += `<li>${selectedWord}</li>`;
+        document.getElementById('foundCount').textContent = foundWords.length;
+      }
+    }
+    
+    initializeGrid();
+  </script>
+    <footer>
+        &copy; 2025 World Teaching School
+    </footer>
+</body>
+</html>

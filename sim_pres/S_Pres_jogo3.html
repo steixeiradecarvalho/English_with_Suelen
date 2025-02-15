@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Fill in the Blanks - English Verbs</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+      min-height: 100vh; /* Ensure footer sticks to bottom */
+    }
+
+    /* Footer Style */
+    footer {
+        background-color: #343a40;
+        color: white;
+        text-align: center;
+        padding: 10px 0;
+        margin-top: 20px; /* Space above footer */
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .title {
+      text-align: center;
+      color: #2d3436;
+      font-size: 2em;
+      margin-bottom: 30px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .word-bank {
+      background: white;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .draggable-word {
+      background: linear-gradient(45deg, #4facfe 0%, #00f2fe 100%);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 25px;
+      cursor: grab;
+      transition: all 0.3s ease;
+      user-select: none;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .draggable-word:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    }
+
+    .draggable-word.dragging {
+      opacity: 0.5;
+      transform: scale(1.05);
+    }
+
+    .sentences {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    }
+
+    .sentence {
+      font-size: 1.2em;
+      margin: 20px 0;
+      padding: 15px;
+      background: #f8f9fa;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .dropzone {
+      display: inline-block;
+      width: 120px;
+      height: 40px;
+      border: 3px dashed #4facfe;
+      border-radius: 20px;
+      margin: 0 5px;
+      vertical-align: middle;
+      transition: all 0.3s ease;
+    }
+
+    .dropzone.hover {
+      background: rgba(79, 172, 254, 0.1);
+      transform: scale(1.05);
+      border-style: solid;
+    }
+
+    .dropzone.correct {
+      border: none;
+      background: linear-gradient(45deg, #84fab0 0%, #8fd3f4 100%);
+      color: white;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      animation: celebrate 0.5s ease;
+    }
+
+    .dropzone.incorrect {
+      border: none;
+      background: linear-gradient(45deg, #ff9a9e 0%, #fad0c4 100%);
+      color: white;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      animation: shake 0.5s ease;
+    }
+
+    @keyframes celebrate {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1) rotate(3deg); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
+
+    .feedback {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 1.2em;
+      color: #2d3436;
+      min-height: 30px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="title">🎯 Complete the Sentences</h1>
+    
+    <div class="word-bank" id="wordBank">
+      <div class="draggable-word" draggable="true">WATCH</div>
+      <div class="draggable-word" draggable="true">GO</div>
+      <div class="draggable-word" draggable="true">WASH</div>
+      <div class="draggable-word" draggable="true">SLEEP</div>
+      <div class="draggable-word" draggable="true">DRIVE</div>
+      <div class="draggable-word" draggable="true">GET</div>
+      <div class="draggable-word" draggable="true">READ</div>
+      <div class="draggable-word" draggable="true">WRITE</div>
+      <div class="draggable-word" draggable="true">THINK</div>
+      <div class="draggable-word" draggable="true">SEE</div>
+    </div>
+
+    <div class="sentences">
+      <div class="sentence">
+        I need to <div class="dropzone" data-answer="WATCH"></div> this movie tonight.
+      </div>
+      <div class="sentence">
+        Let's <div class="dropzone" data-answer="GO"></div> to the park.
+      </div>
+      <div class="sentence">
+        She will <div class="dropzone" data-answer="DRIVE"></div> to work tomorrow.
+      </div>
+      <div class="sentence">
+        I must <div class="dropzone" data-answer="READ"></div> this book by Monday.
+      </div>
+      <div class="sentence">
+        They <div class="dropzone" data-answer="THINK"></div> it's a good idea.
+      </div>
+    </div>
+
+    <div class="feedback" id="feedback"></div>
+  </div>
+
+  <script>
+    let draggingElement = null;
+
+    // Configurar elementos arrastáveis
+    document.querySelectorAll('.draggable-word').forEach(word => {
+      word.addEventListener('dragstart', handleDragStart);
+      word.addEventListener('dragend', handleDragEnd);
+    });
+
+    // Configurar zonas de soltura
+    document.querySelectorAll('.dropzone').forEach(dropzone => {
+      dropzone.addEventListener('dragover', handleDragOver);
+      dropzone.addEventListener('dragleave', handleDragLeave);
+      dropzone.addEventListener('drop', handleDrop);
+    });
+
+    function handleDragStart(e) {
+      draggingElement = e.target;
+      e.target.classList.add('dragging');
+      e.dataTransfer.setData('text/plain', e.target.textContent);
+    }
+
+    function handleDragEnd(e) {
+      e.target.classList.remove('dragging');
+      draggingElement = null;
+    }
+
+    function handleDragOver(e) {
+      e.preventDefault();
+      if (!e.target.classList.contains('correct')) {
+        e.target.classList.add('hover');
+      }
+    }
+
+    function handleDragLeave(e) {
+      e.target.classList.remove('hover');
+    }
+
+    function handleDrop(e) {
+      e.preventDefault();
+      const dropzone = e.target;
+      const word = e.dataTransfer.getData('text/plain');
+      
+      dropzone.classList.remove('hover');
+      
+      if (!dropzone.classList.contains('correct')) {
+        if (word === dropzone.dataset.answer) {
+          dropzone.textContent = word;
+          dropzone.classList.add('correct');
+          draggingElement.style.display = 'none';
+          showFeedback('Correct! 🎉', true);
+          checkAllComplete();
+        } else {
+          dropzone.classList.add('incorrect');
+          showFeedback('Try again! 🔄', false);
+          setTimeout(() => {
+            dropzone.classList.remove('incorrect');
+          }, 1000);
+        }
+      }
+    }
+
+    function showFeedback(message, isSuccess) {
+      const feedback = document.getElementById('feedback');
+      feedback.textContent = message;
+      feedback.style.color = isSuccess ? '#84fab0' : '#ff9a9e';
+    }
+
+    function checkAllComplete() {
+      const total = document.querySelectorAll('.dropzone').length;
+      const completed = document.querySelectorAll('.dropzone.correct').length;
+      
+      if (total === completed) {
+        showFeedback('Congratulations! You completed all sentences! 🎈🎉', true);
+      }
+    }
+  </script>
+  <footer>
+    &copy; 2025 World Teaching School
+  </footer>
+</body>
+</html>

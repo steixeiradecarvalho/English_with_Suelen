@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Interactive English Quiz</title>
+  <style>
+    :root {
+      --primary: #FF61D8;
+      --secondary: #41E9D5;
+      --accent: #FFE147;
+      --background: #2A0E44;
+      --text: #FFFFFF;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--background);
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    .container {
+      flex: 1;
+      width: 90%;
+      max-width: 800px;
+      text-align: center;
+      padding: 20px;
+      position: relative;
+      margin: 0 auto;
+    }
+
+    .title {
+      font-size: 2.5em;
+      margin-bottom: 30px;
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 20px rgba(255,97,216,0.3);
+    }
+
+    .word-bank {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      justify-content: center;
+      margin-bottom: 40px;
+      perspective: 1000px;
+    }
+
+    .draggable-word {
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
+      color: var(--text);
+      padding: 12px 25px;
+      border-radius: 25px;
+      cursor: grab;
+      transition: all 0.3s ease;
+      position: relative;
+      transform-style: preserve-3d;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+
+    .draggable-word:hover {
+      transform: translateY(-5px) rotate(3deg);
+      box-shadow: 0 8px 20px rgba(255,97,216,0.3);
+    }
+
+    .draggable-word::after {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      background: linear-gradient(45deg, var(--accent), var(--primary));
+      border-radius: 25px;
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .draggable-word:hover::after {
+      opacity: 1;
+    }
+
+    .quiz-card {
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      position: relative;
+      transition: transform 0.5s ease;
+      margin: 20px 0;
+    }
+
+    .sentence {
+      font-size: 1.4em;
+      margin: 20px 0;
+      line-height: 1.6;
+    }
+
+    .dropzone {
+      display: inline-block;
+      width: 140px;
+      height: 45px;
+      border: 3px dashed var(--secondary);
+      border-radius: 25px;
+      margin: 0 10px;
+      vertical-align: middle;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .dropzone.hover {
+      transform: scale(1.1);
+      border-color: var(--accent);
+      box-shadow: 0 0 20px rgba(65,233,213,0.4);
+    }
+
+    .dropzone.correct {
+      border: none;
+      background: linear-gradient(45deg, #00ff88, #00ffcc);
+      color: var(--background);
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: celebrate 0.8s ease;
+    }
+
+    .dropzone.incorrect {
+      border: none;
+      background: linear-gradient(45deg, #ff4466, #ff99cc);
+      animation: shake 0.5s ease;
+    }
+
+    .navigation {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 30px;
+    }
+
+    .nav-button {
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
+      border: none;
+      color: var(--text);
+      padding: 12px 25px;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 1.1em;
+      opacity: 0.7;
+    }
+
+    .nav-button:hover {
+      opacity: 1;
+      transform: scale(1.1);
+    }
+
+    .nav-button:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .progress {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      font-size: 1.2em;
+      color: var(--accent);
+    }
+
+    @keyframes celebrate {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.2) rotate(5deg); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-10px); }
+      75% { transform: translateX(10px); }
+    }
+
+    .feedback {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 15px 30px;
+      border-radius: 30px;
+      font-size: 1.2em;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .feedback.show {
+      opacity: 1;
+    }
+
+    .feedback.success {
+      background: linear-gradient(45deg, #00ff88, #00ffcc);
+      color: var(--background);
+    }
+
+    .feedback.error {
+      background: linear-gradient(45deg, #ff4466, #ff99cc);
+      color: var(--text);
+    }
+
+    .confetti {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      background: var(--accent);
+      opacity: 0;
+    }
+    footer {
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
+      padding: 20px;
+      text-align: center;
+      width: 100%;
+      margin-top: auto;
+      box-shadow: 0 -5px 15px rgba(0,0,0,0.2);
+      position: relative;
+      z-index: 100;
+    }
+
+    footer::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, 
+        transparent, 
+        var(--primary),
+        var(--secondary),
+        var(--primary),
+        transparent
+      );
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="title">✨ English Verbs Quiz ✨</h1>
+    
+    <div class="word-bank" id="wordBank">
+      <div class="draggable-word" draggable="true">WATCH</div>
+      <div class="draggable-word" draggable="true">GO</div>
+      <div class="draggable-word" draggable="true">WASH</div>
+      <div class="draggable-word" draggable="true">SLEEP</div>
+      <div class="draggable-word" draggable="true">DRIVE</div>
+      <div class="draggable-word" draggable="true">GET</div>
+      <div class="draggable-word" draggable="true">READ</div>
+      <div class="draggable-word" draggable="true">WRITE</div>
+      <div class="draggable-word" draggable="true">THINK</div>
+      <div class="draggable-word" draggable="true">SEE</div>
+    </div>
+
+    <div id="quizContainer" class="quiz-card">
+      <!-- Questões serão inseridas aqui -->
+    </div>
+
+    <div class="navigation">
+      <button id="prevBtn" class="nav-button" disabled>← Previous</button>
+      <button id="nextBtn" class="nav-button">Next →</button>
+    </div>
+
+    <div class="progress" id="progress">Question 1/5</div>
+    <div id="feedback" class="feedback"></div>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        sentence: "I need to _____ this movie tonight.",
+        answer: "WATCH"
+      },
+      {
+        sentence: "Let's _____ to the park.",
+        answer: "GO"
+      },
+      {
+        sentence: "She will _____ to work tomorrow.",
+        answer: "DRIVE"
+      },
+      {
+        sentence: "I must _____ this book by Monday.",
+        answer: "READ"
+      },
+      {
+        sentence: "They _____ it's a good idea.",
+        answer: "THINK"
+      }
+    ];
+
+    let currentQuestion = 0;
+    let draggingElement = null;
+
+    function showQuestion(index) {
+      const question = questions[index];
+      const container = document.getElementById('quizContainer');
+      
+      container.innerHTML = `
+        <div class="sentence">
+          ${question.sentence.replace('_____', '<div class="dropzone" data-answer="' + question.answer + '"></div>')}
+        </div>
+      `;
+
+      document.getElementById('progress').textContent = `Question ${index + 1}/${questions.length}`;
+      
+      setupDropzones();
+      updateNavigation();
+    }
+
+    function setupDropzones() {
+      document.querySelectorAll('.dropzone').forEach(dropzone => {
+        dropzone.addEventListener('dragover', handleDragOver);
+        dropzone.addEventListener('dragleave', handleDragLeave);
+        dropzone.addEventListener('drop', handleDrop);
+      });
+    }
+
+    function updateNavigation() {
+      document.getElementById('prevBtn').disabled = currentQuestion === 0;
+      document.getElementById('nextBtn').disabled = currentQuestion === questions.length - 1;
+    }
+
+    function showFeedback(message, isSuccess) {
+      const feedback = document.getElementById('feedback');
+      feedback.textContent = message;
+      feedback.className = `feedback ${isSuccess ? 'success' : 'error'} show`;
+      
+      setTimeout(() => {
+        feedback.className = 'feedback';
+      }, 2000);
+
+      if (isSuccess) {
+        createConfetti();
+      }
+    }
+
+    function createConfetti() {
+      for (let i = 0; i < 50; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        document.body.appendChild(confetti);
+
+        const startX = Math.random() * window.innerWidth;
+        const startY = -10;
+        const endY = window.innerHeight + 10;
+        
+        confetti.style.left = `${startX}px`;
+        confetti.style.top = `${startY}px`;
+        confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+        confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+
+        const animation = confetti.animate([
+          { transform: `translate(0, 0) rotate(0)`, opacity: 1 },
+          { transform: `translate(${Math.random() * 200 - 100}px, ${endY}px) rotate(${Math.random() * 720}deg)`, opacity: 0 }
+        ], {
+          duration: 1000 + Math.random() * 1000,
+          easing: 'cubic-bezier(.37,0,.63,1)'
+        });
+
+        animation.onfinish = () => confetti.remove();
+      }
+    }
+
+    // Event Listeners
+    document.querySelectorAll('.draggable-word').forEach(word => {
+      word.addEventListener('dragstart', e => {
+        draggingElement = e.target;
+        e.target.style.opacity = '0.5';
+        e.dataTransfer.setData('text/plain', e.target.textContent);
+      });
+
+      word.addEventListener('dragend', e => {
+        e.target.style.opacity = '1';
+        draggingElement = null;
+      });
+    });
+
+    document.getElementById('prevBtn').addEventListener('click', () => {
+      if (currentQuestion > 0) {
+        currentQuestion--;
+        showQuestion(currentQuestion);
+      }
+    });
+
+    document.getElementById('nextBtn').addEventListener('click', () => {
+      if (currentQuestion < questions.length - 1) {
+        currentQuestion++;
+        showQuestion(currentQuestion);
+      }
+    });
+
+    function handleDragOver(e) {
+      e.preventDefault();
+      if (!e.target.classList.contains('correct')) {
+        e.target.classList.add('hover');
+      }
+    }
+
+    function handleDragLeave(e) {
+      e.target.classList.remove('hover');
+    }
+
+    function handleDrop(e) {
+      e.preventDefault();
+      const dropzone = e.target;
+      const word = e.dataTransfer.getData('text/plain');
+      
+      dropzone.classList.remove('hover');
+      
+      if (!dropzone.classList.contains('correct')) {
+        if (word === dropzone.dataset.answer) {
+          dropzone.textContent = word;
+          dropzone.classList.add('correct');
+          draggingElement.style.display = 'none';
+          showFeedback('Correct! 🎉', true);
+        } else {
+          dropzone.classList.add('incorrect');
+          showFeedback('Try again! 🔄', false);
+          setTimeout(() => {
+            dropzone.classList.remove('incorrect');
+          }, 1000);
+        }
+      }
+    }
+
+    // Iniciar o quiz
+    showQuestion(0);
+  </script>
+  <footer>
+    &copy; 2025 World Teaching School
+  </footer>
+</body>
+</html>
