@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Present - Welcome</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f8f9fa;
+        }
+
+        header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #ffffff;
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+            width: 100%;
+            margin: 0 auto;
+            max-width: 960px;
+        }
+
+        .logo-container {
+            margin-bottom: 1rem;
+        }
+
+        .header-content {
+            width: 100%;
+            text-align: center;
+        }
+
+        .logo {
+            height: 50px;
+            display: block;
+        }
+
+        .course-name {
+            font-weight: bold;
+            color: #007bff;
+            font-size: 1.2rem;
+        }
+
+        .module-name {
+            color: #007bff;
+            font-size: 1.2rem;
+        }
+
+        main {
+            flex-grow: 1;
+            padding: 2rem;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .content {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 2rem;
+            background-color: #ffffff;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            border-radius: 0.5rem;
+            text-align: center;
+        }
+
+        #slide-title {
+            color: #007bff;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            animation: fadeIn 1s ease-in;
+        }
+
+        .topic {
+            color: #343a40;
+            font-size: 1.6rem;
+            margin-bottom: 1rem;
+            animation: slideIn 1s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { 
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .navigation-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            margin: 0 auto;
+            max-width: 960px;
+            margin-bottom: 1rem;
+        }
+
+        .nav-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        .nav-button img {
+            width: 24px;
+            height: 24px;
+        }
+
+        .progress-container {
+            flex-grow: 1;
+            margin: 0 2rem;
+            font-family: monospace;
+            font-size: 24px;
+            text-align: center;
+            color: #e0e0e0;
+        }
+
+        footer {
+            background-color: #007bff;
+            color: #ffffff;
+            text-align: center;
+            padding: 0.5rem;
+            width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            #slide-title {
+                font-size: 2rem;
+            }
+
+            .topic {
+                font-size: 1.4rem;
+            }
+
+            .content {
+                padding: 1rem;
+                margin: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <img src="logoWTS.png" alt="World Teaching School Logo" class="logo">
+        </div>
+        <div class="header-content">
+            <div class="course-info">
+                <span class="course-name">Inglês Básico I</span> - 
+                <span class="module-name">Simple Present</span>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="content">
+            <h1 id="slide-title">Bem-vindo ao estudo do Simple Present</h1>
+            <p class="topic">Vamos aprender sobre o tempo verbal mais usado do inglês!</p>
+        </div>
+    </main>
+
+    <div class="navigation-bar">
+        <!-- button class="nav-button prev-button" onclick="prevPage()">
+            <img src="volta.png" alt="Voltar">
+        </button  -->
+        <div class="progress-container">
+            <span class="progress-text">█▒▒▒▒▒▒▒▒▒</span>
+        </div>
+        <button class="nav-button next-button" onclick="nextPage()">
+            <img src="avanca.png" alt="Avançar">
+        </button>
+    </div>
+
+    <footer>
+        <p>© 2025 World Teaching School</p>
+    </footer>
+
+    <script>
+        const moduleName = "Simple Present";
+        document.getElementById('module-name').textContent = moduleName;
+
+        function nextPage() {
+            window.location.href = 'simpres_apresenta02.html';
+        }
+
+        function prevPage() {
+            // desabilitado neste script (primeiro)
+            window.location.href = 'simpres_apresenta01.html';
+        }
+    </script>
+</body>
+</html>

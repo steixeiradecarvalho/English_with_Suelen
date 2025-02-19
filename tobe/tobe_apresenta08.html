@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Present Welcome</title>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background-color: #6A5ACD;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background-color: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            color: #6A5ACD;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.2rem;
+        }
+
+        .section {
+            margin-bottom: 18x;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #F8F8FF;
+        }
+
+        .section-title {
+            color: #6A5ACD;
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            font-weight: bold;
+            border-bottom: 2px solid #6A5ACD;
+            padding-bottom: 5px;
+        }
+
+        .explanation {
+            margin: 15px 0;
+            line-height: 1.6;
+            color: #444;
+        }
+
+        .example-box {
+            background-color: white;
+            border-left: 4px solid #6A5ACD;
+            padding: 15px;
+            margin: 15px 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .english {
+            color: #6A5ACD;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .translation {
+            color: #666;
+            font-style: italic;
+            margin-left: 20px;
+        }
+
+        .highlight {
+            background-color: #E6E6FA;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .note {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #FFF;
+            border-radius: 5px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .section-title {
+                font-size: 1.2rem;
+            }
+
+            .english, .translation {
+                font-size: 1rem;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="logo-container">  <!-- Container for just the logo -->
+            <img src="logoWTS.png" alt="World Teaching School Logo" class="logo">
+        </div>
+        <div class="header-content">
+            <div class="course-info">
+                <span class="course-name">Inglês Básico I</span> - 
+                <span class="module-name" id="module-name">Nome do Módulo</span>
+            </div>
+        </div>
+    </header>
+    <div class="container">
+        <div class="section">
+            <div class="section-title">Afirmativa</div>
+            <div class="example-box">
+                <div class="english">She is beautiful.</div>
+                <div class="translation">Ela é bonita</div>
+            </div>
+            <div class="highlight">Verbo To Be: IS</div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Interrogativa</div>
+            <div class="explanation">Para fazer a pergunta, colocar o Verbo To Be na frente.</div>
+            <div class="explanation">Diferente do Português, ao qual somente mudamos o tom de voz.</div>
+            <div class="example-box">
+                <div class="english">IS she beautiful?</div>
+                <div class="translation">Ela é bonita?</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Negativa</div>
+            <div class="example-box">
+                <div class="english">She isn't beautiful</div>
+                <div class="translation">Ela não é bonita</div>
+            </div>
+            <div class="highlight">Diferença do ISN'T ou IS NOT</div>
+            <div class="note">O Not é usado para dar Ênfase, quando falamos ou escrevemos o não.</div>
+        </div>
+    </div>
+    <div class="navigation-bar">
+        <button class="nav-button prev-button" onclick="prevPage()">
+            <img src="volta.png" alt="Voltar">
+        </button>
+
+        <div class="progress-container">
+            <span class="progress-text">████████▒▒▒▒</span>
+        </div>
+
+        <button class="nav-button next-button" onclick="nextPage()">
+            <img src="avanca.png" alt="Avançar">
+        </button>
+    </div>
+    <footer>
+        <p>© 2025 World Teaching School</p>
+    </footer>
+
+    <script>
+        // Configuração inicial
+        const moduleName = "Verbo To Be";
+        document.getElementById('module-name').textContent = moduleName;
+
+        function nextPage() {
+            window.location.href = 'tobe_apresenta09.html';
+        }
+
+        function prevPage() {
+            window.location.href = 'tobe_apresenta07.html';
+        }
+        // Você pode usar JavaScript para adicionar conteúdo dinamicamente 
+        // aos containers de tópicos, traduções, exemplos, tabelas e imagens.
+
+        // Exemplo de como adicionar um tópico dinamicamente:
+        // const topicsContainer = document.getElementById('topics-container');
+        // const newTopic = document.createElement('p');
+        // newTopic.classList.add('topic'); // Add the CSS class
+        // newTopic.textContent = 'Novo Tópico';
+        // topicsContainer.appendChild(newTopic);
+    </script>
+</body>
+</html>

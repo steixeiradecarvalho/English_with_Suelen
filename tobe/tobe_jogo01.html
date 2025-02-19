@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Template Apresentação Inglês</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Original template styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f8f9fa;
+        }
+
+        header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #ffffff;
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+            width: 100%;
+            margin: 0 auto;
+            max-width: 960px;
+        }
+
+        .logo-container {
+            margin-bottom: 1rem;
+        }
+
+        .header-content {
+            width: 100%;
+            text-align: center;
+        }
+
+        .logo {
+            height: 50px;
+            display: block;
+        }
+
+        .course-name {
+            font-weight: bold;
+            color: #007bff;
+            font-size: 1.2rem;
+        }
+
+        .module-name {
+            color: #007bff;
+            font-size: 1.2rem;
+        }
+
+        main {
+            flex-grow: 1;
+            padding: 2rem;
+            width: 100%;
+            padding-bottom: 20px;
+        }
+
+        .content {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 2rem;
+            background-color: #ffffff;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            border-radius: 0.5rem;
+        }
+
+        /* Game specific styles */
+        .game-instructions {
+            background-color: #f8f9fa;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 2rem;
+            border-left: 4px solid #007bff;
+        }
+
+        .instruction-text {
+            margin-bottom: 0.5rem;
+        }
+
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .sentence-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            min-height: 50px;
+            background-color: #f8f9fa;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            align-items: center;
+        }
+
+        .word-block {
+            background-color: #007bff;
+            color: white;
+            padding: 0.75rem 1rem;
+            border-radius: 0.25rem;
+            cursor: move;
+            user-select: none;
+            transition: transform 0.2s;
+            font-size: 1.1rem;
+        }
+
+        .word-block.dragging {
+            opacity: 0.5;
+            transform: scale(1.05);
+        }
+
+        .word-block:hover {
+            transform: scale(1.05);
+        }
+
+        /* Different colors for blocks */
+        .word-block:nth-child(2n) { background-color: #28a745; }
+        .word-block:nth-child(3n) { background-color: #dc3545; }
+        .word-block:nth-child(4n) { background-color: #ffc107; color: #000; }
+        .word-block:nth-child(5n) { background-color: #17a2b8; }
+        
+        .completed {
+            background-color: #dff0d8;
+            border: 2px solid #28a745;
+        }
+
+        #confetti-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .back-button-container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 1rem;
+            display: flex;
+            justify-content: center;
+            background-color: #f8f9fa;
+            width: 100%;
+        }
+
+        .back-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-button:hover {
+            background-color: #0056b3;
+        }
+
+        footer {
+            background-color: #007bff;
+            color: #ffffff;
+            text-align: center;
+            padding: 0.5rem;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <img src="logoWTS.png" alt="World Teaching School Logo" class="logo">
+        </div>
+        <div class="header-content">
+            <div class="course-info">
+                <span class="course-name">Inglês Básico I</span> - 
+                <span class="module-name" id="module-name">Question Formation</span>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="content-wrapper">
+            <div class="content">
+                <h1 id="slide-title">Word Order Game</h1>
+
+                <div class="game-instructions">
+                    <p class="instruction-text">
+                        <strong>EN:</strong> Drag and drop the words to create correct sentences. Arrange them in the proper order to form questions and statements.
+                    </p>
+                    <p class="instruction-text">
+                        <strong>PT:</strong> Arraste e solte as palavras para criar frases corretas. Organize-as na ordem adequada para formar perguntas e afirmações.
+                    </p>
+                </div>
+
+                <div class="game-container" id="gameContainer">
+                    <!-- Rows will be added by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="back-button-container">
+        <button class="back-button" onclick="goBack()">
+            <img src="volta.png" alt="Voltar" style="width: 20px; height: 20px;">
+            Voltar
+        </button>
+    </div>
+    
+    <footer>
+        <p>© 2025 World Teaching School</p>
+    </footer>
+
+    <canvas id="confetti-canvas"></canvas>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script>
+        const sentences = [
+            {
+                scrambled: "Is she a Woman beautiful ?",
+                correct: "Is she a beautiful woman ?"
+            },
+            {
+                scrambled: "Are your Father and your brother doctors ?",
+                correct: "Are your father and your brother doctors ?"
+            },
+            {
+                scrambled: "she best friend is my ?",
+                correct: "She is my best friend ?"
+            },
+            {
+                scrambled: "at home is he ?",
+                correct: "Is he at home ?"
+            },
+            {
+                scrambled: "Mary and John friends are ?",
+                correct: "Are Mary and John friends ?"
+            },
+            {
+                scrambled: "today aren't happy you ?",
+                correct: "Aren't you happy today ?"
+            }
+        ];
+
+        // Success sound
+        const successSound = new Audio('data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA/+M4wAAAAAAAAAAAAEluZm8AAAAPAAAAEAAABVgANTU1NTU1Q0NDQ0NDUFBQUFBQXl5eXl5ea2tra2tra3l5eXl5eYaGhoaGhpSUlJSUlKGhoaGhoaGvr6+vr6+8vLy8vLzKysrKysrX19fX19fX5eXl5eXl8vLy8vLy////////AAAAAExhdmM1OC4xMwAAAAAAAAAAAAAAACQEKAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP/jOMAAAAAAAAAAAABJbmZvAAAADwAAAA0AAAeDADMzMzMzMzMzMzMzMzMzZmZmZmZmZmZmZmZmZmaAgICAgICAgICAgICAgIDMzMzMzMzMzMzMzMzMzP//////////////////////////AAAAAExhdmM1OC4xMwAAAAAAAAAAAAAAACQCAAAAAAAAB4MxS+2OAAAAAAD/4zjMAAAAAAAAAAAASW5mbwAAAA8AAAANAAAHgwAzMzMzMzMzMzMzMzMzM2ZmZmZmZmZmZmZmZmZmgICAgICAgICAgICAgICAzMzMzMzMzMzMzMzMzMz//////////////////////////wAAAABMYXZjNTguMTMAAAAAAAAAAAAAAAAkAgAAAAAAAAeDMUvtjgAAAAAAAAAAAAAAAAD/4zjMAAAAAAAAAAAASW5mbwAAAA8AAAADAAAHgwAzMzMzMzMzZmZmZmZmZoCAgICAgIDMzMzMzMzM////////AAAAAExhdmM1OC4xMwAAAAAAAAAAAAAAACQCAAAAAAAAB4MxS+2OAAAAAAAA/+M4zAAAAAAAAAAAAEluZm8AAAAPAAAAAwAAB4MAMzMzMzMzM2ZmZmZmZmaAgICAgICAzMzMzMzMzP///////wAAAABMYXZjNTguMTMAAAAAAAAAAAAAAAAkAgAAAAAAAAeDMUvtjgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA');
+
+        // Initialize game
+        function initializeGame() {
+            const gameContainer = document.getElementById('gameContainer');
+            
+            sentences.forEach((sentence, rowIndex) => {
+                const row = document.createElement('div');
+                row.className = 'sentence-row';
+                row.setAttribute('data-correct', sentence.correct.toLowerCase());
+                
+                // Create and shuffle word blocks
+                const words = sentence.scrambled.split(' ');
+                shuffleArray(words);
+                
+                words.forEach(word => {
+                    const block = document.createElement('div');
+                    block.className = 'word-block';
+                    block.textContent = word;
+                    block.draggable = true;
+                    
+                    block.addEventListener('dragstart', handleDragStart);
+                    block.addEventListener('dragend', handleDragEnd);
+                    
+                    row.appendChild(block);
+                });
+                
+                row.addEventListener('dragover', handleDragOver);
+                row.addEventListener('drop', handleDrop);
+                
+                gameContainer.appendChild(row);
+            });
+        }
+
+        // Drag and drop handlers
+        let draggedElement = null;
+
+        function handleDragStart(e) {
+            draggedElement = this;
+            this.classList.add('dragging');
+        }
+
+        function handleDragEnd(e) {
+            this.classList.remove('dragging');
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            const row = e.currentTarget;
+            
+            if (draggedElement) {
+                const afterElement = getDragAfterElement(row, e.clientX);
+                if (afterElement) {
+                    afterElement.parentElement.insertBefore(draggedElement, afterElement);
+                } else {
+                    row.appendChild(draggedElement);
+                }
+                
+                checkRowOrder(row);
+            }
+        }
+
+        function getDragAfterElement(container, x) {
+            const draggableElements = [...container.querySelectorAll('.word-block:not(.dragging)')];
+            
+            return draggableElements.reduce((closest, child) => {
+                const box = child.getBoundingClientRect();
+                const offset = x - box.left - box.width / 2;
+                
+                if (offset < 0 && offset > closest.offset) {
+                    return { offset: offset, element: child };
+                } else {
+                    return closest;
+                }
+            }, { offset: Number.NEGATIVE_INFINITY }).element;
+        }
+
+        function XcheckRowOrder(row) {
+            const currentOrder = Array.from(row.children)
+                .map(block => block.textContent)
+                .join(' ')
+                .toLowerCase()
+                .trim(); // Remove espaços em branco extras
+
+            if (currentOrder === row.getAttribute('data-correct')) {
+                if (!row.classList.contains('completed')) {
+                    celebrate();
+                    row.classList.add('completed');
+                }
+            } else {
+                row.classList.remove('completed');
+            }
+        }
+
+        function checkRowOrder(row) {
+            const currentOrder = Array.from(row.children)
+                .map(block => block.textContent)
+                .join(' ')
+                .toLowerCase()
+                .trim();
+
+            const correctAnswer = row.getAttribute('data-correct');
+
+            if (currentOrder === correctAnswer) {
+                if (!row.classList.contains('completed')) {
+                    successSound.play();
+                    celebrate();
+                    row.classList.add('completed');
+                }
+            } else {
+                row.classList.remove('completed');
+            }
+        }
+
+        function celebrate() {
+            // Play success sound
+            successSound.play();
+            
+            // Trigger confetti
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function goBack() {
+            window.location.href = 'index.html';
+        }
+
+        // Initialize game when page loads
+        window.addEventListener('load', initializeGame); // Adicione o parêntese aqui
+     </script>

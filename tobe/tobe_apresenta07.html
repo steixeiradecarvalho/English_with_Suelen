@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Present Welcome</title>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background-color: #DC143C;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background-color: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            color: #DC143C;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.2rem;
+        }
+
+        h2 {
+            color: #483D8B;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 1.8rem;
+        }
+
+        .main-rule {
+            background-color: #FFF5F5;
+            border-left: 5px solid #DC143C;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .emphasis {
+            font-weight: bold;
+            color: #DC143C;
+            font-size: 1.2rem;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .warning {
+            background-color: #FFE4E4;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 10px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .content-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .image-container {
+            width: 20%;
+            margin-right: 20px;
+        }
+
+        .image-container img {
+            width: 100%;
+            height: auto;
+        }
+
+        .example-container {
+            width: 75%;
+            padding: 20px;
+            background-color: #F8F8F8;
+            border-radius: 10px;
+        }
+
+        .example {
+            margin-bottom: 20px;
+        }
+
+        .english {
+            color: #DC143C;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .translation {
+            color: #666;
+            font-style: italic;
+            margin-left: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+                margin-bottom: 20px;
+            }
+            h2 {
+                margin-bottom: 20px;
+                font-size: 1.8rem;
+            }
+
+            .main-rule {
+                padding: 15px;
+            }
+
+            .emphasis {
+                font-size: 1.1rem;
+            }
+
+            .content-wrapper {
+                flex-direction: column;
+            }
+
+            .image-container, .example-container {
+                width: 100%;
+                margin-right: 0;
+                margin-bottom: 20px;
+            }
+        }
+
+    </style>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="logo-container">  <!-- Container for just the logo -->
+            <img src="logoWTS.png" alt="World Teaching School Logo" class="logo">
+        </div>
+        <div class="header-content">
+            <div class="course-info">
+                <span class="course-name">Inglês Básico I</span> - 
+                <span class="module-name" id="module-name">Nome do Módulo</span>
+            </div>
+        </div>
+    </header>
+    <div class="container">
+        <h1>Verbo to be</h1>
+        <h2>Conjugação Verbo To be:</h2>
+        <div class="table-container">
+            <table>
+                <tr>
+                    <td class="cell-1">I am<br>Eu sou/Eu estou</td>
+                    <td class="cell-2">You are<br>Você é/Você está</td>
+                    <td class="cell-3">He is<br>Ele é/Ele está</td>
+                    <td class="cell-4">She is<br>Ela é/Ela está</td>
+                </tr>
+                <tr>
+                    <td class="cell-5">It is<br>Ele é/Ela está<span class="note">Uma coisa ou Um animal</span></td>
+                    <td class="cell-6">We are<br>Nós somos/Nós estamos</td>
+                    <td class="cell-7">You are<br>Vocês são/Vocês estão</td>
+                    <td class="cell-8">They are<br>Eles são/Eles estão<span class="note">Pessoas, Coisas, Animais</span></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="navigation-bar">
+        <button class="nav-button prev-button" onclick="prevPage()">
+            <img src="volta.png" alt="Voltar">
+        </button>
+
+        <div class="progress-container">
+            <span class="progress-text">███████▒▒▒▒▒</span>
+        </div>
+
+        <button class="nav-button next-button" onclick="nextPage()">
+            <img src="avanca.png" alt="Avançar">
+        </button>
+    </div>
+    <footer>
+        <p>© 2025 World Teaching School</p>
+    </footer>
+
+    <script>
+        // Configuração inicial
+        const moduleName = "Verbo To Be";
+        document.getElementById('module-name').textContent = moduleName;
+
+        function nextPage() {
+            window.location.href = 'tobe_apresenta08.html';
+        }
+
+        function prevPage() {
+            window.location.href = 'tobe_apresenta06.html';
+        }
+        // Você pode usar JavaScript para adicionar conteúdo dinamicamente 
+        // aos containers de tópicos, traduções, exemplos, tabelas e imagens.
+
+        // Exemplo de como adicionar um tópico dinamicamente:
+        // const topicsContainer = document.getElementById('topics-container');
+        // const newTopic = document.createElement('p');
+        // newTopic.classList.add('topic'); // Add the CSS class
+        // newTopic.textContent = 'Novo Tópico';
+        // topicsContainer.appendChild(newTopic);
+    </script>
+</body>
+</html>

@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Template Apresentação Inglês</title>
+    <style>
+        /* Previous styles remain the same */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f8f9fa;
+        }
+
+        header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #ffffff;
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+            width: 100%;
+            margin: 0 auto;
+            max-width: 960px;
+        }
+
+        .logo-container {
+            margin-bottom: 1rem;
+        }
+
+        .header-content {
+            width: 100%;
+            text-align: center;
+        }
+
+        .logo {
+            height: 50px;
+            display: block;
+        }
+
+        .course-name {
+            font-weight: bold;
+            color: #007bff;
+            font-size: 1.2rem;
+        }
+
+        .module-name {
+            color: #007bff;
+            font-size: 1.2rem;
+        }
+
+        main {
+            flex-grow: 1;
+            padding: 2rem;
+            width: 100%;
+            padding-bottom: 20px; /* Reduced to accommodate the back button */
+        }
+
+        .content {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 2rem;
+            background-color: #ffffff;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            border-radius: 0.5rem;
+        }
+
+        /* Updated back button styles */
+        .back-button-container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 1rem;
+            display: flex;
+            justify-content: center; /* Center the button */
+            background-color: #f8f9fa;
+            width: 100%;
+        }
+
+        .back-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Rest of the existing styles remain the same */
+        #slide-title {
+            color: #007bff;
+            margin-top: 0;
+            margin-bottom: 1.0rem;
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+        #topics-container .topic,
+        #topics-container .subtopic {
+            margin-bottom: 1rem;
+        }
+
+        .topic {
+            color: #343a40;
+            font-size: 1.4rem;
+            font-weight: bold;
+        }
+
+        .subtopic {
+            color: #343a40;
+            font-size: 1.2rem;
+            margin-left: 20px;
+        }
+
+        #translations-container .translation {
+            color: #6c757d;
+            font-style: italic;
+            margin-bottom: 1rem;
+        }
+
+        #examples-container .example {
+            color: #28a745;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .table-container table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+        }
+
+        .table-container th {
+            background-color: #007bff;
+            color: white;
+            padding: 0.75rem;
+            text-align: left;
+        }
+
+        .table-container td {
+            border: 1px solid #dee2e6;
+            padding: 0.75rem;
+        }
+
+        .image-container {
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .image-container img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+
+        footer {
+            background-color: #007bff;
+            color: #ffffff;
+            text-align: center;
+            padding: 0.5rem;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <img src="logoWTS.png" alt="World Teaching School Logo" class="logo">
+        </div>
+        <div class="header-content">
+            <div class="course-info">
+                <span class="course-name">Inglês Básico I</span> - 
+                <span class="module-name" id="module-name">Nome do Módulo</span>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="content-wrapper">
+            <div class="content">
+                <!-- Reservado para conteúdo dinâmico-->
+                <div class="content">
+                    <h1>Jogo de Ordenação de Frases</h1>
+                
+                    <div class="game-instructions">
+                        <p class="instruction-text">
+                            <strong>EN:</strong> Drag and drop the words to form correct sentences. When correct, you'll see celebration effects!<br>
+                            <strong>PT:</strong> Arraste e solte as palavras para formar frases corretas. Ao acertar, efeitos de comemoração aparecerão!
+                        </p>
+                    </div>
+                
+                    <div class="game-container" id="gameContainer"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="back-button-container">
+        <button class="back-button" onclick="goBack()">
+            <img src="volta.png" alt="Voltar" style="width: 20px; height: 20px;">
+            Voltar
+        </button>
+    </div>
+    
+    <footer>
+        <p>© 2025 World Teaching School</p>
+    </footer>
+
+    <script>
+        // Configuração inicial
+        const moduleName = "Verbo To Be";
+        document.getElementById('module-name').textContent = moduleName;
+
+        function goBack() {
+            window.location.href = 'index.html';
+        }
+
+        const sentences = [
+        {
+            scrambled: "Is she a Woman beautiful?",
+            correct: "Is she a beautiful woman?"
+        },
+        {
+            scrambled: "Are your father and your brother doctors?",
+            correct: "Are your father and your brother doctors?"
+        },
+        {
+            scrambled: "she best friend is my.",
+            correct: "She is my best friend."
+        },
+        {
+            scrambled: "at home is he?",
+            correct: "Is he at home?"
+        },
+        {
+            scrambled: "Mary and John friends are",
+            correct: "Are Mary and John friends?"
+        },
+        {
+            scrambled: "today aren't happy you.",
+            correct: "You aren't happy today."
+        }
+    ];
+
+    // Configuração de áudio e confetti
+    const successSound = new Audio('data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU');
+    let confettiCanvas;
+
+    function initializeGame() {
+        const gameContainer = document.getElementById('gameContainer');
+        
+        sentences.forEach(sentence => {
+            const row = document.createElement('div');
+            row.className = 'sentence-row';
+            row.setAttribute('data-correct', sentence.correct.toLowerCase());
+            
+            const words = sentence.scrambled.split(' ');
+            shuffleArray(words);
+            
+            words.forEach(word => {
+                const block = document.createElement('div');
+                block.className = 'word-block';
+                block.textContent = word;
+                block.draggable = true;
+                
+                block.addEventListener('dragstart', handleDragStart);
+                block.addEventListener('dragend', handleDragEnd);
+                row.appendChild(block);
+            });
+            
+            row.addEventListener('dragover', handleDragOver);
+            row.addEventListener('drop', handleDrop);
+            gameContainer.appendChild(row);
+        });
+    }
+
+    // Funções de drag-and-drop (mantidas como na solução anterior)
+    let draggedElement = null;
+
+    function handleDragStart(e) {
+        draggedElement = this;
+        this.classList.add('dragging');
+    }
+
+    function handleDragEnd(e) {
+        this.classList.remove('dragging');
+    }
+
+    function handleDragOver(e) {
+        e.preventDefault();
+    }
+
+    function handleDrop(e) {
+        e.preventDefault();
+        const row = e.currentTarget;
+        
+        if (draggedElement) {
+            const afterElement = getDragAfterElement(row, e.clientX);
+            if (afterElement) {
+                afterElement.parentElement.insertBefore(draggedElement, afterElement);
+            } else {
+                row.appendChild(draggedElement);
+            }
+            checkRowOrder(row);
+        }
+    }
+
+    function getDragAfterElement(container, x) {
+        const draggableElements = [...container.querySelectorAll('.word-block:not(.dragging)')];
+        return draggableElements.reduce((closest, child) => {
+            const box = child.getBoundingClientRect();
+            const offset = x - box.left - box.width/2;
+            return (offset < 0 && offset > closest.offset) ? { offset: offset, element: child } : closest;
+        }, { offset: Number.NEGATIVE_INFINITY }).element;
+    }
+
+    function checkRowOrder(row) {
+        const currentOrder = Array.from(row.children)
+            .map(block => block.textContent)
+            .join(' ')
+            .toLowerCase()
+            .replace(/[.?]/g, ''); // Ignora pontuação na comparação
+
+        const correctAnswer = row.getAttribute('data-correct').replace(/[.?]/g, '');
+
+        if (currentOrder === correctAnswer) {
+            if (!row.classList.contains('completed')) {
+                successSound.play();
+                triggerConfetti();
+                row.classList.add('completed');
+            }
+        } else {
+            row.classList.remove('completed');
+        }
+    }
+
+    function triggerConfetti() {
+        confetti({
+            particleCount: 100,
+            spread: 70,
+            origin: { y: 0.6 },
+            colors: ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff']
+        });
+    }
+
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
+
+    // Inicializa o jogo quando o DOM estiver pronto
+    document.addEventListener('DOMContentLoaded', initializeGame);
+    </script>
+</body>
+</html>

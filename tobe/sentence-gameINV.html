@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <!-- Previous head content remains the same -->
+    <style>
+        /* Previous styles remain the same */
+
+        /* Game specific styles */
+        .game-instructions {
+            background-color: #f8f9fa;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 2rem;
+            border-left: 4px solid #007bff;
+        }
+
+        .instruction-text {
+            margin-bottom: 0.5rem;
+        }
+
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .sentence-row {
+            display: flex;
+            gap: 0.5rem;
+            min-height: 50px;
+            background-color: #f8f9fa;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            align-items: center;
+        }
+
+        .word-block {
+            background-color: #007bff;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.25rem;
+            cursor: move;
+            user-select: none;
+            transition: transform 0.2s;
+        }
+
+        .word-block.dragging {
+            opacity: 0.5;
+            transform: scale(1.05);
+        }
+
+        .word-block:hover {
+            transform: scale(1.05);
+        }
+
+        /* Different colors for blocks */
+        .word-block:nth-child(2n) { background-color: #28a745; }
+        .word-block:nth-child(3n) { background-color: #dc3545; }
+        .word-block:nth-child(4n) { background-color: #ffc107; color: #000; }
+        .word-block:nth-child(5n) { background-color: #17a2b8; }
+        
+        .completed {
+            background-color: #dff0d8;
+            border: 2px solid #28a745;
+        }
+
+        #confetti-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <!-- Previous header content remains the same -->
+    <main>
+        <div class="content-wrapper">
+            <div class="content">
+                <h1 id="slide-title">Word Order Exercise</h1>
+
+                <div class="game-instructions">
+                    <p class="instruction-text">
+                        <strong>EN:</strong> Drag and drop the words to create correct sentences. Each row should form a proper question or statement.
+                    </p>
+                    <p class="instruction-text">
+                        <strong>PT:</strong> Arraste e solte as palavras para criar frases corretas. Cada linha deve formar uma pergunta ou afirmação adequada.
+                    </p>
+                </div>
+
+                <div class="game-container" id="gameContainer">
+                    <!-- Rows will be added by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <canvas id="confetti-canvas"></canvas>
+
+    <!-- Previous footer content remains the same -->
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script>
+        const sentences = [
+            {
+                scrambled: "Is she a Woman beautiful",
+                correct: "Is she a beautiful woman"
+            },
+            {
+                scrambled: "Are doctor your Father and your brother doctors",
+                correct: "Are your father and your brother doctors"
+            },
+            {
+                scrambled: "My she best friend is my",
+                correct: "She is my best friend"
+            },
+            {
+                scrambled: "He at home is he",
+                correct: "Is he at home"
+            },
+            {
+                scrambled: "Mary and John friends are Mary and John",
+                correct: "Are Mary and John friends"
+            },
+            {
+                scrambled: "You today aren´t happy aren't you",
+                correct: "Aren't you happy today"
+            }
+        ];
+
+        // Success sound
+        const successSound = new Audio('data:audio/mp3;base64,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');
+
+        // Initialize game
+        function initializeGame() {
+            const gameContainer = document.getElementById('gameContainer');
+            
+            sentences.forEach((sentence, rowIndex) => {
+                const row = document.createElement('div');
+                row.className = 'sentence-row';
+                row.setAttribute('data-correct', sentence.correct.toLowerCase());
+                
+                // Create and shuffle word blocks
+                const words = sentence.scrambled.split(' ');
+                shuffleArray(words);
+                
+                words.forEach(word => {
+                    const block = document.createElement('div');
+                    block.className = 'word-block';
+                    block.textContent = word;
+                    block.draggable = true;
+                    
+                    block.addEventListener('dragstart', handleDragStart);
+                    block.addEventListener('dragend', handleDragEnd);
+                    
+                    row.appendChild(block);
+                });
+                
+                row.addEventListener('dragover', handleDragOver);
+                row.addEventListener('drop', handleDrop);
+                
+                gameContainer.appendChild(row);
+            });
+        }
+
+        // Drag and drop handlers
+        let draggedElement = null;
+
+        function handleDragStart(e) {
+            draggedElement = this;
+            this.classList.add('dragging');
+        }
+
+        function handleDragEnd(e) {
+            this.classList.remove('dragging');
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            const row = e.currentTarget;
+            
+            if (draggedElement) {
+                const afterElement = getDragAfterElement(row, e.clientX);
+                if (afterElement) {
+                    afterElement.parentElement.insertBefore(draggedElement, afterElement);
+                } else {
+                    row.appendChild(draggedElement);
+                }
+                
+                checkRowOrder(row);
+            }
+        }
+
+        function getDragAfterElement(container, x) {
+            const draggableElements = [...container.querySelectorAll('.word-block:not(.dragging)')];
+            
+            return draggableElements.reduce((closest, child) => {
+                const box = child.getBoundingClientRect();
+                const offset = x - box.left - box.width / 2;
+                
+                if (offset < 0 && offset > closest.offset) {
+                    return { offset: offset, element: child };
+                } else {
+                    return closest;
+                }
+            }, { offset: Number.NEGATIVE_INFINITY }).element;
+        }
+
+        function checkRowOrder(row) {
+            const currentOrder = Array.from(row.children)
+                .map(block => block.textContent)
+                .join(' ')
+                .toLowerCase();
+            
+            if (currentOrder === row.getAttribute('data-correct')) {
+                if (!row.classList.contains('completed')) {
+                    celebrate(row);
+                    row.classList.add('completed');
+                }
+            } else {
+                row.classList.remove('completed');
+            }
+        }
+
+        function celebrate(row) {
+            // Play success sound
+            successSound.play();
+            
+            // Trigger confetti
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        // Initialize game when page loads
+        window.addEventListener('load', initializeGame);
+    </script>
+</body>
+</html>

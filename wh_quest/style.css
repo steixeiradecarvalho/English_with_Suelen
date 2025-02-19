@@ -1,0 +1,163 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    background-color: #f4f4f4;
+}
+
+.container {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+h1 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.drag-options {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.drag-option {
+    background-color: #3498db;
+    color: white;
+    padding: 15px 25px;
+    border-radius: 8px;
+    cursor: grab; /* Alterado para 'grab' para indicar que é arrastável */
+    user-select: none;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.drag-option:hover {
+    background-color: #2980b9;
+}
+
+.questions-container {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.question {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    text-align: left; /* Alinhamento do texto à esquerda dentro da questão */
+}
+
+.question img {
+    max-width: 150px; /* Ajuste o tamanho da imagem conforme necessário */
+    height: auto;
+    border-radius: 8px;
+}
+
+.question p {
+    margin: 0; /* Removendo margens padrão do parágrafo */
+    font-size: 18px;
+    color: #555;
+}
+
+.gap {
+    display: inline-block;
+    min-width: 80px; /* Largura mínima para o gap */
+    height: 30px;
+    border-bottom: 2px dashed #3498db;
+    margin: 0 5px;
+    text-align: center; /* Centralizando o texto dentro do gap */
+    font-weight: bold;
+    color: #3498db;
+}
+
+
+.gap.filled {
+    border: none; /* Remove a borda quando preenchido */
+    background-color: #d4edda; /* Cor de fundo verde claro para correto */
+    color: #27ae60; /* Cor do texto verde para correto */
+    padding: 5px 10px;
+    border-radius: 5px;
+    display: flex; /* Adicionado para centralizar o texto/bloco dentro do gap */
+    align-items: center; /* Centralizar verticalmente */
+    justify-content: center; /* Centralizar horizontalmente */
+}
+
+.drag-option.dropped { /* Estilos gerais para blocos 'dropped' - mesmo que já estejam definidos dentro de .gap.filled, pode ser útil ter aqui também para consistência*/
+    cursor: default;
+    background-color: #27ae60;
+    color: white;
+    border: none;
+}
+
+.gap.incorrect {
+    border-color: #e74c3c; /* Cor da borda vermelha para incorreto */
+    background-color: #fadbd8; /* Fundo vermelho claro para incorreto */
+}
+
+
+.gap.filled .drag-option.dropped { /* Estilo para o bloco 'dropped' dentro do gap 'filled' */
+    cursor: default; /* Garante que o cursor seja 'default' quando o bloco está fixo */
+    background-color: #27ae60; /* Cor de fundo verde mais forte para o bloco fixo */
+    color: white; /* Texto branco para melhor contraste */
+    border: none; /* Remove a borda do bloco quando fixo */
+}
+
+#confetti-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* Permite interações com elementos abaixo */
+}
+
+.confetti {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: #f09433;
+    border-radius: 50%;
+    opacity: 0; /* Inicialmente invisível */
+    animation: confetti-fall 1.5s ease-out forwards;
+}
+
+.confetti:nth-child(even) {
+    background-color: #e74c3c;
+}
+
+.confetti:nth-child(3n) {
+    background-color: #3498db;
+}
+
+.confetti:nth-child(4n) {
+    background-color: #9b59b6;
+}
+
+.confetti:nth-child(5n) {
+    background-color: #2ecc71;
+}
+
+
+@keyframes confetti-fall {
+    0% {
+        transform: translateY(-100vh) rotateX(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(100vh) rotateX(720deg);
+        opacity: 0.7;
+    }
+}

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Present - English Grammar</title>
+    <style>
+         body {
+            margin: 0;
+            overflow: hidden;
+            font-family: sans-serif;
+        }
+
+        #app {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .pages-container {            
+            flex-grow: 1; /* Ensures the container takes up available space */
+            overflow: hidden; /* Important to prevent scrollbars inside the container if iframe content overflows */
+        }
+
+        .pages-container .page {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5em;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            overflow: hidden; /* Prevent scrolling *inside* the iframe */
+            height: 100%;
+            width: 100%; /* Make iframe take full width */
+            display: block;  /* Prevents small spacing issues that can occur with iframes and flex */
+            border: none; /* Remove any default iframe border */
+        }
+
+        .page {
+            flex-grow: 1;
+            height: 100vh;
+        }     
+
+        .nav-bar {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .nav-arrow {
+            background: rgba(0, 0, 0, 0.7);
+            border: none;
+            width: 40px;
+            height: 40px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background 0.3s;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .nav-arrow:hover {
+            background: rgba(0, 0, 0, 0.9);
+        }
+
+        .progress-bar {
+            width: 2px;
+            height: 200px;
+            background-color: rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .progress-indicator {
+            width: 100%;
+            background-color: white;
+            position: absolute;
+            bottom: 0;
+            height: 0%;
+            transition: height 0.3s;
+        }
+
+        .pages-container .page:nth-child(1) { background-color: #87CEFF; }
+        .pages-container .page:nth-child(2) { background-color: #90EE90; }
+        .pages-container .page:nth-child(3) { background-color: #FFFFA0; }
+        .pages-container .page:nth-child(4) { background-color: #FF7F50; }
+        .pages-container .page:nth-child(5) { background-color: #DC143C; }
+        .pages-container .page:nth-child(6) { background-color: #9966CC; }
+        .pages-container .page:nth-child(7) { background-color: #FF69B4; }
+        .pages-container .page:nth-child(8) { background-color: #808080; }
+        .pages-container .page:nth-child(9) { background-color: #F8F8FF; }
+        .pages-container .page:nth-child(10) { background-color: #000000; }
+
+        ul {
+            text-align: left;
+            margin: 20px;
+            list-style-position: inside;
+        }
+
+        .example {
+            font-style: italic;
+            margin: 10px 0;
+        }
+
+        .highlight {
+            font-weight: bold;
+            color: #FFD700;
+        }
+
+        .explanation {
+            font-size: 0.9em;
+            margin-top: 10px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="nav-bar">
+            <button class="nav-arrow" @click="prevPage">↑</button>
+            <div class="progress-bar">
+                <div class="progress-indicator" :style="{ height: 100 - progress + '%' }"></div>
+            </div>
+            <button class="nav-arrow" @click="nextPage">↓</button>
+        </div>
+        <div class="pages-container">
+            <iframe v-for="(page, index) in pages" :key="index" :src="page.url" class="page" v-show="index === currentPage" frameborder="0"></iframe>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+    <script>
+        const { createApp, ref, computed, onMounted } = Vue
+
+        createApp({
+            setup() {
+                const currentPage = ref(0)
+                const pages = ref([
+                    { url: 'tobe_apresenta01.html' },
+                    { url: 'tobe_apresenta02.html' },
+                    { url: 'tobe_apresenta03.html' },
+                    { url: 'tobe_apresenta04.html' },
+                    { url: 'tobe_apresenta05.html' },
+                    { url: 'tobe_apresenta06.html' },
+                    { url: 'tobe_apresenta07.html' },
+                    { url: 'tobe_apresenta08.html' },
+                    { url: 'tobe_apresenta09.html' },
+                    { url: 'tobe_apresenta10.html' },
+                    { url: 'tobe_apresenta11.html' },
+                    { url: 'tobe_apresenta12.html' }
+                ])
+
+                const progress = computed(() => {
+                    return ((currentPage.value + 1) / pages.value.length) * 100
+                })
+
+                const prevPage = () => {
+                    currentPage.value = Math.max(0, currentPage.value - 1)
+                }
+
+                const nextPage = () => {
+                    currentPage.value = Math.min(pages.value.length - 1, currentPage.value + 1)
+                }
+
+                 const handleScroll = (event) => {
+                    const delta = Math.sign(event.deltaY);
+                    if (delta === -1) {
+                        prevPage();
+                    } else if (delta === 1) {
+                        nextPage();
+                    }
+                    event.preventDefault(); // Prevent default scroll behavior 
+                };
+                    
+                onMounted(() => {
+                    window.addEventListener('wheel', handleScroll, { passive: false }); // passive: false is important for preventDefault to work
+                });
+
+
+                return {
+                    currentPage,
+                    pages,
+                    progress,
+                    prevPage,
+                    nextPage
+                }
+            }
+        }).mount('#app')
+    </script>
+</body>
+</html>

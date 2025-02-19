@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Template Apresentação Inglês</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="logo-container">  <!-- Container for just the logo -->
+            <img src="logoWTS.png" alt="World Teaching School Logo" class="logo">
+        </div>
+        <div class="header-content">
+            <div class="course-info">
+                <span class="course-name">Inglês Básico I</span> - 
+                <span class="module-name" id="module-name">Nome do Módulo</span>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="content-wrapper">  <!-- Wrapper for content and navigation -->
+            <div class="content">
+                <h1 id="slide-title">Título do Slide</h1>
+
+                <div id="topics-container">
+                    <!-- Tópicos e Subtópicos -->
+                </div>
+
+
+                <div id="translations-container">
+                    <!-- Traduções -->
+                </div>
+
+
+                <div id="examples-container">
+                    <!-- Exemplos -->
+                </div>
+
+                <div class="table-container" id="table-container">
+                    <!-- Tabelas -->
+                </div>
+
+                <div class="image-container" id="image-container">
+                    <!-- Ilustrações -->
+                </div>
+
+            </div>
+            
+        </div>
+    </main>
+
+    <div class="navigation-bar">
+        <button class="nav-button prev-button" onclick="prevPage()">
+            <img src="volta.png" alt="Voltar">
+        </button>
+
+        <div class="progress-container">
+            <span class="progress-text">█▒▒▒▒▒▒▒▒▒</span>
+        </div>
+
+        <button class="nav-button next-button" onclick="nextPage()">
+            <img src="avanca.png" alt="Avançar">
+        </button>
+    </div>
+    
+    <footer>
+        <p>© 2025 World Teaching School</p>
+    </footer>
+
+    <script>
+        // Configuração inicial
+        const moduleName = "Verbo To Be";
+        document.getElementById('module-name').textContent = moduleName;
+
+        let currentPage = 4; // Começamos da página 1
+        const totalPages = 10;  // Total de páginas do módulo
+
+        function nextPage() {
+            window.location.href = 'index.html';
+        }
+
+        function prevPage() {
+            window.location.href = 'index.html';
+        }
+        // Você pode usar JavaScript para adicionar conteúdo dinamicamente 
+        // aos containers de tópicos, traduções, exemplos, tabelas e imagens.
+
+        // Exemplo de como adicionar um tópico dinamicamente:
+        // const topicsContainer = document.getElementById('topics-container');
+        // const newTopic = document.createElement('p');
+        // newTopic.classList.add('topic'); // Add the CSS class
+        // newTopic.textContent = 'Novo Tópico';
+        // topicsContainer.appendChild(newTopic);
+    </script>
+</body>
+</html>

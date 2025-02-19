@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatives Pronouns - Quando for Afirmativa</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0; /* Remove default margin */
+            background-color: #f8f9fa; /* Content background color */
+        }
+
+        header {
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center horizontally within the header */
+            background-color: #ffffff;
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+            width: 100%;
+            margin: 0 auto;  /* Center the header on the page! */
+            max-width: 960px; /* Optional: limit the header width */
+        }
+
+        .logo-container {  /* Style the logo container */
+            margin-bottom: 1rem; /* Space between logo and course info */
+        }
+
+        .header-content {
+            width: 100%;
+            text-align: center; /* Center the text */
+        }
+
+        .logo {
+            height: 50px;  /* Adjust logo size as needed */
+            display: block;  /* Ensures logo is centered correctly */
+
+        }
+
+
+        .course-name {
+            font-weight: bold;
+            color: #007bff;
+            font-size: 1.2rem;
+        }
+
+
+        .module-name {
+            color: #007bff;
+            font-size: 1.2rem;
+        }
+
+        main {
+            flex-grow: 1; /* Main content takes up available space */
+            padding: 2rem;
+            width: 100%;
+            padding-bottom: 40px; /* Adjust this value if needed */
+        }
+
+        .content {
+            max-width: 960px; /* Adjust as needed */
+            margin: 0 auto;
+            padding: 2rem;
+            background-color: #ffffff; /* White content background */
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            border-radius: 0.5rem;
+
+        }
+
+        .nav-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        .navigation-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            margin: 0 auto;
+            max-width: 960px;
+            margin-bottom: 1rem;
+        }
+
+        .nav-button img {
+            width: 24px;   /* Smaller image size */
+            height: 24px;  /* Smaller image size */            
+        }
+
+        #slide-title {
+            color: #007bff;
+            margin-top: 0;       /* Remove or reduce top margin */
+            margin-bottom: 1.0rem; /* Adjust bottom margin as needed */
+            margin-left: 0;      /* Remove or reduce left margin (if any) */
+            margin-right: 0;     /* Remove or reduce right margin (if any) */
+        }
+
+        #topics-container .topic,
+        #topics-container .subtopic {  /* Style topics and subtopics */
+            margin-bottom: 1rem;
+        }
+
+        .topic {
+            color: #343a40;
+            font-size: 1.4rem;
+            font-weight: bold;
+        }
+
+        .subtopic {
+            color: #343a40;
+            font-size: 1.2rem;
+            margin-left: 20px; /* Indent subtopics */
+        }
+
+        .progress-container {            
+            flex-grow: 1;
+            margin: 0 2rem;
+            font-family: monospace;
+            font-size: 24px;
+            text-align: center;
+            color: #e0e0e0;
+        }
+
+        #translations-container .translation {
+            color: #6c757d;
+            font-style: italic;
+            margin-bottom: 1rem;
+        }
+
+        #examples-container .example {
+            color: #28a745;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        /* Table styles */
+        .table-container table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+        }
+
+        .table-container th {
+            background-color: #007bff;
+            color: white;
+            padding: 0.75rem;
+            text-align: left; /* Or center, as needed */
+        }
+
+        .table-container td {
+            border: 1px solid #dee2e6; /* Light gray border */
+            padding: 0.75rem;
+        }
+
+        .image-container { /* Basic image container styling */
+            text-align: center; /* Center images by default */
+            margin-bottom: 1rem;
+        }
+
+        .image-container img {
+            max-width: 100%;
+            height: auto;
+            display: block;   /* Prevent image from becoming inline */
+            margin: 0 auto;   /* To center if smaller than container */
+        }
+
+        footer {
+            background-color: #007bff;
+            color: #ffffff;
+            text-align: center;
+            padding: 0.5rem;
+            width: 100%;
+        }
+        /* Adição para o layout de imagem + conteúdo - VALIDO SÓ PARA ESSE CASO */
+        .content-flex {
+            display: flex;
+            gap: 2rem;
+            align-items: flex-start;
+        }
+        .image-wrapper {
+            flex: 0 0 40%;
+            max-width: 400px;
+        }
+        .content-main {
+            flex: 1;
+        }
+        .image-container img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+        /* ESTILOS DO TEMPLATE x.html (REVISADOS) */
+        .example { 
+            color: #28a745 !important; /* Força aplicação */
+            font-weight: bold !important;
+            margin-bottom: 1rem;
+        }
+        .translation { 
+            color: #6c757d !important; 
+            font-style: italic !important;
+            display: block; /* Separação clara */
+            margin-top: 0.3rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <img src="logoWTS.png" alt="World Teaching School Logo" class="logo">
+        </div>
+        <div class="header-content">
+            <div class="course-info">
+                <span class="course-name">Inglês Básico I</span> - 
+                <span class="module-name">Verbo To Be</span>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="content">
+            <h1 id="slide-title">Relatives Pronouns - Quando for Afirmativa</h1>
+            
+            <div id="topics-container">
+                <p class="topic">Quando vier no meio da frase, normalmente é afirmativa, não seguirá as regras.</p>
+                
+                <div class="example">This is the girl who my mother likes. - <span class="translation">Colocamos o Who, porque o que vem antes do Who é uma pessoa.</span></div>
+                
+                <div class="example">Quando não vier como pergunta, poderá substituir pelo THAT, e o significado é "que" - <span class="translation">Passará a ser uma frase afirmativa.</span></div>
+                
+                <div class="example">This is the soap opera what I tell for you - <span class="translation">Está é a novela que eu falo para você</span> = This is the soap opera that I tell you.</div>
+                
+                <div class="example">This is the reason why I like you - This is the reason that I like you - <span class="translation">Está é a razão porque eu gosto de você.</span></div>
+                
+                <p class="topic">No item 2, os exemplos não são um WH Question, porque viraram afirmativa, e pode ser substituído por THAT.</p>
+            </div>
+
+            <!-- Containers vazios conforme template -->
+            <div id="translations-container"></div>
+            <div id="examples-container"></div>
+            <div class="table-container" id="table-container"></div>
+            <div class="image-container" id="image-container"></div>
+        </div>
+    </main>
+
+    <!-- Barra de navegação idêntica ao template -->
+    <div class="navigation-bar">
+        <button class="nav-button prev-button" onclick="prevPage()">
+            <img src="volta.png" alt="Voltar">
+        </button>
+        <div class="progress-container">
+            <span class="progress-text">████▒</span>
+        </div>
+        <button class="nav-button next-button" onclick="nextPage()">
+            <img src="avanca.png" alt="Avançar">
+        </button>
+    </div>
+
+    <footer>
+        <p>© 2025 World Teaching School</p>
+    </footer>
+
+    <!-- Script idêntico ao template -->
+    <script>
+        function nextPage() { window.location.href = 'whquest_apresenta05.html'; }
+        function prevPage() { window.location.href = 'whquest_apresenta03.html'; }
+    </script>
+</body>
+</html>

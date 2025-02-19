@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Present - Affirmative Sentences</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f8f9fa;
+        }
+
+        header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #ffffff;
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+            width: 100%;
+            margin: 0 auto;
+            max-width: 960px;
+        }
+
+        .logo-container {
+            margin-bottom: 1rem;
+        }
+
+        .header-content {
+            width: 100%;
+            text-align: center;
+        }
+
+        .logo {
+            height: 50px;
+            display: block;
+        }
+
+        .course-name {
+            font-weight: bold;
+            color: #007bff;
+            font-size: 1.2rem;
+        }
+
+        .module-name {
+            color: #007bff;
+            font-size: 1.2rem;
+        }
+
+        main {
+            flex-grow: 1;
+            padding: 1rem;
+            width: 100%;
+        }
+
+        .content {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 2rem;
+            background-color: #ffffff;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            border-radius: 0.5rem;
+        }
+
+        #slide-title {
+            color: #007bff;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .topic-container {
+            background-color: #f8f9fa;
+            border-left: 4px solid #007bff;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border-radius: 0 0.5rem 0.5rem 0;
+        }
+
+        .topic {
+            color: #343a40;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .example {
+            color: #28a745;
+            font-weight: bold;
+            margin: 1rem 0;
+            padding: 0.5rem;
+            background-color: #f8fff9;
+            border-radius: 0.25rem;
+        }
+
+        .highlight {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        .translation {
+            color: #6c757d;
+            font-style: italic;
+            margin-top: 0.5rem;
+        }
+
+        .pronoun-list {
+            display: inline-block;
+            color: #007bff;
+            font-weight: bold;
+        }
+
+        .navigation-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            margin: 0 auto;
+            max-width: 960px;
+            margin-bottom: 1rem;
+        }
+
+        .nav-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        .nav-button img {
+            width: 24px;
+            height: 24px;
+        }
+
+        .progress-container {
+            flex-grow: 1;
+            margin: 0 2rem;
+            font-family: monospace;
+            font-size: 24px;
+            text-align: center;
+            color: #e0e0e0;
+        }
+
+        footer {
+            background-color: #007bff;
+            color: #ffffff;
+            text-align: center;
+            padding: 0.5rem;
+            width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                padding: 1rem;
+                margin: 0.5rem;
+            }
+
+            #slide-title {
+                font-size: 1.5rem;
+            }
+
+            .topic {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <img src="logoWTS.png" alt="World Teaching School Logo" class="logo">
+        </div>
+        <div class="header-content">
+            <div class="course-info">
+                <span class="course-name">Inglês Básico I</span> - 
+                <span class="module-name">Simple Present</span>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="content">
+            <h1 id="slide-title">Frases Afirmativas</h1>
+
+            <div class="topic-container">
+                <div class="topic">
+                    Frases com Pronomes <span class="pronoun-list">I, you, we, they</span> e nomes de pessoas ou coisas – Não precisam de "s" no verbo.
+                </div>
+                <div class="example">
+                    Eat – Comer
+                    <div class="translation">You eat a cake – Você come um bolo.</div>
+                </div>
+            </div>
+
+            <div class="topic-container">
+                <div class="topic">
+                    Regra para frases que tiverem: <span class="pronoun-list">He/ She/ It</span> e nome de uma pessoa ou coisas – Precisa de "s" no verbo na Afirmativa.
+                </div>
+                <div class="example">
+                    She <span class="highlight">EATS</span> a cake
+                </div>
+            </div>
+
+            <div class="topic-container">
+                <div class="topic">
+                    Afirmativa, para <span class="pronoun-list">She/ He/ It</span> – Acrescenta o "s" na frase
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="navigation-bar">
+        <button class="nav-button prev-button" onclick="prevPage()">
+            <img src="volta.png" alt="Voltar">
+        </button>
+        <div class="progress-container">
+            <span class="progress-text">██▒▒▒▒▒▒▒▒</span>
+        </div>
+        <button class="nav-button next-button" onclick="nextPage()">
+            <img src="avanca.png" alt="Avançar">
+        </button>
+    </div>
+
+    <footer>
+        <p>© 2025 World Teaching School</p>
+    </footer>
+
+    <script>
+        const moduleName = "Simple Present";
+        document.getElementById('module-name').textContent = moduleName;
+
+        function nextPage() {
+            window.location.href = 'simpres_apresenta03.html';
+        }
+
+        function prevPage() {
+            window.location.href = 'simpres_apresenta01.html';
+        }
+    </script>
+</body>
+</html>

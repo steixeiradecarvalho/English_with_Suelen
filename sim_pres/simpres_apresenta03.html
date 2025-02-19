@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Present - Auxiliaries</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f8f9fa;
+        }
+
+        header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #ffffff;
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+            width: 100%;
+            margin: 0 auto;
+            max-width: 960px;
+        }
+
+        .logo-container {
+            margin-bottom: 1rem;
+        }
+
+        .header-content {
+            width: 100%;
+            text-align: center;
+        }
+
+        .logo {
+            height: 50px;
+            display: block;
+        }
+
+        .course-name {
+            font-weight: bold;
+            color: #007bff;
+            font-size: 1.2rem;
+        }
+
+        .module-name {
+            color: #007bff;
+            font-size: 1.2rem;
+        }
+
+        main {
+            flex-grow: 1;
+            padding: 1rem;
+            width: 100%;
+        }
+
+        .content {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 2rem;
+            background-color: #ffffff;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            border-radius: 0.5rem;
+        }
+
+        #slide-title {
+            color: #007bff;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .topic-container {
+            background-color: #f8f9fa;
+            border-left: 4px solid #007bff;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border-radius: 0 0.5rem 0.5rem 0;
+        }
+
+        .topic {
+            color: #343a40;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .auxiliaries-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .auxiliary-card {
+            background-color: #f8f9fa;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            border: 2px solid #007bff;
+        }
+
+        .auxiliary-title {
+            color: #007bff;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .auxiliary-pronouns {
+            color: #28a745;
+            font-style: italic;
+            margin-bottom: 0.5rem;
+        }
+
+        .auxiliary-use {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        .exception-list {
+            color: #dc3545;
+            font-weight: bold;
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: #fff3f3;
+            border-radius: 0.5rem;
+        }
+
+        .navigation-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            margin: 0 auto;
+            max-width: 960px;
+            margin-bottom: 1rem;
+        }
+
+        .nav-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        .nav-button img {
+            width: 24px;
+            height: 24px;
+        }
+
+        .progress-container {
+            flex-grow: 1;
+            margin: 0 2rem;
+            font-family: monospace;
+            font-size: 24px;
+            text-align: center;
+            color: #e0e0e0;
+        }
+
+        footer {
+            background-color: #007bff;
+            color: #ffffff;
+            text-align: center;
+            padding: 0.5rem;
+            width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                padding: 1rem;
+                margin: 0.5rem;
+            }
+
+            #slide-title {
+                font-size: 1.5rem;
+            }
+
+            .topic {
+                font-size: 1.1rem;
+            }
+
+            .auxiliaries-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <img src="logoWTS.png" alt="World Teaching School Logo" class="logo">
+        </div>
+        <div class="header-content">
+            <div class="course-info">
+                <span class="course-name">Inglês Básico I</span> - 
+                <span class="module-name">Simple Present</span>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="content">
+            <h1 id="slide-title">Frases Negativas e Interrogativas</h1>
+
+            <div class="topic-container">
+                <div class="topic">
+                    Quando não for Verbo TO BE (Am, Is, Are), Can, Could, May, Might, Would
+                </div>
+                <div class="exception-list">
+                    Precisa de auxiliar para negativa e interrogativa no presente.
+                </div>
+            </div>
+
+            <div class="topic-container">
+                <div class="topic">Auxiliar Presente:</div>
+                <div class="auxiliaries-grid">
+                    <div class="auxiliary-card">
+                        <div class="auxiliary-title">Do</div>
+                        <div class="auxiliary-pronouns">I, you, we, they, pessoas ou coisas</div>
+                        <div class="auxiliary-use">Frases Interrogativas</div>
+                    </div>
+
+                    <div class="auxiliary-card">
+                        <div class="auxiliary-title">Don't</div>
+                        <div class="auxiliary-pronouns">I, you, we, they, pessoas ou coisas</div>
+                        <div class="auxiliary-use">Frases Negativas</div>
+                    </div>
+
+                    <div class="auxiliary-card">
+                        <div class="auxiliary-title">Does</div>
+                        <div class="auxiliary-pronouns">he/ she/ it</div>
+                        <div class="auxiliary-use">Frases Interrogativas</div>
+                    </div>
+
+                    <div class="auxiliary-card">
+                        <div class="auxiliary-title">Doesn't</div>
+                        <div class="auxiliary-pronouns">he/ she/ it</div>
+                        <div class="auxiliary-use">Frases Negativas</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="navigation-bar">
+        <button class="nav-button prev-button" onclick="prevPage()">
+            <img src="volta.png" alt="Voltar">
+        </button>
+        <div class="progress-container">
+            <span class="progress-text">███▒▒▒▒▒▒▒</span>
+        </div>
+        <button class="nav-button next-button" onclick="nextPage()">
+            <img src="avanca.png" alt="Avançar">
+        </button>
+    </div>
+
+    <footer>
+        <p>© 2025 World Teaching School</p>
+    </footer>
+
+    <script>
+        const moduleName = "Simple Present";
+        document.getElementById('module-name').textContent = moduleName;
+
+        function nextPage() {
+            window.location.href = 'simpres_apresenta04.html';
+        }
+
+        function prevPage() {
+            window.location.href = 'simpres_apresenta02.html';
+        }
+    </script>
+</body>
+</html>

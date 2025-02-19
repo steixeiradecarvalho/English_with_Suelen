@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Present - Does and Doesn't Examples</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f8f9fa;
+        }
+
+        header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #ffffff;
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+            width: 100%;
+            margin: 0 auto;
+            max-width: 960px;
+        }
+
+        .logo-container {
+            margin-bottom: 1rem;
+        }
+
+        .header-content {
+            width: 100%;
+            text-align: center;
+        }
+
+        .logo {
+            height: 50px;
+            display: block;
+        }
+
+        .course-name {
+            font-weight: bold;
+            color: #007bff;
+            font-size: 1.2rem;
+        }
+
+        .module-name {
+            color: #007bff;
+            font-size: 1.2rem;
+        }
+
+        main {
+            flex-grow: 1;
+            padding: 1rem;
+            width: 100%;
+        }
+
+        .content {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 2rem;
+            background-color: #ffffff;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            border-radius: 0.5rem;
+        }
+
+        #slide-title {
+            color: #007bff;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .example-container {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background-color: #f8f9fa;
+            border-radius: 0.5rem;
+            border-left: 4px solid;
+        }
+
+        .affirmative {
+            border-left-color: #28a745;
+        }
+
+        .interrogative {
+            border-left-color: #007bff;
+        }
+
+        .negative {
+            border-left-color: #dc3545;
+        }
+
+        .sentence-type {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: #343a40;
+        }
+
+        .rule {
+            background-color: #fff3cd;
+            padding: 1rem;
+            border-radius: 0.25rem;
+            margin-bottom: 1rem;
+            color: #856404;
+            font-weight: 500;
+        }
+
+        .important {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        .sentence {
+            font-size: 1.4rem;
+            color: #343a40;
+            margin: 1rem 0;
+        }
+
+        .structure {
+            background-color: #e9ecef;
+            padding: 1rem;
+            border-radius: 0.25rem;
+            margin-top: 1rem;
+            color: #495057;
+            font-family: monospace;
+            font-size: 1.1rem;
+        }
+
+        .explanation {
+            color: #6c757d;
+            margin-top: 0.5rem;
+            font-style: italic;
+        }
+
+        .navigation-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            margin: 0 auto;
+            max-width: 960px;
+            margin-bottom: 1rem;
+        }
+
+        .nav-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        .nav-button img {
+            width: 24px;
+            height: 24px;
+        }
+
+        .progress-container {
+            flex-grow: 1;
+            margin: 0 2rem;
+            font-family: monospace;
+            font-size: 24px;
+            text-align: center;
+            color: #e0e0e0;
+        }
+
+        footer {
+            background-color: #007bff;
+            color: #ffffff;
+            text-align: center;
+            padding: 0.5rem;
+            width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                padding: 1rem;
+                margin: 0.5rem;
+            }
+
+            #slide-title {
+                font-size: 1.5rem;
+            }
+
+            .sentence {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <img src="logoWTS.png" alt="World Teaching School Logo" class="logo">
+        </div>
+        <div class="header-content">
+            <div class="course-info">
+                <span class="course-name">Inglês Básico I</span> - 
+                <span class="module-name">Simple Present</span>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="content">
+            <h1 id="slide-title">Exemplos: Does e Doesn't</h1>
+
+            <div class="example-container affirmative">
+                <div class="sentence-type">Afirmativa:</div>
+                <div class="rule">
+                    Quando for <span class="important">He, She, It</span> – Colocamos o "s" no verbo da afirmativa. 
+                    <br><strong>NÃO É PLURAL, É UMA REGRA GRAMATICAL.</strong>
+                </div>
+                <div class="sentence">She <span class="important">EATS</span> a cake</div>
+            </div>
+
+            <div class="example-container interrogative">
+                <div class="sentence-type">Interrogativa: Auxiliar que determina o tempo</div>
+                <div class="rule">
+                    Como é <span class="important">She</span> – Frase no Presente – Usamos o <span class="important">DOES</span>
+                </div>
+                <div class="sentence"><span class="important">Does</span> She EAT a cake?</div>
+                <div class="explanation">Não colocamos o "s" porque ele já está no DOES</div>
+            </div>
+
+            <div class="example-container negative">
+                <div class="sentence-type">Negativa: Auxiliar que determina o tempo</div>
+                <div class="structure">
+                    Ordem: Pessoa + Auxiliar + verbo + complemento
+                </div>
+                <div class="sentence">She <span class="important">doesn't</span> eat a cake</div>
+            </div>
+        </div>
+    </main>
+
+    <div class="navigation-bar">
+        <button class="nav-button prev-button" onclick="prevPage()">
+            <img src="volta.png" alt="Voltar">
+        </button>
+        <div class="progress-container">
+            <span class="progress-text">██████▒▒▒▒</span>
+        </div>
+        <button class="nav-button next-button" onclick="nextPage()">
+            <img src="avanca.png" alt="Avançar">
+        </button>
+    </div>
+
+    <footer>
+        <p>© 2025 World Teaching School</p>
+    </footer>
+
+    <script>
+        const moduleName = "Simple Present";
+        document.getElementById('module-name').textContent = moduleName;
+
+        function nextPage() {
+            window.location.href = 'simpres_apresenta07.html';
+        }
+
+        function prevPage() {
+            window.location.href = 'simpres_apresenta05.html';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Template Apresentação Inglês</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        /* Estilos do template original */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+            
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+
+        header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #ffffff;
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+            width: 100%;
+            margin: 0 auto;
+            max-width: 960px;
+        }
+
+        .logo-container {
+            margin-bottom: 1rem;
+        }
+
+        .header-content {
+            width: 100%;
+            text-align: center;
+        }
+
+        .logo {
+            height: 50px;
+            display: block;
+        }
+
+        .course-name {
+            font-weight: bold;
+            color: #007bff;
+            font-size: 1.2rem;
+        }
+
+        .module-name {
+            color: #007bff;
+            font-size: 1.2rem;
+        }
+
+        main {
+            flex-grow: 1;
+            padding: 2rem;
+            width: 100%;
+            padding-bottom: 20px;
+        }
+
+        .content {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 2rem;
+            background-color: #ffffff;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            border-radius: 0.5rem;
+        }
+
+        .back-button-container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 1rem;
+            display: flex;
+            justify-content: center;
+            background-color: #f8f9fa;
+            width: 100%;
+        }
+
+        .back-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-button:hover {
+            background-color: #0056b3;
+        }
+
+        footer {
+            background-color: #007bff;
+            color: #ffffff;
+            text-align: center;
+            padding: 0.5rem;
+            width: 100%;
+        }
+
+        /* Estilos específicos do jogo */
+        .game-container {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .game-title {
+            color: #e84118;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            font-size: 1.8em;
+        }
+
+        .sentence {
+            margin: 20px 0;
+            font-size: 1.2em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .dropzone {
+            width: 80px;
+            height: 40px;
+            border: 2px dashed #007bff;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+        }
+
+        .dropzone.active {
+            background-color: #e7f1ff;
+            border-style: solid;
+        }
+
+        .words-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 40px;
+            justify-content: center;
+        }
+
+        .draggable {
+            background: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: move;
+            user-select: none;
+            transition: transform 0.2s ease;
+            font-weight: bold;
+        }
+
+        .draggable:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .correct {
+            background-color: #28a745;
+            border-color: #28a745;
+            color: white;
+        }
+
+        /* Particular desse código - Não pertence ao template */
+        .draggable:nth-child(1) { background-color: #e84118; }
+        .draggable:nth-child(2) { background-color: #4a69bd; }
+        .draggable:nth-child(3) { background-color: #6ab04c; }
+        .draggable:nth-child(4) { background-color: #f0932b; }
+        .draggable:nth-child(5) { background-color: #eb4d4b; }
+        .draggable:nth-child(6) { background-color: #22a6b3; }
+        .draggable:nth-child(7) { background-color: #be2edd; }
+
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <img src="logoWTS.png" alt="World Teaching School Logo" class="logo">
+        </div>
+        <div class="header-content">
+            <div class="course-info">
+                <span class="course-name">Inglês Básico I</span> - 
+                <span class="module-name" id="module-name">Nome do Módulo</span>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="content">
+            <div class="game-container">
+                <h2 class="game-title">Complete with "To Be"</h2>
+                <div id="sentences"></div>
+                <div class="words-container" id="words"></div>
+            </div>
+        </div>
+    </main>
+
+    <div class="back-button-container">
+        <button class="back-button" onclick="goBack()">
+            <img src="volta.png" alt="Voltar" style="width: 20px; height: 20px;">
+            Voltar
+        </button>
+    </div>
+    
+    <footer>
+        <p>© 2025 World Teaching School</p>
+    </footer>
+
+    <script>
+        // Configuração inicial do template
+        const moduleName = "Verbo To Be";
+        document.getElementById('module-name').textContent = moduleName;
+
+        function goBack() {
+            window.location.href = 'index.html';
+        }
+
+        // Script do jogo
+        const sentences = [
+            { text: ["", " you my friend"], correct: "Are" },
+            { text: ["You ", " my sister"], correct: "aren't" },
+            { text: ["", " they at home?"], correct: "Are" },
+            { text: ["It ", " a hot day"], correct: "isn't" },
+            { text: ["I ", " at school"], correct: "am" },
+            { text: ["", " she good?"], correct: "Is" }
+        ];
+
+        const words = ["am", "are", "is", "isn't", "aren't", "Are", "Is"];
+
+        function createSentences() {
+            const container = document.getElementById("sentences");
+            sentences.forEach((sentence, index) => {
+                const div = document.createElement("div");
+                div.className = "sentence";
+                div.innerHTML = `
+                    ${sentence.text[0]}
+                    <div class="dropzone" data-correct="${sentence.correct}" data-index="${index}"></div>
+                    ${sentence.text[1]}
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function createWords() {
+            const container = document.getElementById("words");
+            words.sort(() => Math.random() - 0.5).forEach(word => {
+                const div = document.createElement("div");
+                div.className = "draggable";
+                div.setAttribute("draggable", "true");
+                div.textContent = word;
+                container.appendChild(div);
+            });
+        }
+
+        function triggerConfetti() {
+            confetti({
+                particleCount: 150,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ['#007bff', '#28a745', '#ffc107']
+            });
+        }
+
+        function initDragAndDrop() {
+            const draggables = document.querySelectorAll('.draggable');
+            const dropzones = document.querySelectorAll('.dropzone');
+
+            draggables.forEach(draggable => {
+                draggable.addEventListener('dragstart', function(e) {
+                    e.dataTransfer.setData('text/plain', e.target.textContent);
+                    setTimeout(() => e.target.classList.add('dragging'), 0);
+                });
+
+                draggable.addEventListener('dragend', function(e) {
+                    e.target.classList.remove('dragging');
+                });
+            });
+
+            dropzones.forEach(dropzone => {
+                dropzone.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                    this.classList.add('active');
+                });
+
+                dropzone.addEventListener('dragleave', function(e) {
+                    this.classList.remove('active');
+                });
+
+                dropzone.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    const word = e.dataTransfer.getData('text/plain');
+                    const correct = this.getAttribute('data-correct');
+                    
+                    this.textContent = word;
+                    this.classList.remove('active');
+
+                    if (word === correct && !this.classList.contains('correct')) {
+                        this.classList.add('correct');
+                        setTimeout(triggerConfetti, 100);
+                    }
+                });
+            });
+        }
+
+        // Inicialização do jogo após carregamento da página
+        document.addEventListener('DOMContentLoaded', () => {
+            createSentences();
+            createWords();
+            initDragAndDrop();
+        });
+    </script>
+</body>
+</html>

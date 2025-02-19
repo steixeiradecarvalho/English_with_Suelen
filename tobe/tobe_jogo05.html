@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Template Apresentação Inglês</title>
+    <style>
+        /* Previous styles remain the same */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f8f9fa;
+        }
+
+        header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #ffffff;
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+            width: 100%;
+            margin: 0 auto;
+            max-width: 960px;
+        }
+
+        .logo-container {
+            margin-bottom: 1rem;
+        }
+
+        .header-content {
+            width: 100%;
+            text-align: center;
+        }
+
+        .logo {
+            height: 50px;
+            display: block;
+        }
+
+        .course-name {
+            font-weight: bold;
+            color: #007bff;
+            font-size: 1.2rem;
+        }
+
+        .module-name {
+            color: #007bff;
+            font-size: 1.2rem;
+        }
+
+        main {
+            flex-grow: 1;
+            padding: 2rem;
+            width: 100%;
+            padding-bottom: 20px; /* Reduced to accommodate the back button */
+        }
+
+        .content {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 2rem;
+            background-color: #ffffff;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            border-radius: 0.5rem;
+        }
+
+        /* Updated back button styles */
+        .back-button-container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 1rem;
+            display: flex;
+            justify-content: center; /* Center the button */
+            background-color: #f8f9fa;
+            width: 100%;
+        }
+
+        .back-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Rest of the existing styles remain the same */
+        #slide-title {
+            color: #007bff;
+            margin-top: 0;
+            margin-bottom: 1.0rem;
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+        #topics-container .topic,
+        #topics-container .subtopic {
+            margin-bottom: 1rem;
+        }
+
+        .topic {
+            color: #343a40;
+            font-size: 1.4rem;
+            font-weight: bold;
+        }
+
+        .subtopic {
+            color: #343a40;
+            font-size: 1.2rem;
+            margin-left: 20px;
+        }
+
+        #translations-container .translation {
+            color: #6c757d;
+            font-style: italic;
+            margin-bottom: 1rem;
+        }
+
+        #examples-container .example {
+            color: #28a745;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .table-container table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+        }
+
+        .table-container th {
+            background-color: #007bff;
+            color: white;
+            padding: 0.75rem;
+            text-align: left;
+        }
+
+        .table-container td {
+            border: 1px solid #dee2e6;
+            padding: 0.75rem;
+        }
+
+        .image-container {
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .image-container img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+
+        footer {
+            background-color: #007bff;
+            color: #ffffff;
+            text-align: center;
+            padding: 0.5rem;
+            width: 100%;
+        }
+
+        /* Estilos específicos para o jogo de concordância pronominal */
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        .game-title {
+            color: #007bff;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .game-instructions {
+            background-color: #f8f9fa;
+            border-left: 4px solid #007bff;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            border-radius: 0 0.5rem 0.5rem 0;
+        }
+
+        .container {
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .pronouns-box {
+            width: 100%;
+            max-width: 400px;
+            border: 3px solid #007bff;
+            padding: 15px;
+            border-radius: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            background-color: #e6f2ff;
+            align-content: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .target-box {
+            width: 150px;
+            height: 320px;
+            border: 3px dashed #0056b3;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            background-color: #f0f8ff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .pronoun {
+            width: 100px;
+            height: 100px;
+            border: 2px solid #3498db;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: move;
+            background-color: #ffffff;
+            user-select: none;
+            transition: transform 0.2s;
+            padding: 5px;
+        }
+
+        .pronoun img {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            margin-bottom: 5px;
+        }
+
+        .pronoun span {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .pronoun:hover {
+            transform: scale(1.05);
+            background-color: #e8f4fc;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .target-box h2 {
+            color: #007bff;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .correct {
+            border-color: #27ae60 !important;
+            background-color: #d1f2eb !important;
+        }
+
+        .incorrect {
+            border-color: #e74c3c !important;
+            background-color: #fadbd8 !important;
+        }
+
+        .drag-over {
+            background-color: #e3f2fd;
+            border: 3px dashed #2196f3;
+        }
+
+        #reset-btn {
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            display: block;
+        }
+
+        #reset-btn:hover {
+            background-color: #0056b3;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .target-box {
+                width: 100%;
+                max-width: 400px;
+                height: auto;
+                min-height: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <img src="logoWTS.png" alt="World Teaching School Logo" class="logo">
+        </div>
+        <div class="header-content">
+            <div class="course-info">
+                <span class="course-name">Inglês Básico I</span> - 
+                <span class="module-name" id="module-name">Nome do Módulo</span>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="content-wrapper">
+            <div class="content">
+                <!-- Jogo de Concordância Pronominal -->
+                <div class="game-container">
+                    <h1 class="game-title">Jogo de Concordância Pronominal</h1>
+                    
+                    <div class="game-instructions">
+                        <p><strong>Instruções:</strong> Arraste cada pronome para o box correspondente ao verbo correto (<em>am</em>, <em>is</em> ou <em>are</em>). Descubra os pares corretos tentando combinar cada pronome com sua forma verbal apropriada do verbo <em>to be</em>.</p>
+                    </div>
+                    
+                    <div class="container">
+                        <div class="pronouns-box" id="pronounsContainer">
+                            <h2>Pronomes</h2>
+                            <div class="pronoun" draggable="true" data-correct="am">
+                                <img src="I.png" alt="I">
+                                <span>I</span>
+                            </div>
+                            <div class="pronoun" draggable="true" data-correct="are">
+                                <img src="you.png" alt="you">
+                                <span>you</span>
+                            </div>
+                            <div class="pronoun" draggable="true" data-correct="is">
+                                <img src="he.png" alt="he">
+                                <span>he</span>
+                            </div>
+                            <div class="pronoun" draggable="true" data-correct="is">
+                                <img src="she.png" alt="she">
+                                <span>she</span>
+                            </div>
+                            <div class="pronoun" draggable="true" data-correct="is">
+                                <img src="it.png" alt="it">
+                                <span>it</span>
+                            </div>
+                            <div class="pronoun" draggable="true" data-correct="are">
+                                <img src="we.png" alt="we">
+                                <span>we</span>
+                            </div>
+                            <div class="pronoun" draggable="true" data-correct="are">
+                                <img src="they.png" alt="they">
+                                <span>they</span>
+                            </div>
+                        </div>
+
+                        <div class="target-box" id="amBox">
+                            <h2>am</h2>
+                        </div>
+
+                        <div class="target-box" id="isBox">
+                            <h2>is</h2>
+                        </div>
+                        
+                        <div class="target-box" id="areBox">
+                            <h2>are</h2>
+                        </div>
+                    </div>
+
+                    <button id="reset-btn" onclick="resetGame()">Reiniciar Jogo</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="back-button-container">
+        <button class="back-button" onclick="goBack()">
+            <img src="volta.png" alt="Voltar" style="width: 20px; height: 20px;">
+            Voltar
+        </button>
+    </div>
+    
+    <footer>
+        <p>© 2025 World Teaching School</p>
+    </footer>
+
+    <script>
+        // Configuração inicial do template
+        const moduleName = "Verbo To Be";
+        document.getElementById('module-name').textContent = moduleName;
+
+        function goBack() {
+            window.location.href = 'index.html';
+        }
+
+        // Script do jogo de concordância pronominal
+        let draggedItem = null;
+
+        // Configuração inicial dos eventos
+        document.querySelectorAll('.pronoun').forEach(item => {
+            item.addEventListener('dragstart', handleDragStart);
+            item.addEventListener('dragend', handleDragEnd);
+        });
+
+        document.querySelectorAll('.target-box').forEach(box => {
+            box.addEventListener('dragover', handleDragOver);
+            box.addEventListener('dragenter', handleDragEnter);
+            box.addEventListener('dragleave', handleDragLeave);
+            box.addEventListener('drop', handleDrop);
+        });
+
+        function handleDragStart(e) {
+            draggedItem = this;
+            this.classList.add('dragging');
+            setTimeout(() => {
+                this.style.opacity = '0.5';
+            }, 0);
+            // Adicionar dados à operação de arrastar
+            e.dataTransfer.setData('text/plain', '');
+            e.dataTransfer.effectAllowed = 'move';
+        }
+
+        function handleDragEnd(e) {
+            this.classList.remove('dragging');
+            this.style.opacity = '1';
+            draggedItem = null;
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+        }
+
+        function handleDragEnter(e) {
+            e.preventDefault();
+            this.classList.add('drag-over');
+        }
+
+        function handleDragLeave(e) {
+            this.classList.remove('drag-over');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            this.classList.remove('drag-over');
+            
+            if (!draggedItem) return;
+
+            const targetBox = this;
+            const correctAnswer = draggedItem.dataset.correct;
+            const isCorrect = targetBox.id === `${correctAnswer}Box`;
+
+            // Efeito visual de feedback
+            targetBox.classList.add(isCorrect ? 'correct' : 'incorrect');
+            setTimeout(() => {
+                targetBox.classList.remove('correct', 'incorrect');
+            }, 800);
+
+            if (isCorrect) {
+                targetBox.appendChild(draggedItem);
+                draggedItem.style.cursor = 'default';
+                checkCompletion();
+            }
+        }
+
+        function checkCompletion() {
+            const remaining = document.querySelectorAll('#pronounsContainer .pronoun').length;
+            if (remaining === 0) {
+                setTimeout(() => {
+                    alert('Parabéns! Você completou todas as correspondências corretamente!');
+                }, 300);
+            }
+        }
+
+        function resetGame() {
+            const pronounsContainer = document.getElementById('pronounsContainer');
+            document.querySelectorAll('.target-box .pronoun').forEach(item => {
+                item.style.cursor = 'move';
+                pronounsContainer.appendChild(item);
+            });
+        }
+    </script>
+</body>
+</html>

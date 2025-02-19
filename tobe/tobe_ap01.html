@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bem-vindo ao estudo do Verbo to be</title> 
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <img src="logoWTS.png" alt="World Teaching School Logo" class="logo">
+        </div>
+        <div class="header-content">
+            <div class="course-info">
+                <span class="course-name">Inglês Básico I</span> -
+                <span class="module-name" id="module-name">Verbo To Be</span>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="content-wrapper">
+            <div class="content">
+                <h1 id="slide-title">Bem-vindo ao estudo do Verbo to be</h1>
+                <div class="image-container"> <img src="abertura.png" alt="Imagem de abertura"> </div>
+
+                <div id="topics-container">
+                    <p class="topic">Vamos aprender sobre o verbo mais fundamental e versátil do inglês!</p>
+                </div>
+
+                <div id="translations-container"></div>
+                <div id="examples-container"></div>
+                <div id="table-container"></div>
+            </div>
+        </div>
+    </main>
+
+    <div class="navigation-bar">
+        <button class="nav-button prev-button" onclick="prevPage()">
+            <img src="volta.png" alt="Voltar">
+        </button>
+
+        <div class="progress-container">
+            <span class="progress-text">█▒▒▒▒▒▒▒▒▒</span>
+        </div>
+
+        <button class="nav-button next-button" onclick="nextPage()">
+            <img src="avanca.png" alt="Avançar">
+        </button>
+    </div>
+
+    <footer>
+        <p>© 2025 World Teaching School</p>
+    </footer>
+
+    <script>
+        const moduleName = "Verbo To Be"; 
+        document.getElementById('module-name').textContent = moduleName;
+
+        function nextPage() {
+            window.location.href = 'simpres_apresenta05.html';
+        }
+
+        function prevPage() {
+            window.location.href = 'simpres_apresenta03.html';
+        }
+    </script>
+</body>
+</html>
