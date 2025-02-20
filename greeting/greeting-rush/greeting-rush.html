@@ -179,7 +179,7 @@
             </div>
         </div>
     </div>
-
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <script>
         // Dados incorporados diretamente para evitar problemas de carregamento
         const greetingsData = [
@@ -207,8 +207,8 @@
                 this.gameState = {
                     score: 0,
                     timeLeft: 90,
-                    interactions: 0,
-                    correctCount: 0,
+                    interactions: 0,    // Manteremos essa variável, mas para outro propósito
+                    correctCount: 0,    // Esta será a variável importante para contagem
                     activeAliens: [],
                     timerInterval: null
                 };
@@ -234,7 +234,7 @@
                 };
                 
                 // Criar aliens simples com emojis para evitar problemas de carregamento de imagens
-                this.alienEmojis = ["👽", "👾", "🤖", "👹", "🛸"];
+                this.alienEmojis = ["👽", "👾", "🤖", "🤖", "🛸"];
             }
 
             startGame() {
@@ -250,6 +250,25 @@
                 this.gameState.interactions = 0;
                 this.gameState.correctCount = 0;
                 this.gameState.activeAliens = [];
+
+                function triggerConfetti() {
+                    const count = 200;
+                    const defaults = {
+                        origin: { y: 0.7 }
+                    };
+
+                    const fire = (particleRatio, opts) => {
+                        confetti(Object.assign({}, defaults, opts, {
+                            particleCount: Math.floor(count * particleRatio)
+                        }));
+                    };
+
+                    fire(0.25, { spread: 26, startVelocity: 55 });
+                    fire(0.2, { spread: 60 });
+                    fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
+                    fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
+                    fire(0.1, { spread: 120, startVelocity: 45 });
+                }
                 
                 // Atualizar UI
                 this.updateUI();
@@ -296,15 +315,16 @@
 
             spawnAlien() {
                 if (this.gameState.activeAliens.length >= 5) return;
-                if (this.gameState.interactions >= 20) {
-                    clearInterval(this.spawnAlienInterval);
-                    return;
-                }
+                // Removendo a verificação que limitava a geração de alienígenas a 20
+                // if (this.gameState.interactions >= 20) {
+                //     clearInterval(this.spawnAlienInterval);
+                //     return;
+                // }
 
-                // Incrementar interações
-                this.gameState.interactions++;
-                this.updateUI();
-
+                // Não incrementamos mais interactions aqui
+                // Agora interactions representa apenas um contador interno do jogo
+                // this.gameState.interactions++;
+                
                 // Verificar se temos dados de saudações
                 if (!this.greetingsData || this.greetingsData.length === 0) {
                     console.error("Dados de saudações não disponíveis");
@@ -403,6 +423,15 @@
                     
                     // Efeito visual de acerto
                     this.showFeedback(true);
+                    
+                    // Verificar se atingiu 20 acertos
+                    if (this.gameState.correctCount >= 20) {
+                        // Adicionando method call explícito
+                        this.triggerConfetti();
+                        // Finalizando o jogo após atingir 20 acertos
+                        clearInterval(this.spawnAlienInterval);
+                        this.endGame();
+                    }
                 } else {
                     // Resposta incorreta
                     this.showFeedback(false);
@@ -417,12 +446,6 @@
                 
                 // Atualizar UI
                 this.updateUI();
-                
-                // Verificar se chegou ao final do jogo
-                if (this.gameState.interactions >= 20) {
-                    clearInterval(this.spawnAlienInterval);
-                    this.endGame();
-                }
             }
 
             showFeedback(isCorrect) {
@@ -451,9 +474,28 @@
                 // Atualizar elementos de UI
                 this.scoreElement.textContent = `⭐ ${this.gameState.score}`;
                 this.timerElement.textContent = `⏱️ ${this.gameState.timeLeft}s`;
-                this.interactionsElement.textContent = `📝 ${this.gameState.interactions}/20`;
+                // Agora mostramos os acertos, não as interações
+                this.interactionsElement.textContent = `📝 ${this.gameState.correctCount}/20`;
             }
+            triggerConfetti() {
+                const count = 200;
+                const defaults = {
+                    origin: { y: 0.7 }
+                };
 
+                const fire = (particleRatio, opts) => {
+                    confetti(Object.assign({}, defaults, opts, {
+                        particleCount: Math.floor(count * particleRatio)
+                    }));
+                };
+
+                fire(0.25, { spread: 26, startVelocity: 55 });
+                fire(0.2, { spread: 60 });
+                fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
+                fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
+                fire(0.1, { spread: 120, startVelocity: 45 });
+            }
+            
             endGame() {
                 // Atualizar resultados finais
                 this.correctAnswersElement.textContent = this.gameState.correctCount;
