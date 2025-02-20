@@ -189,6 +189,18 @@
         height: 3em;
       }
     }
+    #backButton {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 15px;
+      background-color: #5bc0de; /* Cor de fundo azul */
+      color: white;          /* Cor do texto branca */
+      border: none;          /* Remove a borda padrão */
+      border-radius: 5px;    /* Arredonda os cantos */
+      text-decoration: none; /* Remove sublinhado do link */
+      display: inline-block; /* Permite estilizar como bloco */
+    }
   </style>
 </head>
 
@@ -239,7 +251,8 @@
       </div>
     </div>
     <div id="result"></div>
-    <button id="checkButton" onclick="checkAnswers()">Verificar Respostas</button>
+    <button id="checkButton" onclick="checkAnswers()">Verificar Respostas</button>    
+     <a id="backButton" href=".././index.html">Voltar</a>
   </div>
   <script>
     const subjects = ["He", "Love", "She", "Mary", "Mary and John", "John", "Peter", "you", "we", "The movie", "your father", "your brother and sister"];

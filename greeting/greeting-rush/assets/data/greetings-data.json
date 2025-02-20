@@ -1,0 +1,16 @@
+{
+    "greetings": [
+      { "prompt": "Hello!", "answer": "Hi!", "context": "informal" },
+      { "prompt": "Good morning!", "answer": "Good morning!", "context": "time" },
+      { "prompt": "How are you?", "answer": "I'm fine, thank you!", "context": "conversation" },
+      { "prompt": "Good evening!", "answer": "Good evening!", "context": "time" },
+      { "prompt": "What's up?", "answer": "Not much!", "context": "informal" },
+      { "prompt": "Nice to meet you!", "answer": "Nice to meet you too!", "context": "introduction" },
+      { "prompt": "See you later!", "answer": "See you soon!", "context": "farewell" },
+      { "prompt": "Goodbye!", "answer": "Bye!", "context": "farewell" },
+      { "prompt": "Take care!", "answer": "You too!", "context": "farewell" },
+      { "prompt": "How's it going?", "answer": "Pretty good!", "context": "conversation" }
+    ]
+}
+
+  

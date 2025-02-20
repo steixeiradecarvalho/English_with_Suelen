@@ -143,6 +143,18 @@
       color: #2d3436;
       min-height: 30px;
     }
+    #backButton {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 15px;
+      background-color: #5bc0de; /* Cor de fundo azul */
+      color: white;          /* Cor do texto branca */
+      border: none;          /* Remove a borda padrão */
+      border-radius: 5px;    /* Arredonda os cantos */
+      text-decoration: none; /* Remove sublinhado do link */
+      display: inline-block; /* Permite estilizar como bloco */
+    }
   </style>
 </head>
 <body>
@@ -179,7 +191,9 @@
         They <div class="dropzone" data-answer="THINK"></div> it's a good idea.
       </div>
     </div>
-
+    <div>
+      <a id="backButton" href=".././index.html">Voltar</a>
+    </div>
     <div class="feedback" id="feedback"></div>
   </div>
 

@@ -32,6 +32,15 @@
       margin: 0 auto;
     }
 
+    .voltar {
+      flex: 1;
+      width: 1%;
+      max-width: 800px;
+      text-align: center;
+      position: relative;
+      margin: 0 auto;
+    }
+
     .title {
       font-size: 2.5em;
       margin-bottom: 30px;
@@ -195,6 +204,7 @@
       font-size: 1.2em;
       opacity: 0;
       transition: opacity 0.3s ease;
+      text-align: center;
     }
 
     .feedback.show {
@@ -245,6 +255,18 @@
         transparent
       );
     }
+    #backButton {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 15px;
+      background-color: #5bc0de; /* Cor de fundo azul */
+      color: white;          /* Cor do texto branca */
+      border: none;          /* Remove a borda padrão */
+      border-radius: 5px;    /* Arredonda os cantos */
+      text-decoration: none; /* Remove sublinhado do link */
+      display: inline-block; /* Permite estilizar como bloco */
+    }
   </style>
 </head>
 <body>
@@ -275,6 +297,9 @@
 
     <div class="progress" id="progress">Question 1/5</div>
     <div id="feedback" class="feedback"></div>
+  </div>
+  <div class="voltar">
+    <a id="backButton" href=".././index.html">Voltar</a> <footer></footer>
   </div>
 
   <script>

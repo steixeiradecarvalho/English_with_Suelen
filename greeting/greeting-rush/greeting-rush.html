@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Greeting Rush</title>
+    <style>
+        body {
+            margin: 0;
+            background: url('assets/background-space.jpg') no-repeat center center fixed;
+            background-size: cover;
+            font-family: 'Arial', sans-serif;
+            touch-action: manipulation;
+        }
+
+        .game-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            color: white;
+            font-size: 1.2em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            margin-bottom: 20px;
+        }
+
+        .game-area {
+            position: relative;
+            height: 60vh;
+            border: 2px solid #4CAF50;
+            border-radius: 15px;
+            overflow: hidden;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .alien {
+            position: absolute;
+            width: 80px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .speech-bubble {
+            position: absolute;
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            min-width: 120px;
+            text-align: center;
+            font-weight: bold;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .answers-container {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+            justify-content: center;
+        }
+
+        .answer-box {
+            background: #4CAF50;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            user-select: none;
+            transition: transform 0.2s;
+        }
+
+        .answer-box:hover {
+            transform: scale(1.05);
+        }
+
+        .powerup {
+            position: absolute;
+            width: 40px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .explosion {
+            position: absolute;
+            width: 64px;
+            height: 64px;
+            background-image: url('assets/explosion-sprite.png');
+            animation: playExplosion 0.8s steps(8) forwards;
+        }
+
+        @keyframes playExplosion {
+            100% { background-position: -512px; }
+        }
+
+        #game-over button, #game-over a { /* Estilizando ambos os botões */
+            display: block;          /* Para ocupar toda a largura */
+            margin-top: 1rem;      /* Espaçamento entre os botões */
+            padding: 10px 20px;    /* Preenchimento interno */
+            border: none;           /* Sem borda */
+            border-radius: 5px;    /* Cantos arredondados */
+            cursor: pointer;        /* Cursor de mão */
+            text-decoration: none; /* Sem sublinhado no link */
+            font-size: 16px;
+        }
+
+
+        #game-over button {
+            background-color: #4CAF50; /* Verde */
+            color: white;
+        }
+
+        #game-over a {  /* Estilizando o link como botão */
+            background-color: #008CBA; /* Azul */
+            color: white;
+            text-align: center;  /* Centralizar o texto */
+        }
+
+
+        #game-over a:hover {
+           background-color: #005f7d; /* Azul mais escuro no hover*/
+        }
+         #game-over button:hover {
+           background-color: #367c39; /* Verde mais escuro no hover*/
+        }
+
+        .game-title { /* Estilos para o título */
+            text-align: center;
+            color: white;
+            font-size: 2em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5); /* Sombra para destacar */
+            margin-bottom: 10px; /* Espaçamento inferior */
+        }
+
+        .game-instructions { /* Estilos para as instruções */
+            text-align: center;
+            color: white;
+            font-size: 1.2em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            margin-bottom: 20px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1 class="game-title">Spatial Greeting Rush</h1>  <!-- Título -->
+        <p class="game-instructions">Cumprimente os alienígenas. Complete 20 acertos em 90 segundos</p> <!-- Instruções -->
+
+        <div class="game-header">
+            <span id="score">⭐ 0</span>
+            <span id="timer">⏱️ 90s</span>
+            <span id="interactions">📝 0/20</span>
+        </div>
+
+        <div id="game-area" class="game-area"></div>
+        
+        <div id="answers" class="answers-container"></div>
+
+        <div id="game-over">
+            <div id="game-over">
+                <h2>Resultado Final</h2>
+                <p>Acertos: <span id="correct-answers">0</span></p>
+                <p>Pontuação: <span id="final-score">0</span></p>
+                <button id="retry">🔁 Repetir</button>
+                <a href="./../index.html" role="button">Voltar</a> <!-- Link estilizado como botão -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Dados incorporados diretamente para evitar problemas de carregamento
+        const greetingsData = [
+            { prompt: "Hello!", correctAnswer: "Hi there!", options: ["Goodbye!", "Hi there!", "What's up?", "Good night!"] },
+            { prompt: "Good morning!", correctAnswer: "Morning! How are you?", options: ["Good night!", "See you later!", "Morning! How are you?", "What's your name?"] },
+            { prompt: "How are you?", correctAnswer: "I'm fine, thanks!", options: ["I'm fine, thanks!", "My name is John.", "Nice to meet you.", "Goodbye!"] },
+            { prompt: "Nice to meet you!", correctAnswer: "Nice to meet you too!", options: ["Goodbye!", "What's your name?", "Nice to meet you too!", "I don't know."] },
+            { prompt: "See you later!", correctAnswer: "See you!", options: ["Hello!", "Good morning!", "What's up?", "See you!"] }
+        ];
+
+        class GreetingRush {
+            constructor() {
+                this.gameArea = document.getElementById('game-area');
+                this.answersContainer = document.getElementById('answers');
+                this.scoreElement = document.getElementById('score');
+                this.timerElement = document.getElementById('timer');
+                this.interactionsElement = document.getElementById('interactions');
+                this.correctAnswersElement = document.getElementById('correct-answers');
+                this.finalScoreElement = document.getElementById('final-score');
+                this.retryButton = document.getElementById('retry');
+                
+                // Já definimos os dados diretamente
+                this.greetingsData = greetingsData;
+                
+                this.gameState = {
+                    score: 0,
+                    timeLeft: 90,
+                    interactions: 0,
+                    correctCount: 0,
+                    activeAliens: [],
+                    timerInterval: null
+                };
+
+                this.retryButton.addEventListener('click', () => this.restartGame());
+                
+                this.init();
+            }
+
+            async init() {
+                try {
+                    await this.preloadAssets();
+                    this.startGame();
+                } catch (error) {
+                    console.error("Erro ao inicializar o jogo:", error);
+                    alert("Ocorreu um erro ao iniciar o jogo. Verifique o console para mais detalhes.");
+                }
+            }
+
+            async preloadAssets() {
+                this.assets = {
+                    aliens: []
+                };
+                
+                // Criar aliens simples com emojis para evitar problemas de carregamento de imagens
+                this.alienEmojis = ["👽", "👾", "🤖", "👹", "🛸"];
+            }
+
+            startGame() {
+                console.log("Iniciando jogo com dados:", this.greetingsData);
+                
+                // Limpar elementos do jogo
+                this.gameArea.innerHTML = '';
+                this.answersContainer.innerHTML = '';
+                
+                // Resetar estado do jogo
+                this.gameState.score = 0;
+                this.gameState.timeLeft = 90;
+                this.gameState.interactions = 0;
+                this.gameState.correctCount = 0;
+                this.gameState.activeAliens = [];
+                
+                // Atualizar UI
+                this.updateUI();
+                
+                // Esconder tela de game over
+                document.getElementById('game-over').style.display = 'none';
+                
+                // Iniciar timer
+                this.startTimer();
+                
+                // Iniciar geração de aliens
+                this.spawnAlienInterval = setInterval(() => this.spawnAlien(), 3000);
+                
+                // Spawn do primeiro alien imediatamente
+                setTimeout(() => this.spawnAlien(), 500);
+            }
+
+            restartGame() {
+                // Limpar intervalos anteriores
+                clearInterval(this.gameState.timerInterval);
+                clearInterval(this.spawnAlienInterval);
+                
+                // Iniciar novo jogo
+                this.startGame();
+            }
+
+            startTimer() {
+                // Limpar intervalo anterior se existir
+                if (this.gameState.timerInterval) {
+                    clearInterval(this.gameState.timerInterval);
+                }
+                
+                this.gameState.timerInterval = setInterval(() => {
+                    if (this.gameState.timeLeft > 0) {
+                        this.gameState.timeLeft--;
+                        this.updateUI();
+                    } else {
+                        clearInterval(this.gameState.timerInterval);
+                        clearInterval(this.spawnAlienInterval);
+                        this.endGame();
+                    }
+                }, 1000);
+            }
+
+            spawnAlien() {
+                if (this.gameState.activeAliens.length >= 5) return;
+                if (this.gameState.interactions >= 20) {
+                    clearInterval(this.spawnAlienInterval);
+                    return;
+                }
+
+                // Incrementar interações
+                this.gameState.interactions++;
+                this.updateUI();
+
+                // Verificar se temos dados de saudações
+                if (!this.greetingsData || this.greetingsData.length === 0) {
+                    console.error("Dados de saudações não disponíveis");
+                    return;
+                }
+
+                // Selecionar questão aleatória
+                const questionIndex = Math.floor(Math.random() * this.greetingsData.length);
+                const question = this.greetingsData[questionIndex];
+                
+                if (!question || !question.prompt) {
+                    console.error("Questão inválida:", question);
+                    return;
+                }
+
+                // Criar container do alien
+                const alienContainer = document.createElement('div');
+                alienContainer.className = 'alien';
+                alienContainer.style.left = Math.floor(Math.random() * 80) + '%';
+                alienContainer.style.top = Math.floor(Math.random() * 60) + '%';
+                
+                // Selecionar emoji aleatório para o alien
+                const alienEmoji = this.alienEmojis[Math.floor(Math.random() * this.alienEmojis.length)];
+                
+                // Criar visual do alien (usando emoji para simplificar)
+                const alienVisual = document.createElement('div');
+                alienVisual.style.fontSize = '50px';
+                alienVisual.textContent = alienEmoji;
+                
+                // Criar bolha de fala
+                const speechBubble = document.createElement('div');
+                speechBubble.className = 'speech-bubble';
+                speechBubble.textContent = question.prompt;
+                
+                // Adicionar elementos ao container
+                alienContainer.appendChild(speechBubble);
+                alienContainer.appendChild(alienVisual);
+                
+                // Adicionar container à área de jogo
+                this.gameArea.appendChild(alienContainer);
+                
+                // Adicionar referência ao array de aliens ativos
+                const alienData = {
+                    element: alienContainer,
+                    question: question
+                };
+                this.gameState.activeAliens.push(alienData);
+                
+                // Mostrar opções de resposta
+                this.showAnswerOptions(question);
+                
+                // Remover alien após 5 segundos se não for clicado
+                setTimeout(() => {
+                    if (this.gameArea.contains(alienContainer)) {
+                        alienContainer.remove();
+                        this.gameState.activeAliens = this.gameState.activeAliens.filter(a => a.element !== alienContainer);
+                    }
+                }, 5000);
+            }
+
+            showAnswerOptions(question) {
+                // Limpar opções anteriores
+                this.answersContainer.innerHTML = '';
+                
+                // Verificar se temos opções válidas
+                if (!question.options || !Array.isArray(question.options) || question.options.length === 0) {
+                    console.error("Opções inválidas para a questão:", question);
+                    // Criar opções padrão se não tivermos opções válidas
+                    question.options = ["Sim", "Não", "Talvez", question.correctAnswer || "Olá"];
+                }
+                
+                // Embaralhar opções
+                const options = [...question.options];
+                for (let i = options.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [options[i], options[j]] = [options[j], options[i]];
+                }
+                
+                // Criar botões de resposta
+                options.forEach(option => {
+                    const answerBox = document.createElement('div');
+                    answerBox.className = 'answer-box';
+                    answerBox.textContent = option;
+                    answerBox.addEventListener('click', () => {
+                        this.checkAnswer(option, question.correctAnswer);
+                    });
+                    this.answersContainer.appendChild(answerBox);
+                });
+            }
+
+            checkAnswer(selectedAnswer, correctAnswer) {
+                if (selectedAnswer === correctAnswer) {
+                    // Resposta correta
+                    this.gameState.score += 10;
+                    this.gameState.correctCount++;
+                    
+                    // Efeito visual de acerto
+                    this.showFeedback(true);
+                } else {
+                    // Resposta incorreta
+                    this.showFeedback(false);
+                }
+                
+                // Limpar aliens ativos e preparar para o próximo
+                if (this.gameState.activeAliens.length > 0) {
+                    const firstAlien = this.gameState.activeAliens[0].element;
+                    firstAlien.remove();
+                    this.gameState.activeAliens.shift();
+                }
+                
+                // Atualizar UI
+                this.updateUI();
+                
+                // Verificar se chegou ao final do jogo
+                if (this.gameState.interactions >= 20) {
+                    clearInterval(this.spawnAlienInterval);
+                    this.endGame();
+                }
+            }
+
+            showFeedback(isCorrect) {
+                // Criar elemento de feedback
+                const feedback = document.createElement('div');
+                feedback.style.position = 'fixed';
+                feedback.style.top = '50%';
+                feedback.style.left = '50%';
+                feedback.style.transform = 'translate(-50%, -50%)';
+                feedback.style.fontSize = '2em';
+                feedback.style.fontWeight = 'bold';
+                feedback.style.color = isCorrect ? '#4CAF50' : '#FF5722';
+                feedback.style.zIndex = '1000';
+                feedback.textContent = isCorrect ? '✓ Correto!' : '✗ Incorreto!';
+                
+                // Adicionar ao corpo do documento
+                document.body.appendChild(feedback);
+                
+                // Remover após animação
+                setTimeout(() => {
+                    feedback.remove();
+                }, 1000);
+            }
+
+            updateUI() {
+                // Atualizar elementos de UI
+                this.scoreElement.textContent = `⭐ ${this.gameState.score}`;
+                this.timerElement.textContent = `⏱️ ${this.gameState.timeLeft}s`;
+                this.interactionsElement.textContent = `📝 ${this.gameState.interactions}/20`;
+            }
+
+            endGame() {
+                // Atualizar resultados finais
+                this.correctAnswersElement.textContent = this.gameState.correctCount;
+                this.finalScoreElement.textContent = this.gameState.score;
+                
+                // Mostrar tela de game over
+                document.getElementById('game-over').style.display = 'block';
+                
+                // Limpar área de jogo
+                this.gameArea.innerHTML = '';
+                this.answersContainer.innerHTML = '';
+            }
+        }
+
+        // Inicializar o jogo quando o DOM estiver pronto
+        document.addEventListener('DOMContentLoaded', () => new GreetingRush());
+    </script>
+</body>
+</html>
