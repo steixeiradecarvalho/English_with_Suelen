@@ -313,14 +313,9 @@
                 document.querySelectorAll('.card')[index1].style.visibility = 'hidden';
                 document.querySelectorAll('.card')[index2].style.visibility = 'hidden';
                 matchedPairs++;
-                confetti({
-                    particleCount: 100,
-                    spread: 70,
-                    origin: { y: 0.6 }
-                });
 
                 if (matchedPairs === phrases.length) {
-                    setTimeout(() => alert("Parabéns! Você completou o jogo!"), 500);
+                    showConfetti();
                 }
             } else {
                 // No match
@@ -334,7 +329,7 @@
         }
 
         function goBack() {
-            window.location.href = 'index.html';
+            window.location.href = '.././index.html';
         }
 
         function initGame() {
@@ -342,6 +337,46 @@
             cards.forEach((_, index) => {
                 gameBoard.appendChild(createCard(index));
             });
+        }
+        
+        function showConfetti() {
+            const confettiCount = 100;
+            const container = document.createElement('div');
+            container.style.position = 'fixed';
+            container.style.top = '0';
+            container.style.left = '0';
+            container.style.width = '100%';
+            container.style.height = '100%';
+            container.style.pointerEvents = 'none';
+            container.style.zIndex = '9999';
+            document.body.appendChild(container);
+            
+            for (let i = 0; i < confettiCount; i++) {
+                const confetti = document.createElement('div');
+                confetti.style.position = 'absolute';
+                confetti.style.width = '10px';
+                confetti.style.height = '10px';
+                confetti.style.backgroundColor = getRandomColor();
+                confetti.style.borderRadius = '50%';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.top = '-10px';
+                confetti.style.transform = 'translateY(0)';
+                confetti.style.transition = 'transform 2s ease-out';
+                container.appendChild(confetti);
+                
+                setTimeout(() => {
+                    confetti.style.transform = `translateY(${window.innerHeight}px) rotate(${Math.random() * 360}deg)`;
+                }, 10);
+            }
+            
+            setTimeout(() => {
+                container.remove();
+            }, 2000);
+        }
+
+        function getRandomColor() {
+            const colors = ['#ff5252', '#ffeb3b', '#2196f3', '#4caf50', '#e040fb', '#ff9800'];
+            return colors[Math.floor(Math.random() * colors.length)];
         }
 
         initGame();

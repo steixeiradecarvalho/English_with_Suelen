@@ -316,6 +316,36 @@
                 min-height: 200px;
             }
         }
+        .confetti {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none; /* Impede que o confete bloqueie cliques */
+            z-index: 100; /* Garante que o confete fique acima de outros elementos */
+        }
+
+        .confetti-piece {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #f00; /* Vermelho por padrão, será substituído */
+            animation: confetti-fall 2s linear forwards;
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(calc(100vh + 50px)) translateX(var(--confetti-drift)) rotate(calc(var(--confetti-rotation) + 360deg));
+                opacity: 0;
+            }
+        }
+        
     </style>
 </head>
 <body>
@@ -411,7 +441,7 @@
         document.getElementById('module-name').textContent = moduleName;
 
         function goBack() {
-            window.location.href = 'index.html';
+            window.location.href = '.././index.html';
         }
 
         // Script do jogo de concordância pronominal
@@ -487,10 +517,39 @@
         function checkCompletion() {
             const remaining = document.querySelectorAll('#pronounsContainer .pronoun').length;
             if (remaining === 0) {
-                setTimeout(() => {
-                    alert('Parabéns! Você completou todas as correspondências corretamente!');
-                }, 300);
+                startConfetti();
             }
+        }
+
+        function startConfetti() {
+            const confettiContainer = document.createElement('div');
+            confettiContainer.classList.add('confetti');
+            document.body.appendChild(confettiContainer);
+
+            const width = window.innerWidth;
+
+            for (let i = 0; i < 150; i++) {
+                const confettiPiece = document.createElement('div');
+                confettiPiece.classList.add('confetti-piece');
+
+                const x = Math.random() * width;
+                const rotation = Math.random() * 360;
+                const drift = (Math.random() - 0.5) * width / 2;
+                const colors = ['#f00', '#0f0', '#00f', '#ff0', '#0ff', '#f0f'];
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                
+                confettiPiece.style.left = x + 'px';
+                confettiPiece.style.setProperty('--confetti-rotation', rotation + 'deg');
+                confettiPiece.style.setProperty('--confetti-drift', drift + 'px');
+                confettiPiece.style.backgroundColor = color;
+                
+                confettiContainer.appendChild(confettiPiece);
+            }
+
+            // Remover o container após 3 segundos (tempo suficiente para a animação terminar)
+            setTimeout(() => {
+                confettiContainer.remove();
+            }, 3000);
         }
 
         function resetGame() {

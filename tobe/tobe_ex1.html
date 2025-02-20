@@ -205,26 +205,20 @@
                 correct: 0,
                 image: "./tobe_ex1-3.png"
             },
-            {
-                question: "It _____ a book",
-                translation: "É um livro",
-                options: ["are", "is", "isn't", "is not", "am"],
-                correct: 1,
-                image: "./tobe_ex1-4.png"
-            },
+            
             {
                 question: "_____ she your mother?",
                 translation: "Ela é sua mãe?",
                 options: ["is", "are", "am", "are not"],
                 correct: 0,
-                image: "./tobe_ex1-5.png"
+                image: "./tobe_ex1-4.png"
             },
             {
                 question: "He _____ nice",
                 translation: "Ele não é legal",
                 options: ["isn't", "is", "are", "aren't"],
                 correct: 0,
-                image: "./tobe_ex1-6.png"
+                image: "./tobe_ex1-5.png"
             }
         ];
 
@@ -278,6 +272,28 @@
             prevBtn.disabled = currentExercise === 0;
             nextBtn.disabled = currentExercise === exercises.length - 1;
         }
+
+        function updateNavigation() {
+            prevBtn.disabled = currentExercise === 0;
+
+            if (currentExercise === exercises.length - 1) {
+                nextBtn.textContent = "Volta à aula";
+                nextBtn.onclick = function() {
+                    window.location.href = "./../index.html";
+                };
+            } else {
+                nextBtn.disabled = currentExercise === exercises.length - 1;
+                /*
+                nextBtn.textContent = "Próximo";
+                nextBtn.onclick = function() {
+                  if (currentExercise < exercises.length - 1) {
+                      showExercise(currentExercise + 1);
+                  }
+                };
+                */
+            }
+        }
+
 
         function updateProgress() {
             const progress = ((currentExercise + 1) / exercises.length) * 100;
