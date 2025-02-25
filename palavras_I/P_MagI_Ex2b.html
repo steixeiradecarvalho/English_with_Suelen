@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Leo's English Safari</title>
+  <style>
+    :root {
+      --platform-color: #8B4513;
+      --bg-color: #FFF8DC;
+    }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Arial Rounded MT Bold', Arial, sans-serif;
+      background-color: var(--bg-color);
+      overflow: hidden;
+      touch-action: manipulation;
+    }
+    #game-container {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+      background-image: linear-gradient(#87CEEB, #FFF8DC);
+    }
+    #game-area {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+    #mission-text {
+      position: absolute;
+      top: 20px;
+      left: 0;
+      width: 100%;
+      text-align: center;
+      background-color: rgba(255, 255, 255, 0.8);
+      padding: 10px;
+      border-radius: 10px;
+      z-index: 100;
+      font-size: 1rem;
+    }
+    #player {
+      position: absolute;
+      font-size: 2rem;
+      z-index: 10;
+      transition: transform 0.1s ease;
+    }
+    /* Exibe o item que está sendo carregado */
+    #player.carrying:after {
+      content: attr(data-carrying);
+      position: absolute;
+      top: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 1.2rem;
+    }
+    .platform {
+      position: absolute;
+      background-color: var(--platform-color);
+      border-radius: 8px;
+    }
+    .collectible {
+      position: absolute;
+      font-size: 1.5rem;
+      z-index: 5;
+      transition: transform 0.3s, opacity 0.3s;
+    }
+    /* Efeito glow para as calças vermelhas */
+    .red-pants.correct {
+      animation: glow 1s ease-in-out infinite;
+    }
+    @keyframes glow {
+      0% { filter: drop-shadow(0 0 5px red); }
+      50% { filter: drop-shadow(0 0 10px red); }
+      100% { filter: drop-shadow(0 0 5px red); }
+    }
+    /* Animação pulse para o contador */
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+    .pulse {
+      animation: pulse 0.3s ease-in-out;
+    }
+    /* Animação bounce para coleta de item */
+    @keyframes bounce {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-15px); }
+      100% { transform: translateY(0); }
+    }
+    .bounce {
+      animation: bounce 0.5s ease-in-out;
+    }
+    #controls {
+      position: fixed;
+      bottom: 20px;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      z-index: 100;
+    }
+    .control-btn {
+      width: 60px;
+      height: 60px;
+      background-color: rgba(255, 255, 255, 0.7);
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.5rem;
+      user-select: none;
+      touch-action: manipulation;
+    }
+    #score-container {
+      position: absolute;
+      top: 70px;
+      right: 20px;
+      background-color: rgba(255, 255, 255, 0.8);
+      padding: 10px;
+      border-radius: 10px;
+      z-index: 100;
+    }
+    #level-complete {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: rgba(255, 255, 255, 0.9);
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      z-index: 200;
+      display: none;
+    }
+    .message-popup {
+      position: absolute;
+      top: 120px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: rgba(0, 100, 0, 0.8);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 20px;
+      font-size: 1rem;
+      text-align: center;
+      z-index: 150;
+      animation: fadeInOut 2s forwards;
+    }
+    @keyframes fadeInOut {
+      0% { opacity: 0; }
+      20% { opacity: 1; }
+      80% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+    /* Feedback visual para erros */
+    .error-feedback {
+      background-color: rgba(255, 0, 0, 0.8);
+      color: white;
+    }
+    /* Estilo para a cesta */
+    .basket {
+      transition: transform 0.3s;
+    }
+    .basket.highlight {
+      transform: scale(1.1);
+      filter: brightness(1.2);
+    }
+    /* Botão de áudio */
+    #audio-toggle {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background-color: rgba(255, 255, 255, 0.7);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.2rem;
+      cursor: pointer;
+      z-index: 100;
+    }
+    @media (min-width: 768px) {
+      #controls {
+        display: none;
+      }
+      #mission-text {
+        font-size: 1.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="game-container">
+    <div id="mission-text">
+      <div class="english">Find five red pants</div>
+      <div class="portuguese">O Leão, precisa achar 5 calças vermelhas</div>
+    </div>
+
+    <div id="score-container">
+      Found: <span id="score">0</span>/<span id="total-items">5</span>
+    </div>
+
+    <div id="audio-toggle">🔊</div>
+
+    <div id="game-area">
+      <div id="player">🦁</div>
+      <!-- Platforms and collectibles will be generated by JS -->
+    </div>
+
+    <div id="controls">
+      <div class="control-btn" id="left-btn">⬅️</div>
+      <div class="control-btn" id="jump-btn">⬆️</div>
+      <div class="control-btn" id="right-btn">➡️</div>
+    </div>
+
+    <div id="level-complete">
+      <h2>Level Complete!</h2>
+      <p>Well done! You found all items.</p>
+      <button id="next-level-btn">Next Level</button>
+    </div>
+  </div>
+
+  <script>
+    // Game state
+    const gameState = {
+      player: {
+        x: 50,
+        y: 0,
+        width: 40,
+        height: 40,
+        velX: 0,
+        velY: 0,
+        speed: 5,
+        jumping: false,
+        grounded: false,
+        carrying: null
+      },
+      keys: {},
+      gravity: 0.5,
+      friction: 0.8,
+      platforms: [],
+      collectibles: [],
+      collected: 0,
+      currentLevel: 1,
+      isLevelComplete: false,
+      audioEnabled: true,
+      basket: null
+    };
+
+    // Level configurations
+    const levels = [
+      {
+        mission: {
+          english: "Find five red pants",
+          portuguese: "O Leão, precisa achar 5 calças vermelhas"
+        },
+        totalItems: 5,
+        collectibleEmoji: "👖",
+        collectibleClass: "red-pants",
+        platforms: [
+          { x: 0, y: 500, width: 800, height: 20 },
+          { x: 200, y: 400, width: 150, height: 20 },
+          { x: 450, y: 350, width: 150, height: 20 },
+          { x: 100, y: 250, width: 150, height: 20 }
+        ],
+        collectibles: [
+          { x: 50, y: 460, type: "red-pants" },
+          { x: 250, y: 360, type: "red-pants" },
+          { x: 500, y: 310, type: "red-pants" },
+          { x: 150, y: 210, type: "red-pants" },
+          { x: 700, y: 460, type: "red-pants" },
+          // Distratores:
+          { x: 300, y: 460, type: "blue-pants" },
+          { x: 600, y: 360, type: "green-pants" }
+        ]
+      },
+      {
+        mission: {
+          english: "Find twenty-two apples in the basket",
+          portuguese: "O Leão, precisa achar 22 maçãs na cesta"
+        },
+        totalItems: 22,
+        collectibleEmoji: "🍎",
+        collectibleClass: "apple",
+        platforms: [
+          { x: 0, y: 500, width: 800, height: 20 },
+          { x: 150, y: 420, width: 120, height: 20 },
+          { x: 350, y: 350, width: 120, height: 20 },
+          { x: 100, y: 280, width: 120, height: 20 },
+          { x: 500, y: 250, width: 120, height: 20 }
+        ],
+        basket: { x: 600, y: 460, emoji: "🧺" },
+        collectibles: [
+          { x: 50, y: 460, type: "apple" },
+          { x: 120, y: 460, type: "apple" },
+          { x: 180, y: 460, type: "apple" },
+          { x: 230, y: 460, type: "apple" },
+          { x: 250, y: 380, type: "apple" },
+          { x: 500, y: 460, type: "apple" },
+          { x: 550, y: 210, type: "apple" },
+          { x: 400, y: 310, type: "apple" },
+          { x: 150, y: 240, type: "apple" },
+          { x: 200, y: 380, type: "apple" },
+          { x: 300, y: 460, type: "apple" },
+          { x: 350, y: 310, type: "apple" },
+          { x: 400, y: 460, type: "apple" },
+          { x: 450, y: 210, type: "apple" },
+          { x: 500, y: 310, type: "apple" },
+          { x: 550, y: 460, type: "apple" },
+          { x: 600, y: 210, type: "apple" },
+          { x: 650, y: 310, type: "apple" },
+          { x: 700, y: 460, type: "apple" },
+          { x: 250, y: 310, type: "apple" },
+          { x: 150, y: 380, type: "apple" },
+          { x: 700, y: 210, type: "apple" }
+        ]
+      },
+      {
+        mission: {
+          english: "Find a girl with a pink dress and a boy with a brown cap",
+          portuguese: "O Leão, precisa achar uma menina com um vestido rosa e um menino com um chapéu marrom"
+        },
+        totalItems: 2,
+        characters: [
+          { x: 150, y: 460, emoji: "👩", type: "distractor" },
+          { x: 250, y: 460, emoji: "👨", type: "distractor" },
+          { x: 350, y: 460, emoji: "👧", type: "girl_pink_dress" },
+          { x: 450, y: 460, emoji: "👦", type: "boy_brown_cap" },
+          { x: 550, y: 460, emoji: "🧓", type: "distractor" },
+          { x: 650, y: 460, emoji: "👶", type: "distractor" }
+        ],
+        platforms: [{ x: 0, y: 500, width: 800, height: 20 }]
+      },
+      {
+        mission: {
+          english: "Find people with sunglasses",
+          portuguese: "O Leão, precisa achar pessoas com óculos de sol"
+        },
+        totalItems: 3,
+        characters: [
+          { x: 100, y: 460, emoji: "👨", type: "distractor" },
+          { x: 200, y: 460, emoji: "😎", type: "sunglasses" },
+          { x: 300, y: 460, emoji: "👩", type: "distractor" },
+          { x: 400, y: 360, emoji: "😎", type: "sunglasses" },
+          { x: 500, y: 460, emoji: "👧", type: "distractor" },
+          { x: 600, y: 270, emoji: "😎", type: "sunglasses" },
+          { x: 700, y: 460, emoji: "👴", type: "distractor" }
+        ],
+        platforms: [
+          { x: 0, y: 500, width: 800, height: 20 },
+          { x: 350, y: 400, width: 150, height: 20 },
+          { x: 550, y: 310, width: 150, height: 20 }
+        ]
+      }
+    ];
+
+    // DOM elements
+    const player = document.getElementById('player');
+    const gameArea = document.getElementById('game-area');
+    const missionText = document.getElementById('mission-text');
+    const scoreElement = document.getElementById('score');
+    const totalItemsElement = document.getElementById('total-items');
+    const levelCompleteModal = document.getElementById('level-complete');
+    const nextLevelBtn = document.getElementById('next-level-btn');
+    const audioToggle = document.getElementById('audio-toggle');
+
+    // Mobile controls
+    const leftBtn = document.getElementById('left-btn');
+    const jumpBtn = document.getElementById('jump-btn');
+    const rightBtn = document.getElementById('right-btn');
+
+    // Audio files (base64 placeholders)
+    const audioFiles = {
+      collect: 'data:audio/wav;base64,UklGRl9vT19WAVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU......',
+      error: 'data:audio/wav;base64,UklGRl9vT19WAVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU......',
+      levelComplete: 'data:audio/wav;base64,UklGRl9vT19WAVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU......',
+      jump: 'data:audio/wav;base64,UklGRl9vT19WAVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU......'
+    };
+
+    // Number words for narration
+    const numberWords = [
+      'zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten',
+      'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen', 'twenty',
+      'twenty-one', 'twenty-two'
+    ];
+
+    // Initialize game
+    function initGame() {
+      // Set up audio toggle
+      audioToggle.addEventListener('click', () => {
+        gameState.audioEnabled = !gameState.audioEnabled;
+        audioToggle.textContent = gameState.audioEnabled ? '🔊' : '🔇';
+      });
+
+      // Set up the current level
+      loadLevel(gameState.currentLevel);
+
+      // Event listeners
+      document.addEventListener('keydown', keyDownHandler);
+      document.addEventListener('keyup', keyUpHandler);
+
+      // Mobile control events
+      leftBtn.addEventListener('touchstart', () => gameState.keys[37] = true);
+      leftBtn.addEventListener('touchend', () => gameState.keys[37] = false);
+      rightBtn.addEventListener('touchstart', () => gameState.keys[39] = true);
+      rightBtn.addEventListener('touchend', () => gameState.keys[39] = false);
+      jumpBtn.addEventListener('touchstart', () => {
+        if (!gameState.player.jumping && gameState.player.grounded) {
+          gameState.player.jumping = true;
+          gameState.player.grounded = false;
+          gameState.player.velY = -12;
+          playSound('jump');
+        }
+      });
+
+      nextLevelBtn.addEventListener('click', () => {
+        gameState.currentLevel++;
+        if (gameState.currentLevel <= levels.length) {
+          loadLevel(gameState.currentLevel);
+          levelCompleteModal.style.display = 'none';
+          gameState.isLevelComplete = false;
+        } else {
+          // Game complete
+          missionText.innerHTML = `<div>Congratulations! You've completed all levels!</div>`;
+          levelCompleteModal.innerHTML = `
+            <h2>Game Complete!</h2>
+            <p>Well done! You've completed all levels!</p>
+            <button id="restart-btn">Play Again</button>
+          `;
+          document.getElementById('restart-btn').addEventListener('click', () => {
+            gameState.currentLevel = 1;
+            loadLevel(1);
+            levelCompleteModal.style.display = 'none';
+          });
+        }
+      });
+
+      // Start game loop
+      requestAnimationFrame(update);
+    }
+
+    // Play sound with optional narration
+    function playSound(type, narration = null) {
+      if (!gameState.audioEnabled) return;
+      const sound = new Audio(audioFiles[type] || audioFiles.collect);
+      sound.volume = 0.3;
+      sound.play().catch(e => console.log('Audio play failed:', e));
+      if (narration && 'speechSynthesis' in window) {
+        setTimeout(() => {
+          const speech = new SpeechSynthesisUtterance(narration);
+          speech.rate = 0.9;
+          speech.volume = 0.8;
+          window.speechSynthesis.speak(speech);
+        }, 300);
+      }
+    }
+
+    // Show message popup
+    function showMessage(msg, isError = false) {
+      const msgElement = document.createElement('div');
+      msgElement.className = isError ? 'message-popup error-feedback' : 'message-popup';
+      msgElement.textContent = msg;
+      document.body.appendChild(msgElement);
+      setTimeout(() => msgElement.remove(), 2000);
+    }
+
+    // Load level
+    function loadLevel(levelIndex) {
+      const level = levels[levelIndex - 1];
+      // Reset game state
+      gameState.player.x = 50;
+      gameState.player.y = 0;
+      gameState.player.carrying = null;
+      player.removeAttribute('data-carrying');
+      player.classList.remove('carrying');
+      gameState.collected = 0;
+      gameState.platforms = [];
+      gameState.collectibles = [];
+      gameState.basket = null;
+
+      // Update UI
+      missionText.innerHTML = `
+        <div class="english">${level.mission.english}</div>
+        <div class="portuguese">${level.mission.portuguese}</div>
+      `;
+      scoreElement.textContent = '0';
+      totalItemsElement.textContent = level.totalItems || '0';
+
+      // Clear game area (except player)
+      const elementsToRemove = document.querySelectorAll('.platform, .collectible');
+      elementsToRemove.forEach(el => el.remove());
+
+      // Create platforms
+      level.platforms.forEach(platform => {
+        createPlatform(platform.x, platform.y, platform.width, platform.height);
+      });
+
+      // Create collectibles for levels 1 and 2
+      if (levelIndex === 1) {
+        createMission1Collectibles(level);
+      } else if (levelIndex === 2) {
+        createMission2Collectibles(level);
+      }
+
+      // Create characters for levels 3 & 4
+      if (level.characters) {
+        level.characters.forEach(char => {
+          const character = document.createElement('div');
+          character.className = `collectible character ${char.type}`;
+          character.dataset.type = char.type;
+          character.textContent = char.emoji;
+          character.style.left = `${char.x}px`;
+          character.style.top = `${char.y}px`;
+          gameArea.appendChild(character);
+          if (char.type === 'girl_pink_dress' || char.type === 'boy_brown_cap' || char.type === 'sunglasses') {
+            gameState.collectibles.push({
+              x: char.x,
+              y: char.y,
+              width: 30,
+              height: 30,
+              collected: false,
+              type: char.type,
+              element: character
+            });
+          }
+        });
+      }
+
+      // Responsive adjustments
+      adjustForScreenSize();
+      window.addEventListener('resize', adjustForScreenSize);
+
+      // Show introduction message for the level
+      if (levelIndex === 1) {
+        showMessage("Find the RED pants! 👖", false);
+      } else if (levelIndex === 2) {
+        showMessage("Collect apples and bring them to the basket! 🍎", false);
+      }
+    }
+
+    // Create collectibles for Mission 1 (Calças Vermelhas)
+    function createMission1Collectibles(level) {
+      level.collectibles.forEach(item => {
+        const collectible = document.createElement('div');
+        collectible.textContent = level.collectibleEmoji;
+        collectible.style.left = `${item.x}px`;
+        collectible.style.top = `${item.y}px`;
+        if (item.type === "red-pants") {
+          collectible.className = `collectible red-pants correct`;
+          collectible.style.filter = 'hue-rotate(320deg) saturate(3)';
+        } else if (item.type === "blue-pants") {
+          collectible.className = 'collectible blue-pants';
+          collectible.style.filter = 'hue-rotate(240deg) saturate(2)';
+        } else if (item.type === "green-pants") {
+          collectible.className = 'collectible green-pants';
+          collectible.style.filter = 'hue-rotate(120deg) saturate(2)';
+        }
+        gameArea.appendChild(collectible);
+        gameState.collectibles.push({
+          x: item.x,
+          y: item.y,
+          width: 30,
+          height: 30,
+          collected: false,
+          type: item.type,
+          element: collectible
+        });
+      });
+    }
+
+    // Create collectibles for Mission 2 (Maçãs na Cesta)
+    function createMission2Collectibles(level) {
+      // Create basket
+      if (level.basket) {
+        const basket = document.createElement('div');
+        basket.className = 'collectible basket';
+        basket.textContent = level.basket.emoji;
+        basket.style.left = `${level.basket.x}px`;
+        basket.style.top = `${level.basket.y}px`;
+        basket.style.fontSize = '3rem';
+        gameArea.appendChild(basket);
+        gameState.basket = {
+          x: level.basket.x,
+          y: level.basket.y,
+          width: 50,
+          height: 50,
+          element: basket
+        };
+      }
+      // Create apples
+      level.collectibles.forEach(item => {
+        const collectible = document.createElement('div');
+        collectible.className = `collectible ${level.collectibleClass}`;
+        collectible.textContent = level.collectibleEmoji;
+        collectible.style.left = `${item.x}px`;
+        collectible.style.top = `${item.y}px`;
+        gameArea.appendChild(collectible);
+        gameState.collectibles.push({
+          x: item.x,
+          y: item.y,
+          width: 30,
+          height: 30,
+          collected: false,
+          type: item.type,
+          element: collectible
+        });
+      });
+    }
+
+    // Create platform element
+    function createPlatform(x, y, width, height) {
+      const platform = document.createElement('div');
+      platform.className = 'platform';
+      platform.style.left = `${x}px`;
+      platform.style.top = `${y}px`;
+      platform.style.width = `${width}px`;
+      platform.style.height = `${height}px`;
+      gameArea.appendChild(platform);
+      gameState.platforms.push({ x, y, width, height });
+    }
+
+    // Key handlers
+    function keyDownHandler(e) {
+      gameState.keys[e.keyCode] = true;
+      // Jump (up arrow or space)
+      if ((e.keyCode === 38 || e.keyCode === 32) && !gameState.player.jumping && gameState.player.grounded) {
+        gameState.player.jumping = true;
+        gameState.player.grounded = false;
+        gameState.player.velY = -12;
+        playSound('jump');
+      }
+    }
+    function keyUpHandler(e) {
+      gameState.keys[e.keyCode] = false;
+    }
+
+    // Game loop
+    function update() {
+      if (!gameState.isLevelComplete) {
+        // Player movement
+        if (gameState.keys[37]) {
+          if (gameState.player.velX > -gameState.player.speed) {
+            gameState.player.velX--;
+          }
+        }
+        if (gameState.keys[39]) {
+          if (gameState.player.velX < gameState.player.speed) {
+            gameState.player.velX++;
+          }
+        }
+        gameState.player.velX *= gameState.friction;
+        gameState.player.velY += gameState.gravity;
+        gameState.player.grounded = false;
+        // Collision with platforms
+        for (let i = 0; i < gameState.platforms.length; i++) {
+          const p = gameState.platforms[i];
+          if (
+            gameState.player.x + gameState.player.width > p.x &&
+            gameState.player.x < p.x + p.width &&
+            gameState.player.y + gameState.player.height > p.y &&
+            gameState.player.y + gameState.player.height < p.y + p.height
+          ) {
+            gameState.player.grounded = true;
+            gameState.player.jumping = false;
+            gameState.player.y = p.y - gameState.player.height;
+            gameState.player.velY = 0;
+          }
+        }
+        // Update player position
+        gameState.player.x += gameState.player.velX;
+        gameState.player.y += gameState.player.velY;
+        // Screen boundaries
+        if (gameState.player.x < 0) {
+          gameState.player.x = 0;
+        } else if (gameState.player.x + gameState.player.width > gameArea.offsetWidth) {
+          gameState.player.x = gameArea.offsetWidth - gameState.player.width;
+        }
+        if (gameState.player.y < 0) {
+          gameState.player.y = 0;
+          gameState.player.velY = 0;
+        } else if (gameState.player.y + gameState.player.height > gameArea.offsetHeight) {
+          gameState.player.y = gameArea.offsetHeight - gameState.player.height;
+          gameState.player.grounded = true;
+          gameState.player.jumping = false;
+        }
+        // Update player element
+        player.style.left = `${gameState.player.x}px`;
+        player.style.top = `${gameState.player.y}px`;
+
+        // Mission-specific logic
+        if (gameState.currentLevel === 1) {
+          handleMission1Logic();
+        } else if (gameState.currentLevel === 2) {
+          handleMission2Logic();
+        } else {
+          // Generic collectible check for levels 3 & 4
+          checkCollectibles();
+        }
+
+        // Check if level complete
+        const currentLevel = levels[gameState.currentLevel - 1];
+        if (gameState.collected === currentLevel.totalItems) {
+          gameState.isLevelComplete = true;
+          playSound('levelComplete', "Great job! Level complete!");
+          levelCompleteModal.style.display = 'block';
+        }
+      }
+      requestAnimationFrame(update);
+    }
+
+    // Handle Mission 1 (Red Pants) specific logic
+    function handleMission1Logic() {
+      for (let i = 0; i < gameState.collectibles.length; i++) {
+        const item = gameState.collectibles[i];
+        if (!item.collected && isColliding(gameState.player, item)) {
+          if (item.type === 'red-pants') {
+            collectItem(item);
+            item.element.classList.add('bounce');
+          } else {
+            showMessage("Oops! That's not a red pant!", true);
+            playSound('error');
+          }
+        }
+      }
+    }
+
+    // Handle Mission 2 (Apples in Basket) specific logic
+    function handleMission2Logic() {
+      // If not carrying an apple, check for pickup
+      if (!gameState.player.carrying) {
+        for (let i = 0; i < gameState.collectibles.length; i++) {
+          const item = gameState.collectibles[i];
+          if (!item.collected && item.type === 'apple' && isColliding(gameState.player, item)) {
+            gameState.player.carrying = item;
+            player.setAttribute('data-carrying', item.element.textContent);
+            player.classList.add('carrying');
+            item.element.style.opacity = '0.5';
+            break;
+          }
+        }
+      } else {
+        // If carrying an apple, check collision with basket
+        if (gameState.basket && isColliding(gameState.player, gameState.basket)) {
+          const carried = gameState.player.carrying;
+          carried.collected = true;
+          carried.element.style.opacity = '0.3';
+          gameState.basket.element.classList.add('highlight');
+          setTimeout(() => {
+            gameState.basket.element.classList.remove('highlight');
+          }, 300);
+          gameState.collected++;
+          scoreElement.textContent = gameState.collected;
+          playSound('collect', numberWords[gameState.collected]);
+          gameState.player.carrying = null;
+          player.removeAttribute('data-carrying');
+          player.classList.remove('carrying');
+        }
+      }
+    }
+
+    // Generic collision detection helper
+    function isColliding(rect1, rect2) {
+      return (
+        rect1.x + rect1.width > rect2.x &&
+        rect1.x < rect2.x + rect2.width &&
+        rect1.y + rect1.height > rect2.y &&
+        rect1.y < rect2.y + rect2.height
+      );
+    }
+
+    // Generic collectible collision check (for levels 3 & 4)
+    function checkCollectibles() {
+      for (let i = 0; i < gameState.collectibles.length; i++) {
+        const item = gameState.collectibles[i];
+        if (!item.collected && isColliding(gameState.player, item)) {
+          if (gameState.currentLevel === 3) {
+            const itemType = item.element.dataset.type;
+            if (itemType === 'girl_pink_dress' || itemType === 'boy_brown_cap') {
+              collectItem(item);
+            }
+          } else if (gameState.currentLevel === 4) {
+            const itemType = item.element.dataset.type;
+            if (itemType === 'sunglasses') {
+              collectItem(item);
+            }
+          } else {
+            collectItem(item);
+          }
+        }
+      }
+    }
+
+    // Collect item function (generic)
+    function collectItem(item) {
+      item.collected = true;
+      item.element.style.opacity = '0.3';
+      gameState.collected++;
+      scoreElement.textContent = gameState.collected;
+      playSound('collect');
+    }
+
+    // Adjust for screen size
+    function adjustForScreenSize() {
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+      const scaleFactor = Math.min(width / 800, height / 600);
+      player.style.fontSize = `${Math.max(2, 2 * scaleFactor)}rem`;
+      gameState.player.width = Math.max(40, 40 * scaleFactor);
+      gameState.player.height = Math.max(40, 40 * scaleFactor);
+      document.querySelectorAll('.collectible').forEach(el => {
+        el.style.fontSize = `${Math.max(1.5, 1.5 * scaleFactor)}rem`;
+      });
+      const basket = document.querySelector('.basket');
+      if (basket) {
+        basket.style.fontSize = `${Math.max(3, 3 * scaleFactor)}rem`;
+      }
+    }
+
+    // Initialize the game when the page loads
+    window.addEventListener('load', initGame);
+  </script>
+</body>
+</html>

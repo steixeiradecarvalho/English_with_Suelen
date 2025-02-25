@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Manter todo o conteúdo do head original -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WH Questions Exercise</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* General Styles */        
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            color: #343a40;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            flex: 1;
+        }
+
+        h1, h2, h3 {
+            color: #007bff;
+        }
+
+        /* Common Elements */
+        .exercise-box {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        /* Exercise Components */
+        .exercise-header {
+            margin-bottom: 20px;
+        }
+
+        .exercise-instructions {
+            margin-bottom: 15px;
+        }
+
+        .exercise-tips {
+            margin-bottom: 20px;
+        }
+
+        .tip-item {
+            color: #6c757d;
+            font-style: italic;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        /* Question Styles */
+        .question {
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .question-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Input Types */
+        .input-field {
+            padding: 8px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            transition: border-color 0.3s;
+
+            min-height: 48px; /* Tamanho mínimo para touch */
+            font-size: 1rem; 
+        }
+
+        .input-field:focus {
+            border-color: #80bdff;
+            outline: none;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+        /* Translation Component */
+        .translation-container {
+            display: inline-block;
+            position: relative;
+            margin-left: 10px;
+        }
+
+        .translation {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: #f8f9fa;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            padding: 5px 10px;
+            z-index: 100;
+        }
+
+        .translation-icon {
+            cursor: pointer;
+            color: #007bff;
+        }
+
+        /* Results Section */
+        .results {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            display: none;
+            background-color: #f2f2f2;
+        }
+
+        .correct { color: #28a745; }
+        .incorrect { color: #dc3545; }
+
+        /* Navigation */
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.3s;
+            min-width: 120px;
+            min-height: 48px;
+        }
+
+        .button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #343a40;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            margin-top: 20px;
+        }
+
+        /* Media Queries para Telas Maiores */
+        @media (min-width: 768px) {
+        .container {
+            padding: 40px;
+        }
+        
+            .input-field {
+                width: 200px; /* Ajuste progressivo */
+            }
+        }
+
+        /* Remover hover em dispositivos touch */
+        @media (hover: none) {
+            .button:hover {
+                background-color: #007bff; /* Mantém cor original */
+            }
+        }
+        /* Adições específicas para este exercício */
+        .question-card {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f7f7f7; /* cor de fundo suave */
+            border: 1px solid #ccc; /* moldura */
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .options-container {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        .wh-button {
+            padding: 12px 20px;
+            border: 2px solid #007bff;
+            border-radius: 25px;
+            background: none;
+            color: #007bff;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 16px;
+        }
+
+        .wh-button.selected {
+            background: #007bff;
+            color: white;
+        }
+
+        .translation {
+            display: none;
+            position: absolute;
+            background: #fff;
+            border: 1px solid #007bff;
+            padding: 5px 10px;
+            border-radius: 5px;
+            z-index: 100;
+            top: 100%;
+            left: 0;
+            white-space: nowrap;
+        }
+
+        .correct-answer {
+            font-size: 0.9em;
+            padding: 8px;
+            border-radius: 5px;
+            background-color: #e8f4e8;
+        }
+
+        .question-card.correct {
+            border: 2px solid #28a745;
+        }
+
+        .question-card.incorrect {
+            border: 2px solid #dc3545;
+        }
+
+        @media (max-width: 480px) {
+            .options-container {
+                flex-direction: column;
+            }
+            
+            .wh-button {
+                width: 100%;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="exercise-box">
+            <div class="exercise-header">
+                <h2>WH Questions Practice</h2>
+                <p>Choose the correct question word for each sentence</p>
+            </div>
+
+            <div class="exercise-tips">
+                <div class="tip-item"><strong>When to use:</strong></div>
+                <div class="tip-item">Who - for people</div>
+                <div class="tip-item">Where - for places</div>
+                <div class="tip-item">What - for things/activities</div>
+            </div>
+
+            <div id="cards-container"></div>
+
+            <button class="button" onclick="checkAnswers()">Check Answers</button>
+            <div id="result" class="results"></div>
+        </div>
+
+        <div class="navigation">
+            <a href="../index.html" class="button">Retornar</a>
+        </div>
+    </div>
+
+    <script>
+        const exerciseConfig = {
+            questions: [
+                {
+                    id: "q1",
+                    text: "___ is the girl?",
+                    translation: "Onde está a garota?",
+                    correctAnswer: "Where",
+                    fullAnswer: "He is in Uruguay.", // Added full answer
+                    options: ["What", "Who", "Where"],
+                    image: "./images/1-planet_earth.png"
+                },
+                {
+                    id: "q2",
+                    text: "___ is he?",
+                    translation: "Quem é ele?",
+                    correctAnswer: "Who",
+                    fullAnswer: "He is Mario Kart.", // Added full answer
+                    options: ["What", "Who", "Where"],
+                    image: "./images/2-mario-kart.png"
+                },
+                {
+                    id: "q3",
+                    text: "___ is that woman?",
+                    translation: "Quem é aquela mulher?",
+                    correctAnswer: "Who",
+                    fullAnswer: "She is my sister.", // Added full answer
+                    options: ["What", "Who", "Where"],
+                    image: "./images/3-together.png"
+                },
+                {
+                    id: "q4",
+                    text: "___ is your friend?",
+                    translation: "Onde está seu amigo?",
+                    correctAnswer: "Where",
+                    fullAnswer: "They are in Canada.", // Added full answer
+                    options: ["What", "Who", "Where"],
+                    image: "./images/4-canada.png"
+                },
+                {
+                    id: "q5",
+                    text: "___ old are you?",
+                    translation: "Quantos anos você tem?",
+                    correctAnswer: "How", // resposta correta atualizada
+                    fullAnswer: "I am 7 years old.",
+                    options: ["What", "Who", "Where", "How"], // adicionada a opção "How"
+                    image: "./images/5-seven.png"
+                },
+                {
+                    id: "q6",
+                    text: "___ is your English teacher?",
+                    translation: "Quem é seu professor de inglês?",
+                    correctAnswer: "Who",
+                    fullAnswer: "She is Mrs Silvia.", // Added full answer
+                    options: ["What", "Who", "Where"],
+                    image: "./images/6-teacher.png"
+                },
+                {
+                    id: "q7",
+                    text: "___ is this?",
+                    translation: "O que é isso?",
+                    correctAnswer: "What",
+                    fullAnswer: "It’s a perfum.", // Added full answer
+                    options: ["What", "Who", "Where"],
+                    image: "./images/7-perfum.png"
+                },
+                {
+                    id: "q8",
+                    text: "___ are your parents?",
+                    translation: "Onde estão seus pais?",
+                    correctAnswer: "Where",
+                    fullAnswer: "They are on the beach.", // Added full answer
+                    options: ["What", "Who", "Where"],
+                    image: "./images/8-beach.png"
+                }
+            ]
+        };
+
+        function createQuestionCard(question) {
+        const card = document.createElement('div');
+        card.className = 'question-card';
+        card.innerHTML = `
+            <img src="${question.image}" alt="Image for ${question.text}" style="width: 100%; max-width:200px; margin-bottom: 15px;">
+            <div class="question-content">
+                <p>${question.text}</p>
+                <div class="translation-container">
+                    <i class="fas fa-language translation-icon"></i>
+                    <span class="translation">${question.translation}</span>
+                </div>
+            </div>            
+            <div class="correct-answer">
+                ${question.fullAnswer} <!-- Updated to show fullAnswer -->
+            </div>
+            <div class="options-container" id="${question.id}-options"></div>
+        `;
+
+            const optionsContainer = card.querySelector('.options-container');
+            question.options.forEach(option => {
+                const button = document.createElement('button');
+                button.className = 'wh-button';
+                button.textContent = option;
+                button.onclick = () => selectAnswer(question.id, option);
+                optionsContainer.appendChild(button);
+            });
+
+            return card;
+        }
+
+        function selectAnswer(questionId, selectedOption) {
+            const buttons = document.querySelectorAll(`#${questionId}-options .wh-button`);
+            buttons.forEach(button => {
+                button.classList.remove('selected');
+                if(button.textContent === selectedOption) {
+                    button.classList.add('selected');
+                }
+            });
+        }
+
+        function checkAnswers() {
+            let score = 0;
+            const results = document.getElementById('result');
+            results.innerHTML = '';
+            
+            exerciseConfig.questions.forEach(question => {
+                const card = document.querySelector(`#${question.id}-options`).closest('.question-card');
+                const selectedButton = card.querySelector('.wh-button.selected');
+
+                // Reset styling
+                card.classList.remove('correct', 'incorrect');
+                
+                // As respostas já estão sendo exibidas em cada card via .correct-answer
+
+                if(selectedButton) {
+                    if(selectedButton.textContent === question.correctAnswer) {
+                        score++;
+                        card.classList.add('correct');
+                    } else {
+                        card.classList.add('incorrect');
+                    }
+                }
+            });
+            results.innerHTML = `
+                <h3>Score: ${score}/${exerciseConfig.questions.length}</h3>
+                <p>Correct Answers:</p>
+                <ul>
+                    ${exerciseConfig.questions.map(q => 
+                        `<li>${q.text} <strong>${q.correctAnswer}</strong></li>`
+                    ).join('')}
+                </ul>
+            `;
+            results.style.display = 'block';
+        }
+
+        function initializeTranslationHandlers() {
+            document.querySelectorAll('.translation-icon').forEach(icon => {
+                const translation = icon.nextElementSibling;
+                
+                // Mouse events
+                icon.addEventListener('mouseenter', () => translation.style.display = 'block');
+                icon.addEventListener('mouseleave', () => translation.style.display = 'none');
+                
+                // Touch events
+                icon.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    translation.style.display = 'block';
+                });
+                
+                icon.addEventListener('touchend', () => translation.style.display = 'none');
+            });
+        }
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('cards-container');
+            exerciseConfig.questions.forEach(question => {
+                container.appendChild(createQuestionCard(question));
+            });
+            initializeTranslationHandlers(); 
+        });
+    </script>
+
+    <footer>
+        &copy; 2025 Word Teaching School
+    </footer>
+</body>
+</html>

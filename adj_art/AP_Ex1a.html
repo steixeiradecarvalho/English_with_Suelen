@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Adjetivos em Inglês</title>
+    <style>
+        :root {
+            --primary-color: #FF6B6B;
+            --secondary-color: #4ECDC4;
+            --accent-color: #FFE66D;
+            --background-color: #f7f9fc;
+            --success-color: #2ecc71;
+            --error-color: #e74c3c;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--background-color);
+            background-image: linear-gradient(45deg, #f3f4f6 25%, transparent 25%),
+                            linear-gradient(-45deg, #f3f4f6 25%, transparent 25%),
+                            linear-gradient(45deg, transparent 75%, #f3f4f6 75%),
+                            linear-gradient(-45deg, transparent 75%, #f3f4f6 75%);
+            background-size: 20px 20px;
+            padding: 20px;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .drag-area {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            min-height: 150px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-content: flex-start;
+        }
+
+        .drag-area:hover {
+            transform: translateY(-5px);
+        }
+
+        .adjective {
+            background: var(--secondary-color);
+            color: white;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 25px;
+            cursor: move;
+            display: inline-block;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .adjective:hover {
+            transform: scale(1.1);
+            background: var(--primary-color);
+        }
+
+        .image-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .image-box {
+            background: white;
+            padding: 15px;
+            border-radius: 15px;
+            text-align: center;
+            border: 3px dashed var(--secondary-color);
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .image-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .image-box img {
+            max-width: 150px;
+            max-height: 150px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .image-box img:hover {
+            transform: scale(1.1);
+        }
+
+        .slot {
+            font-size: 1.2em;
+            color: #333;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        .correct {
+            border-color: var(--success-color) !important;
+            animation: pulse 0.5s ease;
+        }
+
+        .incorrect {
+            border-color: var(--error-color) !important;
+            animation: shake 0.5s ease;
+        }
+
+        #message {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        footer {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            text-align: center;
+            padding: 15px 0;
+            margin-top: 30px;
+            border-radius: 10px;
+            box-shadow: 0 -5px 15px rgba(0,0,0,0.1);
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        /* Confetti animation for completion */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background-color: var(--accent-color);
+            animation: confetti-fall 3s linear infinite;
+        }
+
+        @keyframes confetti-fall {
+            0% { transform: translateY(-100vh) rotate(0deg); }
+            100% { transform: translateY(100vh) rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <h2 style="text-align: center;">Arraste os adjetivos corretos para as imagens</h2>
+    
+    <div class="container">
+        <!-- Área de Adjetivos -->
+        <div class="drag-area">
+            <div class="adjective" draggable="true">big</div>
+            <div class="adjective" draggable="true">clean</div>
+            <div class="adjective" draggable="true">new</div>
+            <div class="adjective" draggable="true">old</div>
+            <div class="adjective" draggable="true">long</div>
+            <div class="adjective" draggable="true">small</div>
+            <div class="adjective" draggable="true">cute</div>
+            <div class="adjective" draggable="true">dirty</div>
+            <div class="adjective" draggable="true">short</div>
+            <div class="adjective" draggable="true">fat</div>
+        </div>
+
+        <!-- Área de Imagens -->
+        <div class="image-container">
+            <!-- Cada div representa um par imagem + input -->
+            <div class="image-box" data-correct="dirty">
+                <img src="images/camisetasuja.jpeg" alt="camiseta suja">
+                <div class="slot">______ T-shirt</div>
+            </div>
+
+            <div class="image-box" data-correct="clean">
+                <img src="images/camisetabranca.jpeg" alt="camiseta limpa">
+                <div class="slot">______ T-shirt</div>
+            </div>
+
+            <div class="image-box" data-correct="short">
+                <img src="images/cabelocurto.jpeg" alt="cabelo curto">
+                <div class="slot">______ hair</div>
+            </div>
+
+            <div class="image-box" data-correct="long">
+                <img src="images/cabelolongo.jpeg" alt="cabelo longo">
+                <div class="slot">______ hair</div>
+            </div>
+
+            <div class="image-box" data-correct="big">
+                <img src="images/carroagrande.jpeg" alt="carro agrande">
+                <div class="slot">______ car</div>
+            </div>
+
+            <div class="image-box" data-correct="small">
+                <img src="images/carropequeno.jpeg" alt="carro pequeno">
+                <div class="slot">______ car</div>
+            </div>
+
+            <div class="image-box" data-correct="new">
+                <img src="images/casa.jpeg" alt="casa nova">
+                <div class="slot">______ house</div>
+            </div>
+
+            <div class="image-box" data-correct="old">
+                <img src="images/oldhouse.jpeg" alt="casa velha">
+                <div class="slot">______ house</div>
+            </div>
+
+            <div class="image-box" data-correct="dirty">
+                <img src="images/cuterabbit.jpeg" alt="cute rabbit">
+                <div class="slot">______ rabbit</div>
+            </div>
+
+            <div class="image-box" data-correct="clean">
+                <img src="images/fatcat.jpeg" alt="fat cat">
+                <div class="slot">______ cat</div>
+            </div>
+
+            <!-- Adicione os demais pares seguindo o mesmo padrão -->
+            <!-- ... -->
+            
+        </div>
+    </div>
+
+    <div id="message"></div>
+
+    <script>
+        const correctPairs = {
+            'camisetasuja.jpeg': 'dirty',
+            'camisetabranca.jpeg': 'clean',
+            'cabelocurto.jpeg': 'short',
+            'cabelolongo.jpeg': 'long',
+            'oldhouse.jpeg': 'old',
+            'casa.jpeg': 'new',
+            'carropequeno.jpeg': 'small',
+            'carrogrande.jpeg': 'big',
+            'cuterabbit.jpeg': 'cute',
+            'fatcat.jpeg': 'fat'
+        };
+
+        let draggedAdjective = null;
+
+        document.querySelectorAll('.adjective').forEach(item => {
+            item.addEventListener('dragstart', function(e) {
+                draggedAdjective = this.textContent;
+            });
+        });
+
+        document.querySelectorAll('.image-box').forEach(box => {
+            box.addEventListener('dragover', function(e) {
+                e.preventDefault();
+            });
+
+            box.addEventListener('drop', function(e) {
+                e.preventDefault();
+                const correct = this.dataset.correct;
+                const slot = this.querySelector('.slot');
+                
+                if (draggedAdjective === correct) {
+                    this.classList.add('correct');
+                    this.classList.remove('incorrect');
+                    slot.textContent = `${draggedAdjective} ${slot.textContent.split(' ')[1]}`;
+                    checkCompletion();
+                } else {
+                    this.classList.add('incorrect');
+                    setTimeout(() => this.classList.remove('incorrect'), 1000);
+                }
+            });
+        });
+
+        
+        // Add confetti effect on completion
+        function createConfetti() {
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.backgroundColor = 
+                    ['#FF6B6B', '#4ECDC4', '#FFE66D', '#95E1D3'][Math.floor(Math.random() * 4)];
+                document.body.appendChild(confetti);
+                
+                // Remove confetti after animation
+                setTimeout(() => confetti.remove(), 3000);
+            }
+        }
+
+        function checkCompletion() {
+            const correctBoxes = document.querySelectorAll('.correct').length;
+            if (correctBoxes === 10) {
+                document.getElementById('message').innerHTML = 
+                    '<h3 style="color:#2ecc71; font-size: 2em;">Parabéns! Todas as respostas estão corretas! 🎉</h3>';
+                createConfetti();
+            }
+        }
+    </script>
+</body>
+</html>

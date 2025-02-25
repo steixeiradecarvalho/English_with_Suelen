@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Emoji Customizado</title>
+    <style>
+        #game-container {
+            position: relative;
+            width: 800px;
+            height: 600px;
+            margin: 20px auto;
+            border: 2px solid #000;
+        }
+
+        .character {
+            position: absolute;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .character:hover {
+            transform: scale(1.1);
+        }
+
+        /* Estilo para a imagem personalizada */
+        .custom-emoji {
+            width: 50px; /* Ajuste conforme necessário */
+            height: 50px;
+            object-fit: contain;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="game-container"></div>
+    <script>
+        // Configuração dos personagens
+        const characters = [
+            { x: 150, y: 460, emoji: "👩", type: "distractor" },
+            { x: 250, y: 460, emoji: "👨", type: "distractor" },
+            { 
+                x: 350, 
+                y: 460,
+                image: "imagens/girl_pink_dress.png",
+                type: "girl_pink_dress",
+            },
+            { x: 450, y: 460, emoji: "🧓", type: "distractor" },
+            {
+                x: 550, 
+                y: 460, 
+                image: "imagens/chapeu_marrom.png", 
+                type: "boy_brown_cap" 
+            },
+            { x: 650, y: 460, emoji: "👶", type: "distractor" }
+        ];
+
+        // Função para carregar os elementos
+        function loadCharacters() {
+            const container = document.getElementById("game-container");
+
+            characters.forEach(char => {
+                let element;
+
+                if (char.image) {
+                    // Cria elemento de imagem para o PNG customizado
+                    element = document.createElement("img");
+                    element.src = char.image;
+                    element.classList.add("custom-emoji");
+                } else {
+                    // Cria elemento span para emojis padrão
+                    element = document.createElement("span");
+                    element.textContent = char.emoji;
+                    element.style.fontSize = "40px"; // Tamanho igual à imagem
+                }
+
+                element.classList.add("character");
+                element.style.left = `${char.x}px`;
+                element.style.top = `${char.y}px`;
+                
+                // Adiciona evento de clique (exemplo)
+                element.addEventListener("click", () => {
+                    console.log(`Clicou em: ${char.type}`);
+                });
+
+                container.appendChild(element);
+            });
+        }
+
+        // Inicializa quando o DOM estiver pronto
+        document.addEventListener("DOMContentLoaded", loadCharacters);
+
+    </script>
+</body>
+</html>

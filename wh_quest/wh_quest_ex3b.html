@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WH-Questions - Exercício de Inglês</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --error-color: #e74c3c;
+            --bg-color: #f9f9f9;
+            --card-bg: #ffffff;
+            --text-color: #333;
+            --border-radius: 8px;
+            --shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .instructions {
+            max-width: 600px;
+            margin: 0 auto 20px;
+            line-height: 1.5;
+            text-align: center;
+            font-size: 1rem;
+        }
+
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .columns-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        @media (min-width: 768px) {
+            .columns-container {
+                flex-direction: row;
+                justify-content: space-between;
+            }
+            
+            .wh-column, .questions-column {
+                width: 45%;
+            }
+        }
+
+        .wh-column, .questions-column {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .wh-card {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            text-align: center;
+            padding: 20px;
+        }
+
+        .wh-card.selected {
+            background-color: rgba(52, 152, 219, 0.2);
+            border: 2px solid var(--primary-color);
+        }
+
+        .question-card {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .question-card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: var(--border-radius);
+        }
+
+        .question-text {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+
+        .question-text span.blank {
+            display: inline-block;
+            width: 50px;
+            border-bottom: 2px solid #999;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .question-text span.filled {
+            display: inline-block;
+            min-width: 50px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .answer-text {
+            font-size: 1rem;
+            color: #666;
+            font-style: italic;
+        }
+
+        .question-card.correct {
+            background-color: rgba(52, 152, 219, 0.2);
+            transition: background-color 0.5s ease;
+        }
+
+        .question-card.incorrect {
+            background-color: rgba(231, 76, 60, 0.2);
+            animation: shake 0.5s;
+            transition: background-color 0.5s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-5px); }
+            40%, 80% { transform: translateX(5px); }
+        }
+        
+        .reset-button {
+            display: block;
+            margin: 30px auto 0;
+            padding: 10px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .reset-button:hover {
+            background-color: #2980b9;
+        }
+
+        .score-display {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 1.2rem;
+        }
+
+        .completion-message {
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: rgba(46, 204, 113, 0.2);
+            border-radius: var(--border-radius);
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>WH-Questions Exercise</h1>
+        <p class="instructions">Clique em um pronome ou advérbio interrogativo na primeira coluna e depois na pergunta correspondente na segunda coluna para completar a frase. O fundo ficará azul se a resposta estiver correta ou vermelho se estiver incorreta.</p>
+    </header>
+
+    <div class="game-container">
+        <div class="score-display">
+            Pontuação: <span id="score">0</span>/5
+        </div>
+
+        <div class="columns-container">
+            <div class="wh-column" id="wh-column">
+                <div class="card wh-card" data-wh="who" data-text="Who">Who?</div>
+                <div class="card wh-card" data-wh="when" data-text="When">When?</div>
+                <div class="card wh-card" data-wh="what" data-text="What">What?</div>
+                <div class="card wh-card" data-wh="where" data-text="Where">Where?</div>
+                <div class="card wh-card" data-wh="why" data-text="Why">Why?</div>
+            </div>
+
+            <div class="questions-column" id="questions-column">
+                <div class="card question-card" data-wh="who">
+                    <div class="question-text"><span class="blank">___</span> is your best friend?</div>
+                    <div class="answer-text">She is Joana.</div>
+                    <img src="./images/1-bestfriend.png" alt="Best friend">
+                </div>
+                <div class="card question-card" data-wh="when">
+                    <div class="question-text"><span class="blank">___</span> is your meeting?</div>
+                    <div class="answer-text">Today.</div>
+                    <img src="./images/2-meeting.png" alt="Meeting">
+                </div>
+                <div class="card question-card" data-wh="what">
+                    <div class="question-text"><span class="blank">___</span> is your favorite color?</div>
+                    <div class="answer-text">My favorite color is green.</div>
+                    <img src="./images/3-color.png" alt="Color">
+                </div>
+                <div class="card question-card" data-wh="where">
+                    <div class="question-text"><span class="blank">___</span> do you live?</div>
+                    <div class="answer-text">I live in Australia.</div>
+                    <img src="./images/4-australia.png" alt="Australia">
+                </div>
+                <div class="card question-card" data-wh="why">
+                    <div class="question-text"><span class="blank">___</span> are you happy?</div>
+                    <div class="answer-text">Because I am on the beach.</div>
+                    <img src="./images/5-happy.png" alt="Happy">
+                </div>
+            </div>
+        </div>
+
+        <div class="completion-message" id="completion-message">
+            <h2>Parabéns! Você completou o exercício com sucesso!</h2>
+            <p>Você dominou o uso das WH-Questions em inglês.</p>
+        </div>
+
+        <button class="reset-button" id="reset-button">Reiniciar</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const whCards = document.querySelectorAll('.wh-card');
+            const questionCards = document.querySelectorAll('.question-card');
+            const scoreDisplay = document.getElementById('score');
+            const resetButton = document.getElementById('reset-button');
+            const completionMessage = document.getElementById('completion-message');
+            
+            let selectedWh = null;
+            let correctMatches = new Set();
+            let score = 0;
+            
+            // Shuffle the question cards
+            const questionColumn = document.getElementById('questions-column');
+            const questionArray = Array.from(questionCards);
+            shuffleArray(questionArray);
+            questionArray.forEach(card => questionColumn.appendChild(card));
+            
+            // WH card click event
+            whCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    // If this card is already selected, deselect it
+                    if (selectedWh === this) {
+                        this.classList.remove('selected');
+                        selectedWh = null;
+                        return;
+                    }
+                    
+                    // Deselect previously selected card
+                    if (selectedWh) {
+                        selectedWh.classList.remove('selected');
+                    }
+                    
+                    // Select this card
+                    this.classList.add('selected');
+                    selectedWh = this;
+                });
+            });
+            
+            // Question card click event
+            questionCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    // If no WH card is selected or this card is already matched correctly, do nothing
+                    if (!selectedWh || correctMatches.has(this.getAttribute('data-wh'))) {
+                        return;
+                    }
+                    
+                    const whType = selectedWh.getAttribute('data-wh');
+                    const questionType = this.getAttribute('data-wh');
+                    const whText = selectedWh.getAttribute('data-text');
+                    
+                    // Find the blank span and fill it
+                    const blankSpan = this.querySelector('.blank') || this.querySelector('.filled');
+                    blankSpan.textContent = whText;
+                    blankSpan.classList.remove('blank');
+                    blankSpan.classList.add('filled');
+                    
+                    // Check if match is correct
+                    if (whType === questionType) {
+                        // Correct match
+                        this.classList.remove('incorrect');
+                        this.classList.add('correct');
+                        
+                        // Add to correct matches if not already there
+                        if (!correctMatches.has(whType)) {
+                            correctMatches.add(whType);
+                            // Update score
+                            score++;
+                            scoreDisplay.textContent = score;
+                        }
+                        
+                        // Check if all matches are complete
+                        if (score === 5) {
+                            completionMessage.style.display = 'block';
+                        }
+                    } else {
+                        // Wrong match
+                        this.classList.remove('correct');
+                        this.classList.add('incorrect');
+                        
+                        // Reset after 1 second if this card wasn't already correct
+                        if (!correctMatches.has(questionType)) {
+                            setTimeout(() => {
+                                this.classList.remove('incorrect');
+                                blankSpan.textContent = '___';
+                                blankSpan.classList.remove('filled');
+                                blankSpan.classList.add('blank');
+                            }, 1000);
+                        }
+                    }
+                    
+                    // Deselect WH card
+                    selectedWh.classList.remove('selected');
+                    selectedWh = null;
+                });
+            });
+            
+            // Reset button click event
+            resetButton.addEventListener('click', function() {
+                // Reset score
+                score = 0;
+                scoreDisplay.textContent = score;
+                correctMatches.clear();
+                
+                // Reset cards
+                questionCards.forEach(card => {
+                    card.classList.remove('correct', 'incorrect');
+                    const filledSpan = card.querySelector('.filled');
+                    if (filledSpan) {
+                        filledSpan.textContent = '___';
+                        filledSpan.classList.remove('filled');
+                        filledSpan.classList.add('blank');
+                    }
+                });
+                
+                if (selectedWh) {
+                    selectedWh.classList.remove('selected');
+                    selectedWh = null;
+                }
+                
+                // Hide completion message
+                completionMessage.style.display = 'none';
+                
+                // Reshuffle question cards
+                const questionArray = Array.from(questionCards);
+                shuffleArray(questionArray);
+                questionArray.forEach(card => questionColumn.appendChild(card));
+            });
+            
+            // Utility function to shuffle array
+            function shuffleArray(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+                return array;
+            }
+        });
+    </script>
+</body>
+</html>

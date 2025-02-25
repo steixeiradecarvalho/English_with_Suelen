@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prepositions Game - In/On/At</title>
+    <style>
+        :root {
+            --cor-primaria: #2c3e50;
+            --cor-acerto: #27ae60;
+            --cor-erro: #c0392b;
+            --cor-fundo: #ecf0f1;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: var(--cor-fundo);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 90%;
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .question-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 10px 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { 
+                opacity: 0; 
+                transform: translateY(20px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+        }
+
+        .active { 
+            display: block; 
+        }
+
+        .nav-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 20px 0;
+        }
+
+        .nav-btn {
+            font-size: 2em;
+            cursor: pointer;
+            padding: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-btn:hover { 
+            transform: scale(1.2); 
+        }
+
+        .counter {
+            font-size: 1.2em;
+            color: var(--cor-primaria);
+        }
+
+        .options-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 25px;
+            margin-bottom: 20px;
+        }
+
+        .option-btn {
+            aspect-ratio: 2;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+            color: white;
+            border: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .option-btn.in {
+            background: #3498db url('data:image/svg+xml,<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="45" fill="%23000000" opacity="0.1"/></svg>');
+        }
+
+        .option-btn.on {
+            background: #e74c3c url('data:image/svg+xml,<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect x="10" y="10" width="80" height="80" fill="%23000000" opacity="0.1"/></svg>');
+        }
+
+        .option-btn.at {
+            background: #2ecc71 url('data:image/svg+xml,<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><polygon points="50 10 90 90 10 90" fill="%23000000" opacity="0.1"/></svg>');
+        }
+
+        .correct {
+            background-color: var(--cor-acerto) !important;
+            filter: brightness(1.1);
+            box-shadow: 0 5px 15px rgba(39, 174, 96, 0.4);
+        }
+
+        .incorrect {
+            background-color: var(--cor-erro) !important;
+            opacity: 0.8;
+        }
+
+        .answer-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50px;
+            height: 50px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .correct .answer-icon-correct,
+        .incorrect .answer-icon-wrong {
+            opacity: 1;
+        }
+
+        .question-card h3 {
+            font-size: clamp(16px, 4vw, 24px);
+            margin: 0 0 15px 0;
+            text-align: center;
+            line-height: 1.3;
+        }
+
+        .reset-button {
+            margin-top: 20px;
+            padding: 15px 30px;
+            background: #e67e22;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .reset-button:hover {
+            background: #d35400;
+        }
+
+        #score-container {
+            font-size: 24px;
+            margin: 20px;
+            text-align: center;
+        }
+
+        #score {
+            font-weight: bold;
+            color: green;
+        }
+
+        .game-title {
+            font-size: clamp(1.5rem, 4vw, 2.5rem); /* Responsivo */
+            color: var(--cor-primaria); 
+            text-align: center;
+            margin: 20px 0 30px 0;
+            padding: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Efeitos de animação */
+        @keyframes pulseCorrect {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes shakeWrong {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(10px); }
+            50% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+            100% { transform: translateX(0); }
+        }
+
+        @keyframes glowCorrect {
+            0% { box-shadow: 0 0 10px var(--cor-acerto); }
+            50% { box-shadow: 0 0 20px var(--cor-acerto); }
+            100% { box-shadow: 0 0 10px var(--cor-acerto); }
+        }
+
+        /* Estilos da seção de congratulações */
+        .congrats-hidden {
+            display: none;
+            opacity: 0;
+            transform: scale(0.8);
+        }
+
+        #congrats {
+            text-align: center;
+            padding: 30px;
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            color: white;
+            border-radius: 15px;
+            margin: 20px 0;
+            animation: congratsReveal 0.5s ease-out forwards;
+        }
+
+        @keyframes congratsReveal {
+            from { opacity: 0; transform: translateY(-50px) scale(0.8); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .home-button {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 12px 25px;
+            background: #2980b9;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .home-button:hover {
+            background: #3498db;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="game-title">Prepositions: In-On-At Game</h1>
+        <div id="score-container">
+            <span>Pontuação:</span>
+            <span id="score">0</span>
+        </div>
+        <div id="questions-container"></div>
+        <!-- button onclick="resetGame()" class="reset-button">Reiniciar</button -->
+    </div>
+    <div id="congrats" class="congrats-hidden">
+        <h2>🎉 Congratulations! 🎉</h2>
+        <p>You completed all questions with a score of <span id="final-score">0</span>!<br></p>
+        <a href="./../index.html" class="home-button">Retornar</a>
+    </div>
+
+    <script>
+        let score = 0; // Inicializa o contador de pontos
+        let answeredQuestions = 0;
+        
+        function updateScore(points) {
+            score += points; // Incrementa o contador
+            document.getElementById('score').textContent = score; // Atualiza o valor na tela
+        }
+
+        const questions = [
+            {question: "She comes ____ monday", answer: "on"},
+            {question: "I love _____ christmas", answer: "at"},
+            {question: "I watch movies ______ night", answer: "at"},
+            {question: "I study ___ night", answer: "at"},
+            {question: "We are ____ Paris", answer: "in"},
+            {question: "They are ___ home", answer: "at"},
+            {question: "I have dentist ____ 3 o'clock in morning", answer: "at"},
+            {question: "My birthday is ____ june", answer: "in"},
+            {question: "I watch tv ____ the morning", answer: "in"},
+            {question: "We go to the beach ____ the evening", answer: "in"}
+        ];
+
+        let currentQuestion = 0;
+
+        // SVG icons for correct and wrong answers
+        const correctIcon = `<svg class="answer-icon answer-icon-correct" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+            <path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>`;
+
+        const wrongIcon = `<svg class="answer-icon answer-icon-wrong" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+            <path d="M18 6L6 18M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>`;
+
+        function createGame() {
+            const container = document.getElementById('questions-container');
+            
+            questions.forEach((q, i) => {
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.innerHTML = `
+                    <h3>${q.question}</h3>
+                    <div class="options-container">
+                        ${['in', 'on', 'at'].map(opt => `
+                            <button class="option-btn ${opt}" onclick="checkAnswer(${i},'${opt}')">
+                                ${opt.toUpperCase()}
+                                ${correctIcon}
+                                ${wrongIcon}
+                            </button>
+                        `).join('')}
+                    </div>                    
+                    <div class="nav-controls">
+                        <div class="nav-btn" onclick="navigate(-1)">◀️</div>
+                        <div class="counter"><span id="current${i}">Question ${i + 1} of ${questions.length}</span></div>
+                        <div class="nav-btn" onclick="navigate(1)">▶️</div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+
+            document.querySelector('.question-card').classList.add('active');
+        }
+
+        function navigate(direction) {
+            currentQuestion += direction;
+
+            if (currentQuestion < 0) currentQuestion = 0;
+            if (currentQuestion >= questions.length) currentQuestion = questions.length - 1;
+
+            document.querySelectorAll('.question-card').forEach((card, i) => {
+                card.classList.toggle('active', i === currentQuestion);
+            });
+        }
+        
+        function checkAnswer(qIndex, selected) {
+            const correct = questions[qIndex].answer;
+            const options = document.querySelectorAll(`#questions-container > div:nth-child(${qIndex + 1}) .option-btn`);
+            const correctButton = document.querySelector(`#questions-container > div:nth-child(${qIndex + 1}) .${correct}`); // Botão correto
+            let isCorrect = false;
+
+            options.forEach(btn => {
+                btn.disabled = true; // Desabilita todos os botões
+
+                // Se o botão for o CORRETO
+                if (btn.classList.contains(correct)) {
+                    btn.classList.add('correct'); // Marca como correto
+                    btn.style.animation = 'pulseCorrect 0.5s, glowCorrect 1s infinite'; // Efeito visual
+                }
+
+                // Se o botão for o SELECIONADO (usuário)
+                if (btn.textContent.trim().toLowerCase() === selected) {
+                    if (selected !== correct) {
+                        btn.classList.add('incorrect'); // Marca como erro
+                        btn.style.animation = 'shakeWrong 0.5s'; // Efeito de tremor
+                    } else {
+                        isCorrect = true; // Resposta correta
+                    }
+                }
+            });
+
+            if (isCorrect) {
+                updateScore(1); // Atualiza pontuação
+                answeredQuestions++;
+                if (answeredQuestions === questions.length) showCongrats(); // Verifica conclusão
+            }
+        }
+
+        function showCongrats() {
+            const congrats = document.getElementById('congrats');
+            const finalScore = document.getElementById('final-score');
+            finalScore.textContent = score;
+            congrats.classList.remove('congrats-hidden');
+            congrats.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function resetGame() {
+            currentQuestion = 0;
+            score = 0;
+            answeredQuestions = 0;
+            document.getElementById('score').textContent = '0';
+            document.getElementById('congrats').classList.add('congrats-hidden');
+            
+            document.querySelectorAll('.question-card').forEach(card => {
+                card.classList.remove('active', 'correct-question');
+                card.querySelectorAll('.option-btn').forEach(btn => {
+                    btn.classList.remove('correct', 'incorrect');
+                    btn.style.animation = '';
+                    btn.disabled = false;
+                });
+            });
+            document.querySelector('.question-card').classList.add('active');
+            document.getElementById('congrats').classList.add('congrats-hidden');
+        }
+        window.onload = createGame;
+    </script>
+</body>
+</html>

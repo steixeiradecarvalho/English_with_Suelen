@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo Educativo</title>
+    <style>
+        /* Estilos gerais */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        /* Container do jogo */
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        /* Estilos para a pontuação */
+        .score-container {
+            width: 100%;
+            text-align: center;
+            margin: 10px 0;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        /* Estilos para a seção de resultados */
+        .results {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin: 20px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .results h2 {
+            color: #4CAF50;
+        }
+
+        .play-again, .home-btn {
+            padding: 12px 24px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 10px;
+            text-decoration: none;
+            color: white;
+        }
+
+        .play-again {
+            background-color: #2196F3;
+        }
+
+        .home-btn {
+            background-color: #FF9800;
+        }
+
+        .play-again:hover, .home-btn:hover {
+            opacity: 0.9;
+        }
+
+        /* Estilo dos cards */
+        .card {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin: 10px;
+            width: 90%;
+            max-width: 400px;
+            display: none; /* Escondemos todos os cards por padrão */
+        }
+
+        .card:first-child {
+            display: block; /* Apenas o primeiro card é visível inicialmente */
+        }
+
+        /* Ilustração */
+        .illustration img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+
+        /* Frase */
+        .sentence {
+            margin: 20px 0;
+            font-size: 18px;
+            text-align: center;
+        }
+
+        .blank {
+            border-bottom: 2px solid #333;
+            padding: 0 10px;
+        }
+
+        /* Botões de adjetivos */
+        .buttons {
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .adjective-btn {
+            padding: 12px 24px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            background-color: #2196F3;
+            color: white;
+            transition: all 0.3s;
+        }
+
+        .adjective-btn:hover {
+            opacity: 0.9;
+        }
+
+        /* Efeitos de feedback */
+        .glow {
+            animation: glow 1s infinite;
+        }
+
+        .shake {
+            animation: shake 0.5s;
+        }
+
+        .obscure {
+            opacity: 0.5;
+            pointer-events: none; /* Impede cliques adicionais */
+        }
+
+        @keyframes glow {
+            0% { box-shadow: 0 0 5px #4CAF50; }
+            50% { box-shadow: 0 0 20px #4CAF50; }
+            100% { box-shadow: 0 0 5px #4CAF50; }
+        }
+
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+            100% { transform: translateX(0); }
+        }
+
+        /* Navegação */
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            width: 90%;
+            max-width: 400px;
+            margin: 20px 0;
+        }
+
+        .nav-btn {
+            background-color: #FF9800;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .nav-btn:hover {
+            background-color: #F57C00;
+        }
+    </style>
+</head>
+<body>
+    <!-- Contagem de pontos -->
+    <div class="score-container">
+        <p>Pontuação: <span id="score">0</span></p>
+    </div>
+    <div class="game-container">
+        <div class="card">
+            <div class="illustration">
+                <img src="./images/1-coldGlass.png" alt="Cold Glass">
+            </div>
+            <div class="sentence">
+                <p>The water is <span class="blank">______</span></p>
+            </div>
+            <div class="buttons">
+                <button class="adjective-btn" data-correct="true">cold</button>
+                <button class="adjective-btn" data-correct="false">hot</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="illustration">
+                <img src="./images/2-flowery.png" alt="Flowery Garden">
+            </div>
+            <div class="sentence">
+                <p>The garden is <span class="blank">______</span></p>
+            </div>
+            <div class="buttons">
+                <button class="adjective-btn" data-correct="true">beautiful</button>
+                <button class="adjective-btn" data-correct="false">ugly</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="illustration">
+                <img src="./images/3-sportscar.png" alt="Sportscar">
+            </div>
+            <div class="sentence">
+                <p>The car is <span class="blank">______</span></p>
+            </div>
+            <div class="buttons">
+                <button class="adjective-btn" data-correct="true">fast</button>
+                <button class="adjective-btn" data-correct="false">slow</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="illustration">
+                <img src="./images/4-kitchen.png" alt="Clean Kitchen">
+            </div>
+            <div class="sentence">
+                <p>The kitchen is <span class="blank">______</span></p>
+            </div>
+            <div class="buttons">
+                <button class="adjective-btn" data-correct="true">clean</button>
+                <button class="adjective-btn" data-correct="false">dirty</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="illustration">
+                <img src="./images/5-skyscraper.png" alt="Skyscraper">
+            </div>
+            <div class="sentence">
+                <p>The building is <span class="blank">______</span></p>
+            </div>
+            <div class="buttons">
+                <button class="adjective-btn" data-correct="true">tall</button>
+                <button class="adjective-btn" data-correct="false">short</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="illustration">
+                <img src="./images/6-cutekitten.png" alt="Cute Kitten">
+            </div>
+            <div class="sentence">
+                <p>The kitten is <span class="blank">______</span></p>
+            </div>
+            <div class="buttons">
+                <button class="adjective-btn" data-correct="true">small</button>
+                <button class="adjective-btn" data-correct="false">big</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="illustration">
+                <img src="./images/7-narrowalley.png" alt="Narrow Alley">
+            </div>
+            <div class="sentence">
+                <p>The street is <span class="blank">______</span></p>
+            </div>
+            <div class="buttons">
+                <button class="adjective-btn" data-correct="true">narrow</button>
+                <button class="adjective-btn" data-correct="false">wide</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="illustration">
+                <img src="./images/8-diver.png" alt="Diver in Ocean">
+            </div>
+            <div class="sentence">
+                <p>The ocean is <span class="blank">______</span></p>
+            </div>
+            <div class="buttons">
+                <button class="adjective-btn" data-correct="true">deep</button>
+                <button class="adjective-btn" data-correct="false">shallow</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="illustration">
+                <img src="./images/9-crossing.png" alt="Safe Crossing">
+            </div>
+            <div class="sentence">
+                <p>The crosswalk is <span class="blank">______</span></p>
+            </div>
+            <div class="buttons">
+                <button class="adjective-btn" data-correct="true">safe</button>
+                <button class="adjective-btn" data-correct="false">dangerous</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="illustration">
+                <img src="./images/10-athlete.png" alt="Strong Athlete">
+            </div>
+            <div class="sentence">
+                <p>The athlete is <span class="blank">______</span></p>
+            </div>
+            <div class="buttons">
+                <button class="adjective-btn" data-correct="true">strong</button>
+                <button class="adjective-btn" data-correct="false">weak</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="illustration">
+                <img src="./images/11-plate.png" alt="Full Plate">
+            </div>
+            <div class="sentence">
+                <p>The plate is <span class="blank">______</span></p>
+            </div>
+            <div class="buttons">
+                <button class="adjective-btn" data-correct="true">full</button>
+                <button class="adjective-btn" data-correct="false">empty</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="illustration">
+                <img src="./images/12-student.png" alt="Student Taking Exam">
+            </div>
+            <div class="sentence">
+                <p>The exam is <span class="blank">______</span></p>
+            </div>
+            <div class="buttons">
+                <button class="adjective-btn" data-correct="true">difficult</button>
+                <button class="adjective-btn" data-correct="false">easy</button>
+            </div>
+        </div>
+
+    </div>
+    <div class="navigation">
+        <button class="nav-btn prev">←</button>
+        <button class="nav-btn next">→</button>
+    </div>
+    <!-- Seção de resultados -->
+    <div class="results" style="display: none;">
+        <h2>Resultados</h2>
+        <p>Sua pontuação final: <span id="final-score">0</span></p>
+        <button class="play-again">Jogar Novamente</button>
+        <a href="./../index.html" class="home-btn">Voltar para Home</a>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+        const cards = document.querySelectorAll('.card');
+        const nextBtn = document.querySelector('.nav-btn.next');
+        const prevBtn = document.querySelector('.nav-btn.prev');
+        const scoreDisplay = document.getElementById('score');
+        const finalScoreDisplay = document.getElementById('final-score');
+        const resultsSection = document.querySelector('.results');
+        const playAgainBtn = document.querySelector('.play-again');
+        let currentCardIndex = 0;
+        let score = 0;
+
+        // Função para mostrar o card atual
+        function showCard(index) {
+            cards.forEach((card, i) => {
+                card.style.display = i === index ? 'block' : 'none';
+            });
+            if (index === cards.length - 1) {
+                nextBtn.textContent = 'Finalizar';
+            } else {
+                nextBtn.textContent = '→';
+            }
+        }
+
+        // Randomizar botões em cada card
+        function shuffleButtons(card) {
+            const buttonsContainer = card.querySelector('.buttons');
+            const buttons = Array.from(buttonsContainer.children);
+            buttons.sort(() => Math.random() - 0.5); // Embaralha os botões
+            buttons.forEach(button => buttonsContainer.appendChild(button));
+        }
+
+        // Aplicar randomização em todos os cards
+        cards.forEach(card => shuffleButtons(card));
+
+        // Mostrar o primeiro card
+        showCard(currentCardIndex);
+
+        // Adicionar eventos aos botões de adjetivos
+        cards.forEach(card => {
+            const buttons = card.querySelectorAll('.adjective-btn');
+            buttons.forEach(button => {
+                button.addEventListener('click', () => {
+                    if (button.disabled) return; // Impede múltiplos cliques
+                    const isCorrect = button.getAttribute('data-correct') === 'true';
+                    if (isCorrect) {
+                        score++;
+                        scoreDisplay.textContent = score;
+                        button.classList.add('glow'); // Adiciona efeito de brilho
+                        button.innerHTML += ' ✓'; // Adiciona símbolo de check
+                    } else {
+                        button.classList.add('shake'); // Adiciona efeito de tremor
+                        button.innerHTML += ' ✗'; // Adiciona símbolo de erro
+                        setTimeout(() => {
+                            button.classList.add('obscure'); // Obscurece o botão errado
+                        }, 500);
+                    }
+                    // Desabilitar todos os botões do card após a escolha
+                    buttons.forEach(btn => btn.disabled = true);
+                });
+            });
+        });
+
+        // Navegação entre cards
+            nextBtn.addEventListener('click', () => {
+                if (currentCardIndex < cards.length - 1) {
+                    currentCardIndex++;
+                    showCard(currentCardIndex);
+                } else {
+                    // Mostrar resultados
+                    finalScoreDisplay.textContent = score;
+                    resultsSection.style.display = 'block';
+                    document.querySelector('.game-container').style.display = 'none';
+                    document.querySelector('.navigation').style.display = 'none';
+                }
+            });
+
+            prevBtn.addEventListener('click', () => {
+                if (currentCardIndex > 0) {
+                    currentCardIndex--;
+                    showCard(currentCardIndex);
+                }
+            });
+
+            // Reiniciar o jogo
+            playAgainBtn.addEventListener('click', () => {
+                location.reload(); // Recarrega a página para reiniciar
+            });
+        });
+    </script>
+</body>
+</html>

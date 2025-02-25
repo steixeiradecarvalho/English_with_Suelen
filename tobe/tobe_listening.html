@@ -95,8 +95,8 @@
             transition: transform 0.2s;
             color: var(--primary-color);
             padding: 10px;
-            width: 60px;
-            height: 60px;
+            width: min-width;
+            height: min-width;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -144,6 +144,15 @@
             text-decoration: none; /* Remove sublinhado do link */
             display: inline-block; /* Permite estilizar como bloco */
             }
+
+        @media (max-width: 480px) {
+            .text-content {
+                margin: 0 20px; /* Reduz margens em telas pequenas */
+            }
+            input {
+                width: 100%; /* Inputs ocupam largura total em mobile */
+            }
+        }
     </style>
 </head>
 <body>
@@ -155,6 +164,13 @@
 
         <div class="text-container">
             <div class="exercise-wrapper">
+                <div class="text-content">
+                    My name IS Mary. I AM a very happy person. My mother IS a doctor, and my father is a vet. My family and I 
+                    <input type="text" data-answer="are" class="answer"> very happy.
+                </div>
+                <div class="translation">
+                    Meu nome é Mary. Eu sou uma pessoa muito feliz. Minha mãe é médica e meu pai é veterinário. Minha família e eu somos muito felizes.
+                </div>
                 <div class="control-buttons">
                     <button class="btn play-audio" data-audio="tobe_ex1-1.mp3">
                         <i class="fas fa-play"></i>
@@ -163,26 +179,12 @@
                         <i class="fas fa-language"></i>
                     </button>
                 </div>
-                <div class="text-content">
-                    My name IS Mary. I AM a very happy person. My mother IS a doctor, and my father is a vet. My family and I 
-                    <input type="text" data-answer="are" class="answer"> very happy.
-                </div>
-                <div class="translation">
-                    Meu nome é Mary. Eu sou uma pessoa muito feliz. Minha mãe é médica e meu pai é veterinário. Minha família e eu somos muito felizes.
-                </div>
+                
             </div>
         </div>
 
         <div class="text-container">
             <div class="exercise-wrapper">
-                <div class="control-buttons">
-                    <button class="btn play-audio" data-audio="tobe_ex1-2.mp3">
-                        <i class="fas fa-play"></i>
-                    </button>
-                    <button class="btn show-translation">
-                        <i class="fas fa-language"></i>
-                    </button>
-                </div>
                 <div class="text-content">
                     He IS my brother. He Is my best friend, too. We 
                     <input type="text" data-answer="are" class="answer"> in the same school. My friends and my brother 
@@ -191,9 +193,18 @@
                 <div class="translation">
                     Ele é meu irmão. Ele também é meu melhor amigo. Nós estamos na mesma escola. Meus amigos e meu irmão estão no parque agora.
                 </div>
+                <div class="control-buttons">
+                    <button class="btn play-audio" data-audio="tobe_ex1-2.mp3">
+                        <i class="fas fa-play"></i>
+                    </button>
+                    <button class="btn show-translation">
+                        <i class="fas fa-language"></i>
+                    </button>
+                </div>
+                
             </div>
         </div>
-        <a id="backButton" href=".././index.html">Voltar</a>
+        <a id="backButton" href=".././index.html">Home</a>
     </div>
 
     <script>

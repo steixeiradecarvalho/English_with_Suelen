@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>City Preposition Drive</title>
+    <style>
+        :root {
+            --element-size: 5vw;
+            --button-font-size: 4vw;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to bottom, #87CEEB, #4682B4);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            touch-action: manipulation;
+        }
+
+        .instructions {
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 12px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            width: 90%;
+            max-width: 600px;
+        }
+
+        .instructions h3 {
+            margin: 0 0 8px 0;
+            color: #2c3e50;
+            font-size: 5vw;
+        }
+
+        .instructions ul {
+            margin: 4px 0;
+            padding-left: 20px;
+            font-size: 3.5vw;
+        }
+
+        .game-container {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            width: 90%;
+            max-width: 600px;
+            margin-bottom: 15px;
+        }
+
+        .road {
+            background: #333;
+            height: 30vh;
+            position: relative;
+            border-radius: 8px;
+            margin: 15px 0;
+            overflow: hidden;
+            max-height: 200px;
+        }
+
+        .car {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10vw;
+            z-index: 2;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .city-element {
+            position: absolute;
+            left: -150px;
+            font-size: 35px;
+            animation: moveRight linear infinite;
+            opacity: 0.9;
+            top: 60%;
+            transform: translateY(-50%);
+            white-space: nowrap;
+        }        
+
+        .question-sign {
+            background: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            position: absolute;
+            left: -150px;
+            transform: translateY(-50%);
+            box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+            z-index: 3;
+            font-size: 3vw;
+            white-space: nowrap;
+            display: inline-block;
+            top: 50%;
+            animation: moveRight linear forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes moveRight {
+            from { left: -150px; }
+            to { left: 120%; }
+        }
+
+        .controls {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .controls button {
+            padding: 12px 20px;
+            font-size: var(--button-font-size);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            background: #4CAF50;
+            color: white;
+            transition: transform 0.2s;
+            min-width: 25vw;
+            touch-action: manipulation;
+        }
+
+        .stats {
+            background: rgba(255,255,255,0.9);
+            padding: 12px;
+            border-radius: 8px;
+            margin: 8px;
+            display: flex;
+            justify-content: space-between;
+            width: 90%;
+            max-width: 600px;
+            font-size: 3.5vw;
+        }
+
+        .correct-effect {
+            filter: drop-shadow(0 0 15px #2ecc77) brightness(1.2);
+        }
+
+        .wrong-effect {
+            filter: drop-shadow(0 0 15px #e74c3c) brightness(0.8);
+        }
+
+        @media (min-width: 600px) {
+            :root {
+                --element-size: 35px;
+                --button-font-size: 18px;
+            }
+            
+            .instructions h3 {
+                font-size: 24px;
+            }
+            
+            .instructions ul {
+                font-size: 16px;
+            }            
+            
+            .stats {
+                font-size: 16px;
+            }
+            
+            .car {
+                font-size: 60px;
+            }
+            
+            .controls button {
+                min-width: 100px;
+                padding: 12px 24px;
+            }
+          
+            .question-sign {
+                font-size: 16px;
+                padding: 6px 12px;
+            }
+        }
+
+        .start-screen {
+            text-align: center;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        #startButton {
+            padding: 20px 40px;
+            font-size: 24px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.3s;
+            width: 90%;
+            max-width: 300px;
+        }
+
+        #startButton:hover {
+            transform: scale(1.05);
+        }
+
+        .game-over {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(0,0,0,0.3);
+            z-index: 100;
+        }
+
+        .victory-screen {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(0,0,0,0.3);
+            z-index: 100;
+        }
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: #ff0;
+            pointer-events: none;
+            animation: fall 2s linear forwards;
+        }
+
+        @keyframes fall {
+            from { transform: translateY(-100vh); }
+            to { transform: translateY(100vh); }
+        }
+
+        .final-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .final-button {
+            padding: 15px 30px;
+            font-size: 18px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .restart-button {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .return-button {
+            background: #3498db;
+            color: white;
+        }
+
+        .final-button:hover {
+            transform: scale(1.1);
+        }
+
+        .question-counter {
+            margin-top: 5px;
+            font-size: 3.5vw;
+            text-align: center;
+        }
+
+        @media (min-width: 600px) {
+            .question-counter {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="instructions">
+        <h3 style="text-align: center;">🚗 City Preposition Drive 🏁</h3>
+        <br><span style="font-weight: bold; color: #2c3e50; background-color: #f0f0f0; padding: 4px 8px; border-radius: 4px;">Você está trafegando por uma via e surgirão placas com destinos:</span>
+        <ul>
+            <li>🛑 Responda às placas com a preposição adequada.</li>
+            <li>✅ Acertos: +velocidade | ❌ Erros: -velocidade</li>
+            <li>❤️ Vidas: 5 | 🎯 Objetivo: Acerte todas as 10 questões!</li>
+        </ul>
+    </div>
+
+    <div class="stats">
+        <div>⭐ Score: <span id="score">0</span></div>
+        <div>❤️ Lives: <span id="lives">5</span></div>
+        <div>🚀 Speed: <span id="speed">1</span>x</div>
+    </div>
+
+    <div class="game-container">
+        <div class="road">
+            <div class="car">🚗</div>
+            <div id="city"></div>
+        </div>
+        <div class="question-counter">Question <span id="currentQuestionNum">1</span> of <span id="totalQuestions">10</span></div>
+        <div class="controls">
+            <button onclick="checkAnswer('in')">In</button>
+            <button onclick="checkAnswer('at')">At</button>
+            <button onclick="checkAnswer('on')">On</button>
+        </div>
+    </div>
+    
+    <div class="start-screen" id="startScreen">
+        <button id="startButton">Start Game 🚗</button>
+    </div>
+
+    <div class="game-over" id="gameOverScreen">
+        <h2>🏁 Game Over!</h2>
+        <p>Your Score: <span id="finalScore">0</span></p>
+        <div class="final-buttons">
+            <button class="final-button restart-button" id="restartButton">Start Game 🚗</button>
+            <a href="./../index.html" class="final-button return-button">Home</a>
+        </div>
+    </div>
+
+    <div class="victory-screen" id="victoryScreen">
+        <h2>🎉 Victory! 🏆</h2>
+        <p>Your Score: <span id="victoryScore">0</span></p>
+        <div class="final-buttons">
+            <button class="final-button restart-button" id="victoryRestartButton">Start Game 🚗</button>
+            <a href="./../index.html" class="final-button return-button">Home</a>
+        </div>
+    </div>
+
+    <script>
+        const elements = ['🏢','🏫','🏨','🌳','🏪','🏭','🌆','🚦'];
+        const questions = [
+            { phrase: "____ April 🗓️", answer: "in" },
+            { phrase: "____ June, 30 📅", answer: "on" },
+            { phrase: "____ home 🏠", answer: "at" },
+            { phrase: "____ bank 🏦", answer: "in" },
+            { phrase: "____ week 📅", answer: "on" },
+            { phrase: "____ the afternoon 🌅", answer: "in" },
+            { phrase: "____ Brazil 🇧🇷", answer: "in" },
+            { phrase: "____ School 🏫", answer: "in" },
+            { phrase: "____ Restaurant 🍽️", answer: "in" },
+            { phrase: "____ Saturday 📅", answer: "on" }
+        ];
+        
+        let score = 0;
+        let lives = 5;
+        let speed = 1;
+        let currentQuestion = null;
+        let questionIndex = 0;
+        let pendingQuestions = [...Array(questions.length).keys()]; // Indices das perguntas pendentes
+        let cityInterval;
+        let questionTimeout;
+        let questionActive = false;
+        let gameStarted = false;
+        
+        // Não esconde mais os elementos do jogo - eles são visíveis desde o início
+        
+        function startGame() {
+            document.getElementById('startScreen').style.display = 'none';
+            gameStarted = true;
+            cityInterval = setInterval(createCityElement, 800);
+            createNextQuestion();
+            updateDisplay();
+        }
+
+        document.getElementById('startButton').addEventListener('click', startGame);
+
+        function createCityElement() {
+            if (!gameStarted) return;
+            
+            const element = document.createElement('div');
+            element.className = 'city-element';
+            element.style.animationDuration = `${3/speed}s`;
+            element.textContent = elements[Math.floor(Math.random() * elements.length)];
+            document.getElementById('city').appendChild(element);
+            setTimeout(() => element.remove(), (3/speed)*1000 + 500);
+        }
+
+        function createNextQuestion() {
+            if (!gameStarted || questionActive) return;
+            
+            if (pendingQuestions.length === 0) {
+                winGame();
+                return;
+            }
+            
+            questionActive = true;
+            updateQuestionCounter();
+            
+            // Pegando a próxima questão na sequência
+            currentQuestion = questions[pendingQuestions[0]];
+            
+            const sign = document.createElement('div');
+            sign.className = 'question-sign';
+            sign.innerHTML = `<div>${currentQuestion.phrase}</div>`;
+            sign.style.animationDuration = `${6/speed}s`;
+            document.getElementById('city').appendChild(sign);
+            
+            // Define o tempo para remover a questão se não for respondida
+            questionTimeout = setTimeout(() => {
+                if(sign.parentElement) {
+                    lives--;
+                    updateDisplay();
+                    if(lives <= 0) {
+                        endGame();
+                        return;
+                    }
+                    sign.remove();
+                    questionActive = false;
+                    
+                    // Agendando a próxima questão após um pequeno atraso
+                    setTimeout(createNextQuestion, 1000);
+                }
+            }, 6000/speed);
+        }
+
+        function checkAnswer(answer) {
+            if(!gameStarted || !questionActive) return;
+            
+            clearTimeout(questionTimeout);
+            const sign = document.querySelector('.question-sign');
+            if(sign) sign.remove();
+            
+            if(answer === currentQuestion.answer) {
+                score += 100;
+                speed = Math.min(3, speed * 1.1); // Limita a velocidade máxima
+                document.querySelector('.car').classList.add('correct-effect');
+                
+                // Remove a questão da lista de pendentes
+                pendingQuestions.shift();
+            } else {
+                speed = Math.max(0.5, speed * 0.9); // Limita a velocidade mínima
+                lives--;
+                document.querySelector('.car').classList.add('wrong-effect');
+                
+                // Move essa questão para o final da fila
+                const currentQuestionIndex = pendingQuestions.shift();
+                pendingQuestions.push(currentQuestionIndex);
+                
+                if(lives <= 0) {
+                    endGame();
+                    return;
+                }
+            }
+            
+            questionActive = false;
+            updateDisplay();
+            
+            setTimeout(() => {
+                document.querySelector('.car').classList.remove('correct-effect', 'wrong-effect');
+                // Agenda a próxima questão
+                setTimeout(createNextQuestion, 1000);
+            }, 1000);
+        }
+
+        function updateDisplay() {
+            document.getElementById('score').textContent = score;
+            document.getElementById('lives').textContent = lives;
+            document.getElementById('speed').textContent = speed.toFixed(1);
+        }
+        
+        function updateQuestionCounter() {
+            const questionsDone = questions.length - pendingQuestions.length;
+            document.getElementById('currentQuestionNum').textContent = Math.min(questionsDone + 1, questions.length);
+        }
+
+        function endGame() {
+            clearInterval(cityInterval);
+            clearTimeout(questionTimeout);
+            questionActive = false;
+            gameStarted = false;
+            
+            const gameOverScreen = document.getElementById('gameOverScreen');
+            document.getElementById('finalScore').textContent = score;
+            gameOverScreen.style.display = 'block';
+            
+            document.getElementById('restartButton').addEventListener('click', () => {
+                location.reload();
+            });
+        }
+
+        function winGame() {
+            clearInterval(cityInterval);
+            clearTimeout(questionTimeout);
+            questionActive = false;
+            gameStarted = false;
+            
+            const victoryScreen = document.getElementById('victoryScreen');
+            document.getElementById('victoryScore').textContent = score;
+            victoryScreen.style.display = 'block';
+            
+            launchConfetti();
+            
+            document.getElementById('victoryRestartButton').addEventListener('click', () => {
+                location.reload();
+            });
+        }
+
+        function launchConfetti() {
+            for(let i = 0; i < 100; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = `${Math.random() * 100}vw`;
+                confetti.style.background = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                confetti.style.animationDuration = `${Math.random() * 2 + 1}s`;
+                document.body.appendChild(confetti);
+                setTimeout(() => confetti.remove(), 3000);
+            }
+        }
+    </script>
+</body>
+</html>

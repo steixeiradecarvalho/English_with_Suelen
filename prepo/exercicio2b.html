@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Course - Exercise Template</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            color: #343a40;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            flex: 1;
+        }
+
+        h1, h2, h3 {
+            color: #007bff;
+        }
+
+        /* Exercise Box */
+        .exercise-box {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        /* Exercise Text Styles */
+        .exercise-text {
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        /* Input Styles */
+        .gap-input {
+            width: 60px;
+            padding: 5px;
+            margin: 0 3px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .gap-input:focus {
+            border-color: #80bdff;
+            outline: none;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+        /* Hint Style */
+        .hint {
+            color: #666;
+            font-size: 0.9em;
+            margin-left: 5px;
+        }
+
+        /* Results Section */
+        .results {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            display: none;
+            background-color: #f2f2f2;
+        }
+
+        .correct { color: #28a745; }
+        .incorrect { color: #dc3545; }
+        .error {
+            border-color: #dc3545;
+            background-color: #ffebee;
+        }
+
+        /* Button Styles */
+        .button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Navigation */
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        /* Confetti Animation */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: #ccc;
+            pointer-events: none;
+            animation: fall 3s linear infinite;
+            top: -10vh;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(110vh) rotate(360deg);
+            }
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 480px) {
+            .gap-input {
+                width: 50px;
+                padding: 3px;
+            }
+            
+            .container {
+                padding: 10px;
+            }
+        }
+
+        /* Footer */
+        footer {
+            background-color: #343a40;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="exercise-box">
+            <!-- Exercise Header -->
+            <div class="exercise-header">
+                <h2 id="exercise-title">Exercise Title</h2>
+                <p id="exercise-description">Exercise description goes here.</p>
+                <p id="translation-instruction">Click the language icon for translation</p>
+            </div>
+
+            <!-- Exercise Tips/Rules -->
+            <div class="exercise-tips" id="exercise-tips">
+                <!-- Tips will be dynamically inserted here -->
+            </div>
+
+            <!-- Questions Container -->
+            <div id="questions-container">
+                <!-- Questions will be dynamically inserted here -->
+            </div>
+
+            <!-- Controls -->
+            <button class="button" onclick="checkAnswers()">Check answers</button>
+            
+            <!-- Results -->
+            <div id="result" class="results"></div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="navigation">
+            <a href="../index.html" class="button">Next Exercise</a>
+        </div>
+    </div>
+
+    <script>
+        // Exercise Configuration Object
+        const exerciseConfig = {
+            title: "Complete com as Preposições Corretas",
+            description: "Preencha os espaços com as preposições adequadas.",
+            translationInstruction: "",
+            tips: [], // This exercise doesn't use tips
+            questions: [
+                {
+                    id: "q1",
+                    beforeText: "I live ",
+                    afterText: " São Paulo",
+                    translation: "in",
+                    correctAnswer: "in",
+                    type: "text",
+                    hint: "(in)"
+                },
+                {
+                    id: "q2",
+                    beforeText: "I wake up ",
+                    afterText: " 7 o'clock",
+                    translation: "at",
+                    correctAnswer: "at",
+                    type: "text",
+                    hint: "(at)"
+                },
+                {
+                    id: "q3",
+                    beforeText: "I love to go to the beach. ",
+                    afterText: " the beach, I swim.",
+                    translation: "On",
+                    correctAnswer: "On",
+                    type: "text"
+                },
+                {
+                    id: "q4",
+                    beforeText: "",
+                    afterText: " Weekend, I go to the restaurant",
+                    translation: "on",
+                    correctAnswer: "on",
+                    type: "text"
+                },
+                {
+                    id: "q5",
+                    beforeText: "",
+                    afterText: " my city",
+                    translation: "in",
+                    correctAnswer: "in",
+                    type: "text",
+                    hint: "(in)"
+                },
+                {
+                    id: "q6",
+                    beforeText: "",
+                    afterText: " Monday, I play tennis,",
+                    translation: "On",
+                    correctAnswer: "On",
+                    type: "text"
+                },
+                {
+                    id: "q7",
+                    beforeText: "",
+                    afterText: " the afternoon",
+                    translation: "in",
+                    correctAnswer: "in",
+                    type: "text",
+                    hint: "(in)"
+                },
+                {
+                    id: "q8",
+                    beforeText: "",
+                    afterText: " my friend's house,",
+                    translation: "in",
+                    correctAnswer: "in",
+                    type: "text"
+                },
+                {
+                    id: "q9",
+                    beforeText: "I'm the tallest player ",
+                    afterText: " the school team.",
+                    translation: "in",
+                    correctAnswer: "in",
+                    type: "text"
+                },
+                {
+                    id: "q10",
+                    beforeText: "I'm the youngest ",
+                    afterText: " my Family.",
+                    translation: "in",
+                    correctAnswer: "in",
+                    type: "text"
+                }
+            ]
+        };
+
+        // Initialize Exercise
+        function initializeExercise(config) {
+            // Set header content
+            document.getElementById("exercise-title").textContent = config.title;
+            document.getElementById("exercise-description").textContent = config.description;
+            
+            // Generate tips if any
+            const tipsContainer = document.getElementById("exercise-tips");
+            if (config.tips && config.tips.length > 0) {
+                config.tips.forEach(tip => {
+                    const tipElement = document.createElement("div");
+                    tipElement.className = "tip-item";
+                    tipElement.innerHTML = tip.emphasis ? `<strong>${tip.text}</strong>` : tip.text;
+                    tipsContainer.appendChild(tipElement);
+                });
+            }
+
+            // Generate content as continuous text
+            const questionsContainer = document.getElementById("questions-container");
+            
+            // Clear any existing content
+            questionsContainer.innerHTML = '';
+            
+            // Create a single paragraph for the entire exercise
+            const paragraph = document.createElement("p");
+            
+            // Add each question and its surrounding text
+            config.questions.forEach((question, index) => {
+                // Add text before the input
+                if (question.beforeText) {
+                    paragraph.appendChild(document.createTextNode(question.beforeText));
+                }
+                
+                // Create the input
+                const input = document.createElement("input");
+                input.type = "text";
+                input.className = "gap-input";
+                input.id = question.id;
+                paragraph.appendChild(input);
+                
+                // Add text after the input
+                if (question.afterText) {
+                    paragraph.appendChild(document.createTextNode(question.afterText));
+                }
+                
+                // Add hint if exists
+                if (question.hint) {
+                    const hint = document.createElement("span");
+                    hint.className = "hint";
+                    hint.textContent = question.hint;
+                    paragraph.appendChild(hint);
+                }
+                
+                // Add space between questions if not the last one
+                if (index < config.questions.length - 1 && !question.afterText.endsWith(" ")) {
+                    paragraph.appendChild(document.createTextNode(" "));
+                }
+            });
+            
+            questionsContainer.appendChild(paragraph);
+        }
+
+        // Create Question Element
+        function createQuestionElement(question) {
+            const div = document.createElement("div");
+            div.className = "question";
+            
+            const content = document.createElement("div");
+            content.className = "question-content";
+
+            // Create input based on question type
+            const input = document.createElement(question.type === "select" ? "select" : "input");
+            input.className = "input-field";
+            input.id = question.id;
+            if (question.type === "text") {
+                input.type = "text";
+            }
+
+            // Add question text
+            const textNode = document.createTextNode(` ${question.text}`);
+
+            // Add translation
+            const translationContainer = createTranslationElement(question.translation);
+
+            content.appendChild(input);
+            content.appendChild(textNode);
+            content.appendChild(translationContainer);
+            div.appendChild(content);
+
+            return div;
+        }
+
+        // Create Translation Element
+        function createTranslationElement(translationText) {
+            const container = document.createElement("div");
+            container.className = "translation-container";
+
+            const icon = document.createElement("i");
+            icon.className = "fas fa-language translation-icon";
+            icon.tabIndex = "0";
+
+            const translation = document.createElement("span");
+            translation.className = "translation";
+            translation.textContent = translationText;
+
+            container.appendChild(icon);
+            container.appendChild(translation);
+
+            return container;
+        }
+
+        // Check Answers
+        function checkAnswers() {
+            let score = 0;
+            const questions = exerciseConfig.questions;
+            const inputs = document.querySelectorAll('.gap-input');
+            let errorCount = 0;
+            
+            inputs.forEach((input, index) => {
+                const userAnswer = input.value.trim().toLowerCase();
+                const correctAnswer = questions[index].correctAnswer.toLowerCase();
+                
+                if (userAnswer === correctAnswer) {
+                    input.classList.remove('error');
+                    score++;
+                } else {
+                    input.classList.add('error');
+                    errorCount++;
+                }
+            });
+
+            displayResults(errorCount, questions.length);
+        }
+
+        // Display Results
+        function displayResults(errorCount, total) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.style.display = 'block';
+            
+            if (errorCount === 0) {
+                resultDiv.innerHTML = '<h3 style="color: var(--cor-acerto)">🎉 Parabéns! Todas as respostas estão corretas!</h3>';
+                confetti({ particleCount: 100, spread: 70 });
+            } else {
+                let resultsHTML = '<h3>Resultado:</h3>';
+                const inputs = document.querySelectorAll('.gap-input');
+                
+                inputs.forEach((input, index) => {
+                    const userAnswer = input.value.trim().toLowerCase();
+                    const correctAnswer = exerciseConfig.questions[index].correctAnswer;
+                    
+                    if (userAnswer !== correctAnswer.toLowerCase()) {
+                        resultsHTML += `<p class="highlight">Erro na preposição "${userAnswer || '[vazio]'}". Correto: ${correctAnswer}</p>`;
+                    }
+                });
+                
+                resultsHTML += `<p>Total de erros: ${errorCount}</p>`;
+                resultDiv.innerHTML = resultsHTML;
+            }
+            
+            resultDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function confetti({ particleCount = 50, spread = 70 } = {}) {
+            for (let i = 0; i < particleCount; i++) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                confetti.style.left = Math.random() * spread + '%';
+                confetti.style.backgroundColor = `hsl(${Math.random() * 360},100%,50%)`;
+                confetti.style.animationDuration = Math.random() * 3 + 2 + 's';
+                document.body.appendChild(confetti);
+                
+                setTimeout(() => confetti.remove(), 5000);
+            }
+        }
+
+        // Initialize Translation Handlers
+        function initializeTranslationHandlers() {
+            document.querySelectorAll('.translation-icon').forEach(icon => {
+                const showTranslation = () => {
+                    const translation = icon.nextElementSibling;
+                    if (translation) translation.style.display = 'block';
+                };
+                
+                const hideTranslation = () => {
+                    const translation = icon.nextElementSibling;
+                    if (translation) translation.style.display = 'none';
+                };
+
+                // Mouse events
+                icon.addEventListener('mousedown', e => {
+                    e.preventDefault();
+                    showTranslation();
+                });
+                icon.addEventListener('mouseup', hideTranslation);
+                icon.addEventListener('mouseleave', hideTranslation);
+
+                // Keyboard support
+                icon.addEventListener('keydown', e => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        showTranslation();
+                    }
+                });
+                icon.addEventListener('keyup', e => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        hideTranslation();
+                    }
+                });
+
+                // Touch events
+                icon.addEventListener('touchstart', e => {
+                    e.preventDefault();
+                    showTranslation();
+                }, { passive: false });
+                icon.addEventListener('touchend', hideTranslation);
+                icon.addEventListener('touchcancel', hideTranslation);
+            });
+        }
+
+        // Initialize everything when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeExercise(exerciseConfig);
+        });
+        
+    </script>
+
+    <footer>
+        &copy; 2025 Word Teaching School
+    </footer>
+</body>
+</html>

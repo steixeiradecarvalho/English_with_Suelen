@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Exercise - Identify the Adjective</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #FF6B6B;
+            --secondary-color: #4ECDC4;
+            --accent-color: #FFE66D;
+            --text-color: #2C3E50;
+            --light-bg: #F7F9FC;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, var(--light-bg), var(--secondary-color));
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        footer {
+            background-color: #343a40;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            margin-top: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+
+        .instructions {
+            background-color: var(--accent-color);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            font-size: 1.2em;
+            text-align: center;
+        }
+
+        .text-container {
+            background: var(--light-bg);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .text-content {
+            font-size: 1.1em;
+            line-height: 1.6;
+            color: var(--text-color);
+            margin: 0 50px;
+            padding: 10px 0;
+            display: none; /* Frase escondida por padrão */
+        }
+
+        .options {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 10px;
+        }
+
+        .option {
+            padding: 10px 20px;
+            border: 2px solid var(--secondary-color);
+            border-radius: 4px;
+            cursor: pointer;
+            background-color: white;
+            transition: background-color 0.3s;
+        }
+
+        .option:hover {
+            background-color: var(--accent-color);
+        }
+
+        .correct {
+            background-color: #98FB98;
+        }
+
+        .incorrect {
+            background-color: #FFB6C1;
+        }
+
+        .control-buttons {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+        }
+
+        .btn {
+            background: none;
+            border: none;
+            font-size: 2.2em;
+            cursor: pointer;
+            transition: transform 0.2s;
+            color: var(--primary-color);
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: white;
+            border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .translation {
+            display: none;
+            margin-top: 10px;
+            color: var(--primary-color);
+            font-style: italic;
+            text-align: center;
+            padding: 10px;
+            background-color: white;
+            border-radius: 8px;
+        }
+
+        #backButton {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 15px;
+            background-color: #5bc0de;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        @media (max-width: 480px) {
+            .text-content {
+                margin: 0 20px;
+            }
+            .options {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+
+        .audio-visualizer {
+            width: 80%; /* Ajuste este valor conforme necessário */
+            height: 30px;
+            margin: 0 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>English Exercise - Identify the Adjective</h1>
+        <div class="instructions">
+            Ouça a frase e clique no adjetivo que você ouviu.
+        </div>
+
+        <!-- Exercício 1 -->
+        <div class="text-container">
+            <div class="exercise-wrapper">
+                <div class="control-buttons">
+                    <button class="btn play-audio" data-audio="./voice/This_is_a_Blue_pen.mp3">
+                        <i class="fas fa-play"></i>
+                    </button>
+                    <img src="./images/spectro.gif" alt="Visualizador de Áudio" class="audio-visualizer" style="display: none; height: 30px; margin: 0 10px;">
+                    <button class="btn show-translation">
+                        <i class="fas fa-language"></i>
+                    </button>
+                </div>
+                <div class="text-content">
+                    This is a Blue pen.
+                </div>
+                <div class="translation">
+                    Esta é uma caneta azul.
+                </div>
+                <div class="options">
+                    <button class="option" data-correct="true">a) Blue</button>
+                    <button class="option" data-correct="false">b) Pen</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Exercício 2 -->
+        <div class="text-container">
+            <div class="exercise-wrapper">
+                <div class="control-buttons">
+                    <button class="btn play-audio" data-audio="./voice/He_is_a_sad_person.mp3">
+                        <i class="fas fa-play"></i>
+                    </button>
+                    <img src="./images/spectro.gif" alt="Visualizador de Áudio" class="audio-visualizer" style="display: none; height: 30px; margin: 0 10px;">
+                    <button class="btn show-translation">
+                        <i class="fas fa-language"></i>
+                    </button>
+                </div>
+                <div class="text-content">
+                    He is a sad person.
+                </div>
+                <div class="translation">
+                    Ele é uma pessoa triste.
+                </div>
+                <div class="options">
+                    <button class="option" data-correct="false">a) Person</button>
+                    <button class="option" data-correct="true">b) Sad</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Exercício 3 -->
+        <div class="text-container">
+            <div class="exercise-wrapper">
+                <div class="control-buttons">
+                    <button class="btn play-audio" data-audio="./voice/I_am_in_a_very_beautiful_beach.mp3">
+                        <i class="fas fa-play"></i>
+                    </button>
+                    <img src="./images/spectro.gif" alt="Visualizador de Áudio" class="audio-visualizer" style="display: none; height: 30px; margin: 0 10px;">
+                    <button class="btn show-translation">
+                        <i class="fas fa-language"></i>
+                    </button>
+                </div>
+                <div class="text-content">
+                    I am in a very beautiful beach.
+                </div>
+                <div class="translation">
+                    Eu estou em uma praia muito bonita.
+                </div>
+                <div class="options">
+                    <button class="option" data-correct="true">a) Very</button>
+                    <button class="option" data-correct="false">b) Beach</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Exercício 4 -->
+        <div class="text-container">
+            <div class="exercise-wrapper">
+                <div class="control-buttons">
+                    <button class="btn play-audio" data-audio="./voice/This_is_a_lazy_boy_to_play_soccer.mp3">
+                        <i class="fas fa-play"></i>
+                    </button>
+                    <img src="./images/spectro.gif" alt="Visualizador de Áudio" class="audio-visualizer" style="display: none; height: 30px; margin: 0 10px;">
+                    <button class="btn show-translation">
+                        <i class="fas fa-language"></i>
+                    </button>
+                </div>
+                <div class="text-content">
+                    This is a lazy boy to play soccer.
+                </div>
+                <div class="translation">
+                    Este é um menino preguiçoso para jogar bola.
+                </div>
+                <div class="options">
+                    <button class="option" data-correct="true">a) Lazy</button>
+                    <button class="option" data-correct="false">b) Play</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Exercício 5 -->
+        <div class="text-container">
+            <div class="exercise-wrapper">
+                <div class="control-buttons">
+                    <button class="btn play-audio" data-audio="./voice/That_cap_is_ugly.mp3">
+                        <i class="fas fa-play"></i>
+                    </button>
+                    <img src="./images/spectro.gif" alt="Visualizador de Áudio" class="audio-visualizer" style="display: none; height: 30px; margin: 0 10px;">
+                    <button class="btn show-translation">
+                        <i class="fas fa-language"></i>
+                    </button>
+                </div>
+                <div class="text-content">
+                    That cap is ugly.
+                </div>
+                <div class="translation">
+                    Aquele boné é feio.
+                </div>
+                <div class="options">
+                    <button class="option" data-correct="false">a) Cap</button>
+                    <button class="option" data-correct="true">b) Ugly</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Exercício 6 -->
+        <div class="text-container">
+            <div class="exercise-wrapper">
+                <div class="control-buttons">
+                    <button class="btn play-audio" data-audio="./voice/My_sister_is_Young.mp3">
+                        <i class="fas fa-play"></i>
+                    </button>
+                    <img src="./images/spectro.gif" alt="Visualizador de Áudio" class="audio-visualizer" style="display: none; height: 30px; margin: 0 10px;">
+                    <button class="btn show-translation">
+                        <i class="fas fa-language"></i>
+                    </button>
+                </div>
+                <div class="text-content">
+                    My sister is Young.
+                </div>
+                <div class="translation">
+                    Minha irmã é jovem.
+                </div>
+                <div class="options">
+                    <button class="option" data-correct="true">a) Young</button>
+                    <button class="option" data-correct="false">b) Sister</button>
+                </div>
+            </div>
+        </div>
+
+        <a id="backButton" href=".././index.html">Voltar</a>
+    </div>
+
+    <footer>
+        &copy; 2025 World Teaching School
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Controle de áudio
+            const audioButtons = document.querySelectorAll('.play-audio');
+            audioButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const audio = new Audio(this.dataset.audio);
+                    const visualizer = this.parentElement.querySelector('.audio-visualizer');
+
+                    visualizer.style.display = 'inline'; // Mostra o GIF
+
+                    audio.addEventListener('ended', function() {
+                        visualizer.style.display = 'none'; // Esconde o GIF quando o áudio termina
+                    });
+
+                    audio.play();
+                });
+            });
+
+            // Mostrar/ocultar frase e tradução
+            const translationButtons = document.querySelectorAll('.show-translation');
+            translationButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const wrapper = this.closest('.exercise-wrapper');
+                    const textContent = wrapper.querySelector('.text-content');
+                    const translation = wrapper.querySelector('.translation');
+                    textContent.style.display = textContent.style.display === 'none' ? 'block' : 'none';
+                    translation.style.display = translation.style.display === 'none' ? 'block' : 'none';
+                });
+            });
+
+            // Verificar respostas
+            const options = document.querySelectorAll('.option');
+            options.forEach(option => {
+                option.addEventListener('click', function() {
+                    const isCorrect = this.dataset.correct === 'true';
+                    if (isCorrect) {
+                        this.classList.add('correct');
+                        this.classList.remove('incorrect');
+                    } else {
+                        this.classList.add('incorrect');
+                        this.classList.remove('correct');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
