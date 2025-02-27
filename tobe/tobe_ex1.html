@@ -2,6 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Exercícios de Inglês - Verbo To Be</title>
     <style>
         * {
@@ -13,37 +14,42 @@
         body {
             font-family: 'Comic Sans MS', cursive, sans-serif;
             background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
-            padding: 20px;
-            min-height: 100vh; /* Ensure footer sticks to bottom */
+            padding: 10px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
+
         footer {
             background-color: #343a40;
             color: white;
             text-align: center;
             padding: 10px 0;
-            margin-top: 20px; /* Space above footer */
+            margin-top: 20px;
+            width: 100%;
         }
 
         .container {
-            max-width: 800px;
+            max-width: 100%;
             margin: 0 auto;
             background-color: white;
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            border-radius: 15px;
+            padding: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            flex: 1;
         }
 
         h1 {
             text-align: center;
             color: #ff6b6b;
-            margin-bottom: 30px;
-            font-size: 2.5em;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
         }
 
         .exercise {
             display: none;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             animation: fadeIn 0.5s;
         }
 
@@ -53,52 +59,57 @@
 
         .question-container {
             display: flex;
-            gap: 30px;
-            margin-bottom: 20px;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 15px;
         }
 
         .question-text {
-            flex: 1;
+            order: 2;
         }
 
         .question-image {
-            width: 200px;
-            height: 200px;
+            order: 1;
+            width: 100%;
+            height: auto;
+            max-height: 200px;
             object-fit: cover;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            align-self: center;
         }
 
         .question {
-            font-size: 1.2em;
-            margin-bottom: 20px;
+            font-size: 1.1em;
+            margin-bottom: 15px;
             color: #2d3436;
         }
 
         .translation {
             color: #636e72;
             font-style: italic;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         .options {
             display: grid;
-            gap: 10px;
+            gap: 8px;
         }
 
         .option {
             background-color: #fff;
             border: 2px solid #dfe6e9;
-            border-radius: 10px;
-            padding: 15px;
+            border-radius: 8px;
+            padding: 12px;
             cursor: pointer;
             transition: all 0.3s ease;
-            font-size: 1.1em;
+            font-size: 1em;
+            width: 100%;
+            text-align: left;
         }
 
         .option:hover {
             background-color: #f0f2f5;
-            transform: translateY(-2px);
         }
 
         .option.correct {
@@ -116,36 +127,35 @@
         .navigation {
             display: flex;
             justify-content: space-between;
-            margin-top: 30px;
+            margin-top: 20px;
         }
 
         .nav-button {
             background-color: #74b9ff;
             color: white;
             border: none;
-            padding: 12px 25px;
-            border-radius: 25px;
+            padding: 10px 20px;
+            border-radius: 20px;
             cursor: pointer;
-            font-size: 1.1em;
+            font-size: 1em;
             transition: all 0.3s ease;
+            width: 45%;
         }
 
         .nav-button:hover {
             background-color: #0984e3;
-            transform: translateY(-2px);
         }
 
         .nav-button:disabled {
             background-color: #b2bec3;
             cursor: not-allowed;
-            transform: none;
         }
 
         .progress {
-            height: 10px;
+            height: 8px;
             background-color: #dfe6e9;
-            border-radius: 5px;
-            margin: 20px 0;
+            border-radius: 4px;
+            margin: 15px 0;
             overflow: hidden;
         }
 
@@ -155,16 +165,79 @@
             transition: width 0.3s ease;
         }
 
+        .score {
+            text-align: center;
+            font-size: 1.1em;
+            color: #2d3436;
+            margin-top: 15px;
+        }
+
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .score {
-            text-align: center;
-            font-size: 1.2em;
-            color: #2d3436;
-            margin-top: 20px;
+        /* Media queries para telas maiores */
+        @media (min-width: 600px) {
+            body {
+                padding: 20px;
+            }
+
+            .container {
+                max-width: 600px;
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2.2em;
+                margin-bottom: 25px;
+            }
+
+            .question-container {
+                flex-direction: row;
+                gap: 20px;
+            }
+
+            .question-text {
+                order: 1;
+                flex: 1;
+            }
+
+            .question-image {
+                order: 2;
+                width: 180px;
+                height: 180px;
+            }
+
+            .question {
+                font-size: 1.2em;
+            }
+
+            .option {
+                padding: 15px;
+                font-size: 1.1em;
+            }
+
+            .nav-button {
+                width: auto;
+                padding: 12px 25px;
+            }
+        }
+
+        @media (min-width: 800px) {
+            .container {
+                max-width: 800px;
+                padding: 30px;
+            }
+
+            h1 {
+                font-size: 2.5em;
+            }
+
+            .question-image {
+                width: 200px;
+                height: 200px;
+            }
         }
     </style>
 </head>
@@ -270,11 +343,6 @@
 
         function updateNavigation() {
             prevBtn.disabled = currentExercise === 0;
-            nextBtn.disabled = currentExercise === exercises.length - 1;
-        }
-
-        function updateNavigation() {
-            prevBtn.disabled = currentExercise === 0;
 
             if (currentExercise === exercises.length - 1) {
                 nextBtn.textContent = "Home";
@@ -282,18 +350,15 @@
                     window.location.href = "./../index.html";
                 };
             } else {
-                nextBtn.disabled = currentExercise === exercises.length - 1;
-                /*
                 nextBtn.textContent = "Próximo";
+                nextBtn.disabled = false;
                 nextBtn.onclick = function() {
-                  if (currentExercise < exercises.length - 1) {
-                      showExercise(currentExercise + 1);
-                  }
+                    if (currentExercise < exercises.length - 1) {
+                        showExercise(currentExercise + 1);
+                    }
                 };
-                */
             }
         }
-
 
         function updateProgress() {
             const progress = ((currentExercise + 1) / exercises.length) * 100;
