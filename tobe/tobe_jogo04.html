@@ -1,310 +1,500 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 <head>
-    <title>To Be Matching Game</title>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo de Combinação - Verbo To Be</title>
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #6366f1, #8b5cf6);
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
+        :root {
+            --primary: #FF6B6B;
+            --secondary: #4ECDC4;
+            --accent: #FFD166;
+            --background: #f7f9fc;
+            --dark: #2A363B;
+            --success: #06D6A0;
+            --error: #FF4858;
+        }
+        
+        * {
             box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial Rounded MT Bold', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--background);
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
+            padding: 20px;
         }
-
-        .game-container {
-            background: white;
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            max-width: 900px;
-            width: 95%;
-            margin: 20px auto;
+        
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+            color: var(--dark);
         }
-
+        
         h1 {
-            text-align: center;
-            color: #4f46e5;
-            margin-bottom: 15px;
-            font-size: 2em;
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
         }
-
-        .game-area {
-            display: grid;
-            grid-template-columns: 1fr 0.5fr 1fr;
-            gap: 10px;
-            align-items: start;
+        
+        .subtitle {
+            font-size: 1rem;
+            color: var(--dark);
+            opacity: 0.8;
+            line-height: 1.5;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 0 15px;
         }
-
-        .draggables-container, .dropzones-container, .translations-container {
+        
+        .game-container {
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+            width: 100%;
+            max-width: 800px;
+        }
+        
+        .column {
+            flex: 1;
             display: flex;
             flex-direction: column;
             gap: 10px;
         }
-
-        .draggable {
-            padding: 15px;
-            border-radius: 10px;
-            cursor: move;
-            font-weight: bold;
-            text-align: center;
-            color: white;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s;
-        }
-
-        .dropzone {
-            height: 50px;
-            border: 2px dashed #6366f1;
-            border-radius: 10px;
+        
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px 15px;
             display: flex;
-            align-items: center;
             justify-content: center;
-            transition: all 0.3s;
-            background: #f8fafc;
-        }
-
-        .dropzone.active {
-            background: #e0e7ff;
-            border-style: solid;
-        }
-
-        .translation {
-            padding: 15px;
-            background: #f8fafc;
-            border-radius: 10px;
-            font-size: 0.9em;
-            line-height: 1.4;
-            text-align: center;
-        }
-
-        .correct {
-            background: #22c55e !important;
-            border-color: #22c55e;
-            color: white;
-        }
-
-        .incorrect {
-            background-color: #fca5a5 !important; /* Light red for incorrect */
-            border-color: #fca5a5;
-            color: white;
-            animation: shake 0.5s; /* Shake animation for incorrect drop */
-        }
-        @keyframes shake {
-            0% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            50% { transform: translateX(5px); }
-            75% { transform: translateX(-5px); }
-            100% { transform: translateX(0); }
-        }
-
-        /* Style for displaying feedback messages */
-        .feedback {
-            text-align: center;
+            align-items: center;
+            min-height: 80px;
+            font-size: 1.2rem;
             font-weight: bold;
-            margin-top: 20px; /* Add some spacing */
-            font-size: 1.2em;
-            transition: opacity 0.5s ease-in-out; /* Smooth transition for feedback */
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+            text-align: center;
         }
-        .feedback.show {
+        
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .card.selected {
+            border-color: var(--accent);
+            transform: scale(1.03);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+        
+        .card.matched {
+            animation: matched 0.5s forwards;
+            pointer-events: none;
+        }
+        
+        .card.error {
+            animation: shake 0.5s forwards;
+            border-color: var(--error);
+        }
+        
+        @keyframes matched {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.1);
+                background-color: var(--success);
+                color: white;
+                opacity: 0.9;
+            }
+            100% {
+                transform: scale(0);
+                opacity: 0;
+                height: 0;
+                margin: 0;
+                padding: 0;
+            }
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+        
+        .score-container {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 1.2rem;
+            color: var(--dark);
+        }
+        
+        .restart-btn {
+            margin-top: 20px;
+            padding: 12px 25px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            border: none;
+            border-radius: 25px;
+            color: white;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            display: inline-block;
+        }
+        
+        .restart-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+
+        }
+        
+        .celebration {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .celebration.show {
             opacity: 1;
         }
-        .feedback.hide {
-            opacity: 0;
+        
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: var(--accent);
+            opacity: 0.8;
         }
-        .feedback.correct {
-           color: #22c55e;
+        
+        .win-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 1001;
         }
-        .feedback.incorrect {
-           color: #ef4444;
+        
+        .win-message.show {
+            transform: translate(-50%, -50%) scale(1);
+        }
+        
+        .win-message h2 {
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        
+        /* Estilos para mobile */
+        @media (max-width: 600px) {
+            .game-container {
+                flex-direction: column;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+        }
+        .win-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
         }
 
-        #backButton {
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            margin-top: 15px;
-            background-color: #5bc0de; /* Cor de fundo azul */
-            color: white;          /* Cor do texto branca */
-            border: none;          /* Remove a borda padrão */
-            border-radius: 5px;    /* Arredonda os cantos */
-            text-decoration: none; /* Remove sublinhado do link */
-            display: inline-block; /* Permite estilizar como bloco */
+        .win-buttons .restart-btn {
+            margin-top: 0;
         }
+
     </style>
 </head>
 <body>
+    <header>
+        <h1>Combinando o Verbo "To Be"</h1>
+        <p class="subtitle">Aprenda as conjugações do verbo "to be" em inglês e português! Selecione primeiro um card em inglês e depois encontre sua tradução correta em português. Quando os pares combinarem, eles desaparecerão. Seu objetivo é encontrar todos os 8 pares e dominar as conjugações!</p>
+    </header>
+    
     <div class="game-container">
-        <h1>Match the "To Be" Conjugations</h1>
-        <div class="game-area">
-            <div class="draggables-container" id="draggables"></div>
-            <div class="dropzones-container" id="dropzones"></div>
-            <div class="translations-container" id="translations"></div>
-            
+        <div class="column column-en" id="column-en"></div>
+        <div class="column column-pt" id="column-pt"></div>
+    </div>
+    
+    <div class="score-container">
+        <p>Pares encontrados: <span id="score">0</span>/8</p>
+    </div>
+    
+    <button class="restart-btn" id="restart-btn">Reiniciar Jogo</button>
+    
+    <div class="celebration" id="celebration"></div>
+    
+    <div class="win-message" id="win-message">
+        <h2>Parabéns!</h2>
+        <p>Você completou o jogo!</p>
+        <div class="win-buttons">
+            <button class="restart-btn" id="play-again-btn">Jogar Novamente</button>
+            <a href="../index.html" class="restart-btn home-btn">Home</a>
         </div>
-        <a id="backButton" href=".././index.html">Home</a>
     </div>
 
     <script>
-        const items = [
-            { verb: "I am", translation: "Eu sou / Eu estou", color: "#ec4899" },
-            { verb: "You are", translation: "Você é / Você está", color: "#8b5cf6" },
-            { verb: "He is", translation: "Ele é / Ele está", color: "#3b82f6" },
-            { verb: "She is", translation: "Ela é / Ela está", color: "#06b6d4" },
-            { verb: "It is", translation: "Isso é / Isso está", color: "#10b981" },
-            { verb: "We are", translation: "Nós somos / Nós estamos", color: "#f59e0b" },
-            { verb: "You are", translation: "Vocês são / Vocês estão", color: "#ef4444" },
-            { verb: "They are", translation: "Eles são / Eles estão", color: "#6366f1" }
-        ];
-
-        function shuffleArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-            return array;
-        }
-
-        function createGameElements() {
-            const draggablesContainer = document.getElementById('draggables');
-            const dropzonesContainer = document.getElementById('dropzones');
-            const translationsContainer = document.getElementById('translations');
-
-            const shuffledItems = shuffleArray([...items]);
-            const shuffledTranslations = shuffleArray([...items]);
-
-            shuffledItems.forEach((item, index) => {
-                const draggable = document.createElement('div');
-                draggable.className = 'draggable';
-                draggable.textContent = item.verb;
-                draggable.style.backgroundColor = item.color;
-                draggable.setAttribute('draggable', 'true');
-                draggable.dataset.verb = item.verb;
-                draggablesContainer.appendChild(draggable);
-
-                const dropzone = document.createElement('div');
-                dropzone.className = 'dropzone';
-                dropzone.dataset.translation = item.translation;
-                dropzonesContainer.appendChild(dropzone);
-            });
-
-            shuffledTranslations.forEach((item) => {
-                const translation = document.createElement('div');
-                translation.className = 'translation';
-                translation.textContent = item.translation;
-                translationsContainer.appendChild(translation);
-            });
-        }
-
-        function initDragAndDrop() {
-            const draggables = document.querySelectorAll('.draggable');
-            const dropzones = document.querySelectorAll('.dropzone');
-            const feedbackElement = document.getElementById('feedback');
-
-            draggables.forEach(draggable => {
-                draggable.addEventListener('dragstart', function(e) {
-                    e.dataTransfer.setData('text', e.target.dataset.verb);
-                    // Create a ghost image for better visual feedback during drag
-                    const ghost = this.cloneNode(true);
-                    ghost.style.opacity = 0.5;
-                    e.dataTransfer.setDragImage(ghost, 0, 0);
-
-
-                });
-            });
-
-            dropzones.forEach(dropzone => {
-                let occupied = false;
-                dropzone.addEventListener('dragover', function(e) {
-                if (!occupied) { // Only allow hover if not occupied
-                e.preventDefault();
-                this.classList.add('active');
-                }
-            });
-
-            dropzone.addEventListener('dragleave', function() {
-                this.classList.remove('active');
-            });
-    
-            dropzone.addEventListener('drop', function(e) {
-                e.preventDefault();
-                this.classList.remove('active');
-
-                if (!occupied) {
-                    const draggedVerb = e.dataTransfer.getData('text');
-                    const correctTranslation = items.find(item => item.verb === draggedVerb).translation;
-
-                    const originalDraggable = Array.from(draggables).find(el => el.dataset.verb === draggedVerb);
-
-
-                    if (this.dataset.translation === correctTranslation) {
-                        this.textContent = draggedVerb;
-                        this.classList.add('correct');
-                        confetti({ particleCount: 50, spread: 70 });
-                        showFeedback("Correct!", "correct");
-                        // NOW celebrate!
-                        confetti({ particleCount: 50, spread: 70 });  
-                        showFeedback("Correct!", "correct");
-
-                        originalDraggable.style.visibility = 'hidden'; // Hide instead of removing
-
-                    } else {
-                        this.textContent = draggedVerb;
-                        this.classList.add('incorrect');
-                        navigator.vibrate(200);
-                        showFeedback("Incorrect, try again.", "incorrect");
-
-                        setTimeout(() => {
-                            this.textContent = '';
-                            this.classList.remove('incorrect');
-                        }, 1000);
-
-                    }
-
-                    occupied = true;
-
-
-
-                    // Check if all dropzones are filled and correct
-                    const allCorrect = Array.from(dropzones).every(dz => dz.classList.contains('correct') && dz.textContent !== '');
-                    if (allCorrect) {
-                        showFeedback("Congratulations! You matched all the conjugations.", "correct");
-                    }
-
-
-                }
-            });
-        });
-
-
-
-
-            // Function to display feedback messages with smooth transitions
-            function showFeedback(message, type) {
-                feedbackElement.textContent = message;
-                feedbackElement.classList.add("show", type);
-
-                setTimeout(() => {
-                    feedbackElement.classList.remove("show");
-                    // Delay hiding to allow transition
-                    setTimeout(() => {
-                        feedbackElement.classList.add("hide");
-                        feedbackElement.classList.remove(type);
-                    }, 500);
-
-                }, 2000); // Show for 2 seconds
-            }
-        }
-
-
-
         document.addEventListener('DOMContentLoaded', () => {
-            createGameElements();
-            initDragAndDrop();
+            const verbPairs = [
+                { english: "I am", portuguese: "Eu sou / Eu estou" },
+                { english: "You are", portuguese: "Você é / Você está" },
+                { english: "He is", portuguese: "Ele é / Ele está" },
+                { english: "She is", portuguese: "Ela é / Ela está" },
+                { english: "It is", portuguese: "Isso é / Isso está" },
+                { english: "We are", portuguese: "Nós somos / Nós estamos" },
+                { english: "You are", portuguese: "Vocês são / Vocês estão" },
+                { english: "They are", portuguese: "Eles são / Eles estão" }
+            ];
+            
+            const colors = [
+                "#FF6B6B", // vermelho claro
+                "#4ECDC4", // turquesa
+                "#FFD166", // amarelo
+                "#06D6A0", // verde menta
+                "#118AB2", // azul
+                "#073B4C", // azul escuro
+                "#F78C6B", // coral
+                "#8A89C0"  // lavanda
+            ];
+            
+            const columnEn = document.getElementById('column-en');
+            const columnPt = document.getElementById('column-pt');
+            const scoreElement = document.getElementById('score');
+            const restartBtn = document.getElementById('restart-btn');
+            const playAgainBtn = document.getElementById('play-again-btn');
+            const celebration = document.getElementById('celebration');
+            const winMessage = document.getElementById('win-message');
+            
+            let selectedCards = [];
+            let matchedPairs = 0;
+            let canSelect = true;
+            
+            function shuffleArray(array) {
+                const newArray = [...array];
+                for (let i = newArray.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+                }
+                return newArray;
+            }
+            
+            function initGame() {
+                columnEn.innerHTML = '';
+                columnPt.innerHTML = '';
+                selectedCards = [];
+                matchedPairs = 0;
+                scoreElement.textContent = '0';
+                winMessage.classList.remove('show');
+                
+                const shuffledPairs = shuffleArray(verbPairs);
+                const shuffledPairsForPt = shuffleArray([...verbPairs]);
+                
+                shuffledPairs.forEach((pair, index) => {
+                    const card = document.createElement('div');
+                    card.classList.add('card');
+                    card.dataset.index = index;
+                    card.dataset.english = pair.english;
+                    card.textContent = pair.english;
+                    card.style.backgroundColor = colors[index % colors.length] + '33'; // 33 para transparência
+                    card.addEventListener('click', handleCardClick);
+                    columnEn.appendChild(card);
+                });
+                
+                shuffledPairsForPt.forEach((pair, index) => {
+                    const card = document.createElement('div');
+                    card.classList.add('card');
+                    card.dataset.index = index;
+                    card.dataset.portuguese = pair.portuguese;
+                    card.dataset.englishPair = pair.english;
+                    card.textContent = pair.portuguese;
+                    card.style.backgroundColor = colors[index % colors.length] + '33'; // 33 para transparência
+                    card.addEventListener('click', handleCardClick);
+                    columnPt.appendChild(card);
+                });
+            }
+            
+            function handleCardClick(e) {
+                if (!canSelect) return;
+                
+                const card = e.target;
+                
+                // Impede seleção do mesmo card ou card já combinado
+                if (selectedCards.includes(card) || card.classList.contains('matched')) {
+                    return;
+                }
+                
+                // Impede selecionar dois cards da mesma coluna
+                if (selectedCards.length === 1) {
+                    const firstCard = selectedCards[0];
+                    const firstIsEnglish = firstCard.parentElement.id === 'column-en';
+                    const currentIsEnglish = card.parentElement.id === 'column-en';
+                    
+                    if (firstIsEnglish === currentIsEnglish) {
+                        selectedCards[0].classList.remove('selected');
+                        selectedCards = [card];
+                        card.classList.add('selected');
+                        return;
+                    }
+                }
+                
+                card.classList.add('selected');
+                selectedCards.push(card);
+                
+                if (selectedCards.length === 2) {
+                    canSelect = false;
+                    checkMatch();
+                }
+            }
+            
+            function checkMatch() {
+                const card1 = selectedCards[0];
+                const card2 = selectedCards[1];
+                
+                let isMatch = false;
+                
+                // Verifica se um card é inglês e o outro português
+                if (card1.dataset.english && card2.dataset.englishPair) {
+                    isMatch = card1.dataset.english === card2.dataset.englishPair;
+                } else if (card2.dataset.english && card1.dataset.englishPair) {
+                    isMatch = card2.dataset.english === card1.dataset.englishPair;
+                }
+                
+                if (isMatch) {
+                    handleMatch();
+                } else {
+                    handleMismatch();
+                }
+            }
+            
+            function handleMatch() {
+                matchedPairs++;
+                scoreElement.textContent = matchedPairs;
+                
+                selectedCards.forEach(card => {
+                    card.classList.add('matched');
+                    card.classList.remove('selected');
+                });
+                
+                createCelebration();
+                
+                // Aguarda a animação terminar antes de reorganizar
+                setTimeout(() => {
+                    reorganizeCards();
+                }, 500);
+                
+                selectedCards = [];
+                canSelect = true;
+                
+                if (matchedPairs === verbPairs.length) {
+                    setTimeout(showWinMessage, 1200);
+                }
+            }
+            
+            function handleMismatch() {
+                selectedCards.forEach(card => {
+                    card.classList.add('error');
+                });
+                
+                setTimeout(() => {
+                    selectedCards.forEach(card => {
+                        card.classList.remove('selected');
+                        card.classList.remove('error');
+                    });
+                    selectedCards = [];
+                    canSelect = true;
+                }, 800);
+            }
+            
+            function reorganizeCards() {
+                // Reorganiza coluna inglês
+                reorganizeColumn(columnEn);
+                
+                // Reorganiza coluna português
+                reorganizeColumn(columnPt);
+            }
+            
+            function reorganizeColumn(column) {
+                const visibleCards = Array.from(column.querySelectorAll('.card')).filter(
+                    card => !card.classList.contains('matched')
+                );
+                
+                column.innerHTML = '';
+                visibleCards.forEach(card => {
+                    column.appendChild(card);
+                });
+            }
+            
+            function createCelebration() {
+                celebration.innerHTML = '';
+                celebration.classList.add('show');
+                
+                for (let i = 0; i < 50; i++) {
+                    const confetti = document.createElement('div');
+                    confetti.classList.add('confetti');
+                    confetti.style.left = Math.random() * 100 + 'vw';
+                    confetti.style.top = -10 + 'px';
+                    confetti.style.width = Math.random() * 10 + 5 + 'px';
+                    confetti.style.height = Math.random() * 10 + 5 + 'px';
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                    confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+                    
+                    celebration.appendChild(confetti);
+                    
+                    const animationDuration = Math.random() * 2 + 1;
+                    const horizontalMovement = Math.random() * 100 - 50;
+                    
+                    confetti.animate([
+                        { transform: `translateY(0) translateX(0) rotate(0)`, opacity: 1 },
+                        { transform: `translateY(100vh) translateX(${horizontalMovement}px) rotate(${Math.random() * 360}deg)`, opacity: 0 }
+                    ], {
+                        duration: animationDuration * 1000,
+                        easing: 'cubic-bezier(0,0.5,0.5,1)'
+                    });
+                }
+                
+                setTimeout(() => {
+                    celebration.classList.remove('show');
+                }, 2000);
+            }
+            
+            function showWinMessage() {
+                winMessage.classList.add('show');
+            }
+            
+            restartBtn.addEventListener('click', initGame);
+            playAgainBtn.addEventListener('click', initGame);
+            
+            // Iniciar o jogo
+            initGame();
         });
     </script>
 </body>
