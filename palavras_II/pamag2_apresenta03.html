@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Template Apresentação Inglês</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Mobile First */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+            min-height: 100vh;
+            padding: 15px;
+        }
+
+        .slide-container {
+            background: rgba(255, 255, 255, 0.97);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .title {
+            color: #1a237e;
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .grid-layout {
+            display: grid;
+            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        }
+
+        .expression-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            min-height: 140px;
+        }
+
+        .expression-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-icon {
+            color: #00796b;
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+
+        .expression-text {
+            color: #1a237e;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .translation {
+            color: #455a64;
+            font-size: 0.95rem;
+            font-style: italic;
+        }
+
+        /* Animações */
+        @keyframes cardEntrance {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .expression-card {
+            animation: cardEntrance 0.6s ease forwards;
+            opacity: 0;
+        }
+
+        /* Desktop */
+        @media (min-width: 768px) {
+            .title {
+                font-size: 2.5rem;
+            }
+            
+            .grid-layout {
+                gap: 30px;
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .expression-card {
+                min-height: 160px;
+                padding: 25px;
+            }
+
+            .card-icon {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .grid-layout {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <img src="logoWTS.png" alt="World Teaching School Logo" class="logo">
+        </div>
+        <div class="header-content">
+            <div class="course-info">
+                <span class="course-name">Inglês Básico I</span> - 
+                <span class="module-name" id="module-name">Nome do Módulo</span>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="content-wrapper">
+            <div class="slide-container">
+                <div class="header">
+                    <h1 class="title">Vocabulário do Dia a Dia<br><span style="font-size: 0.7em;">Daily Vocabulary</span></h1>
+                </div>
+
+                <div class="grid-layout">
+                    <!-- Expressão 8 -->
+                    <div class="expression-card">
+                        <i class="fas fa-microphone-alt card-icon"></i>
+                        <div class="expression-text">Could you speak slower, please?</div>
+                        <div class="translation">Você poderia falar mais devagar?</div>
+                    </div>
+
+                    <!-- Expressão 9 -->
+                    <div class="expression-card">
+                        <i class="fas fa-hand-wave card-icon"></i>
+                        <div class="expression-text">See you</div>
+                        <div class="translation">Vejo você em breve</div>
+                    </div>
+
+                    <!-- Expressão 10 -->
+                    <div class="expression-card">
+                        <i class="fas fa-globe-americas card-icon"></i>
+                        <div class="expression-text">Where are you from?</div>
+                        <div class="translation">De onde você é?</div>
+                    </div>
+
+                    <!-- Expressão 11 -->
+                    <div class="expression-card">
+                        <i class="fas fa-restroom card-icon"></i>
+                        <div class="expression-text">Where is the restroom?</div>
+                        <div class="translation">Onde fica o banheiro?</div>
+                    </div>
+
+                    <!-- Expressão 12 -->
+                    <div class="expression-card">
+                        <i class="fas fa-sun card-icon"></i>
+                        <div class="expression-text">Good Morning</div>
+                        <div class="translation">Bom Dia</div>
+                    </div>
+
+                    <!-- Expressão 13 -->
+                    <div class="expression-card">
+                        <i class="fas fa-clock card-icon"></i>
+                        <div class="expression-text">Good Afternoon</div>
+                        <div class="translation">Boa Tarde</div>
+                    </div>
+
+                    <!-- Expressão 14 -->
+                    <div class="expression-card">
+                        <i class="fas fa-cloud-sun card-icon"></i>
+                        <div class="expression-text">Good Evening</div>
+                        <div class="translation">Boa Tarde (17h-18h)</div>
+                    </div>
+
+                    <!-- Expressão 15 -->
+                    <div class="expression-card">
+                        <i class="fas fa-moon card-icon"></i>
+                        <div class="expression-text">Good Night</div>
+                        <div class="translation">Boa Noite</div>
+                    </div>
+
+                    <!-- Expressão 16-18 -->
+                    <div class="expression-card">
+                        <i class="fas fa-tshirt card-icon"></i>
+                        <div class="expression-text">My size is:</div>
+                        <div class="translation">
+                            <span style="color: #00796b; font-weight: bold;">P • M • G</span><br>
+                            Small / Medium / Large
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="navigation-bar">
+        <button class="nav-button prev-button" onclick="prevPage()">
+            <img src="volta.png" alt="Voltar">
+        </button>
+
+        <div class="progress-container">
+            <span class="progress-text" style="color: #007bff;">███▒▒▒</span>
+        </div>
+
+        <button class="nav-button next-button" onclick="nextPage()">
+            <img src="avanca.png" alt="Avançar">
+        </button>
+    </div>
+    
+    <footer>
+        <p>© 2025 World Teaching School</p>
+    </footer>
+
+    <script>
+        // Configuração inicial
+        const moduleName = "Palavras Mágicas II";
+        document.getElementById('module-name').textContent = moduleName;
+
+        let currentPage = 4;
+        const totalPages = 10;
+
+        function nextPage() {
+            window.location.href = './pamag2_apresenta04.html';
+        }
+
+        function prevPage() {
+            window.location.href = './pamag2_apresenta02.html';
+        }
+
+        // Animação ao rolar
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationPlayState = 'running';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.expression-card').forEach((card) => {
+            card.style.animationDelay = `${Math.random() * 0.5}s`;
+            observer.observe(card);
+        });
+    </script>
+</body>
+</html>

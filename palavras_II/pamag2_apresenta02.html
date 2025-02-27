@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Template Apresentação Inglês</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Mobile First */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .slide-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .title {
+            color: #2c3e50;
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .grid-container {
+            display: grid;
+            gap: 20px;
+            grid-template-columns: 1fr;
+        }
+
+        .vocab-card {
+            background: #ffffff;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            min-height: 150px;
+        }
+
+        .vocab-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .icon-wrapper {
+            position: absolute;
+            right: 15px;
+            top: 15px;
+            opacity: 0.2;
+            font-size: 2.5rem;
+            color: #3498db;
+        }
+
+        .vocab-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .vocab-card h3 {
+            color: #2c3e50;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        .vocab-card p {
+            color: #7f8c8d;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        /* Desktop Layout */
+        @media (min-width: 768px) {
+            .grid-container {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 30px;
+            }
+
+            .title {
+                font-size: 2.5rem;
+            }
+
+            .vocab-card {
+                min-height: 180px;
+                padding: 25px;
+            }
+
+            .icon-wrapper {
+                font-size: 3.5rem;
+                right: 20px;
+                top: 20px;
+            }
+        }
+
+        /* Animações */
+        @keyframes cardEntrance {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .vocab-card {
+            animation: cardEntrance 0.6s ease forwards;
+            opacity: 0;
+        }
+
+        .vocab-card:nth-child(1) { animation-delay: 0.2s; }
+        .vocab-card:nth-child(2) { animation-delay: 0.4s; }
+        .vocab-card:nth-child(3) { animation-delay: 0.6s; }
+        .vocab-card:nth-child(4) { animation-delay: 0.8s; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <img src="logoWTS.png" alt="World Teaching School Logo" class="logo">
+        </div>
+        <div class="header-content">
+            <div class="course-info">
+                <span class="course-name">Inglês Básico I</span> - 
+                <span class="module-name" id="module-name">Nome do Módulo</span>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="content-wrapper">
+            <div class="slide-container">
+                <div class="header">
+                    <h1 class="title">Vocabulário do Dia a Dia<br><span style="font-size: 0.8em;">Daily Vocabulary</span></h1>
+                </div>
+
+                <div class="grid-container">
+                    <!-- Card 1 -->
+                    <div class="vocab-card">
+                        <div class="icon-wrapper"><i class="fas fa-microphone"></i></div>
+                        <div class="vocab-content">
+                            <h3>What's your name? - Qual seu nome?</h3>
+                            <p><strong>Resposta:</strong> My name is…<br>
+                            <em>Complete com seu nome</em></p>
+                        </div>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div class="vocab-card">
+                        <div class="icon-wrapper"><i class="far fa-smile"></i></div>
+                        <div class="vocab-content">
+                            <h3>How are you? - Como você está?</h3>
+                            <p><strong>Respostas:</strong><br>
+                            - I am fine (bem)<br>
+                            - I am so so (mais ou menos)<br>
+                            - I am tired (cansado)</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 3 -->
+                    <div class="vocab-card">
+                        <div class="icon-wrapper"><i class="fas fa-clock"></i></div>
+                        <div class="vocab-content">
+                            <h3>What time is it? - Que horas são?</h3>
+                            <p><strong>Resposta:</strong> It's 4 o'clock<br></p>
+                        </div>
+                    </div>
+
+                    <!-- Card 4 -->
+                    <div class="vocab-card">
+                        <div class="icon-wrapper"><i class="far fa-comment-dots"></i></div>
+                        <div class="vocab-content">
+                            <h3>Expressões Diárias</h3>
+                            <p>• Thank you - Obrigado<br>
+                               • You're welcome - De nada<br>
+                               • I'm sorry - Desculpa<br>
+                               • I don't understand - Não entendo</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <div class="navigation-bar">
+        <button class="nav-button prev-button" onclick="prevPage()">
+            <img src="volta.png" alt="Voltar">
+        </button>
+
+        <div class="progress-container">
+            <span class="progress-text" style="color: #007bff;">██▒▒▒▒</span>
+        </div>
+
+        <button class="nav-button next-button" onclick="nextPage()">
+            <img src="avanca.png" alt="Avançar">
+        </button>
+    </div>
+    
+    <footer>
+        <p>© 2025 World Teaching School</p>
+    </footer>
+
+    <script>
+        // Configuração inicial
+        const moduleName = "Palavras Mágicas II";
+        document.getElementById('module-name').textContent = moduleName;
+
+        let currentPage = 4;
+        const totalPages = 10;
+
+        function nextPage() {
+            window.location.href = './pamag2_apresenta03.html';
+        }
+
+        function prevPage() {
+            window.location.href = './pamag2_apresenta01.html';
+        }
+
+        // Intersection Observer para animações de scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = "1";
+                }
+            });
+        });
+
+        document.querySelectorAll('.vocab-card').forEach((card) => {
+            observer.observe(card);
+        });
+    </script>
+</body>
+</html>
