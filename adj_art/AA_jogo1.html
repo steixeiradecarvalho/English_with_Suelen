@@ -176,6 +176,14 @@
     pointer-events: none;
     }
 
+    .table-title {
+        font-size: 1.2rem;
+        color: #2c3e50;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #3498db;
+        text-align: center;
+    }
     /* Result screen */
     #result-screen {
     position: fixed;
@@ -295,16 +303,49 @@
     }
     }
 
+    /* Navigation Styles */
+    .navigation {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+    }
+
+    .nav-button {
+        background-color: #007bff;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none;
+        font-size: 14px;
+        transition: background-color 0.3s;
+    }
+
+    .nav-button:hover {
+        background-color: #0056b3;
+    }
+
     /* Animation for hidden elements */
     .hidden {
     display: none;
     }
+
+    .hint-icon {
+      width: 1em;       /* Tamanho relativo ao caractere */
+      height: 1em;      /* Mantém a proporção quadrada */
+      vertical-align: middle; /* Alinha com o texto */
+      margin: 0 2px;    /* Espaçamento opcional */
+    }
+
   </style>
 </head>
 <body>
   <header>
     <h1>Match & Learn</h1>
     <h2>Adjective Antonym Challenge</h2>
+    <h3>Toque ou clique em uma palavra na <strong>Tabela A</strong> e em seu antônimo correspondente na <strong>Tabela B</strong>.<br>Toque em <img src="./images/interrogation.png" class="hint-icon" alt="ícone de ajuda"> para ver a tradução</h3>
+
     <div id="info-panel">
       <div class="info-item">
         <span class="info-label">Time:</span>
@@ -321,10 +362,12 @@
   </header>
   <main>
     <section id="game-board">
-      <div id="adjectives" class="list">
+      <h4 class="table-title">Tabela A</h4>
+      <div id="adjectives" class="list">        
         <!-- Adjective items will be inserted via JavaScript -->
       </div>
-      <div id="antonyms" class="list">
+      <h4 class="table-title">Tabela B</h4>
+      <div id="antonyms" class="list">        
         <!-- Antonym items will be inserted via JavaScript -->
       </div>
     </section>
@@ -338,6 +381,9 @@
       <button id="restart-btn">Play Again</button>
     </div>
   </section>
+  <div class="navigation">
+    <a href=".././index.html" class="nav-button">Home</a>
+  </div>
   <audio id="correct-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-positive-interface-beep-221.mp3"></audio>
   <audio id="wrong-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-fail-notification-946.mp3"></audio>
   <audio id="complete-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-winning-chimes-2015.mp3"></audio>

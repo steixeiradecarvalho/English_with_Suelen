@@ -342,8 +342,8 @@
 
     <div class="back-button-container">
         <button class="back-button" onclick="goBack()">
-            <img src="volta.png" alt="Voltar" style="width: 20px; height: 20px;">
-            Voltar
+            <!-- img src="volta.png" alt="Voltar" style="width: 20px; height: 20px;" -->
+            Home
         </button>
     </div>
     
@@ -357,7 +357,7 @@
         document.getElementById('module-name').textContent = moduleName;
 
         function goBack() {
-            window.location.href = 'index.html';
+            window.location.href = '../index.html';
         }
         function toggleTranslation(element) {
             element.nextElementSibling.classList.toggle('show');

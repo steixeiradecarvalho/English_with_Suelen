@@ -169,6 +169,11 @@
             background-color: #0056b3;
         }
 
+        .word-block.selected {
+            outline: 2px solid #000;
+            outline-offset: 2px;
+        }
+
         footer {
             background-color: #007bff;
             color: #ffffff;
@@ -196,12 +201,10 @@
             <div class="content">
                 <h1 id="slide-title">Word Order Game</h1>
 
-                <div class="game-instructions">
+                <div class="game-instructions">                    
                     <p class="instruction-text">
-                        <strong>EN:</strong> Drag and drop the words to create correct sentences. Arrange them in the proper order to form questions and statements.
-                    </p>
-                    <p class="instruction-text">
-                        <strong>PT:</strong> Arraste e solte as palavras para criar frases corretas. Organize-as na ordem adequada para formar perguntas e afirmações.
+                        Reorganize as palavras embaralhadas para formar sentenças coerentes. Toque na palavra e depois no local correto.<br>
+                        Toque no símbolo 👌 para verificar o acerto.
                     </p>
                 </div>
 
@@ -228,174 +231,560 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script>
         const sentences = [
-            {
-                scrambled: "Is she a Woman beautiful ?",
-                correct: "Is she a beautiful woman ?"
-            },
-            {
-                scrambled: "Are your Father and your brother doctors ?",
-                correct: "Are your father and your brother doctors ?"
-            },
-            {
-                scrambled: "she best friend is my ?",
-                correct: "She is my best friend ?"
-            },
-            {
-                scrambled: "at home is he ?",
-                correct: "Is he at home ?"
-            },
-            {
-                scrambled: "Mary and John friends are ?",
-                correct: "Are Mary and John friends ?"
-            },
-            {
-                scrambled: "today aren't happy you ?",
-                correct: "Aren't you happy today ?"
-            }
-        ];
+        {
+            scrambled: "Is she a Woman beautiful ?",
+            correct: "Is she a beautiful woman ?"
+        },
+        {
+            scrambled: "Are your Father and your brother doctors ?",
+            correct: "Are your father and your brother doctors ?"
+        },
+        {
+            scrambled: "she best friend is my ?",
+            correct: "She is my best friend ?"
+        },
+        {
+            scrambled: "at home is he ?",
+            correct: "Is he at home ?"
+        },
+        {
+            scrambled: "Mary and John friends are ?",
+            correct: "Are Mary and John friends ?"
+        },
+        {
+            scrambled: "today aren't happy you ?",
+            correct: "Aren't you happy today ?"
+        }
+    ];
 
-        // Success sound
-        const successSound = new Audio('data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA/+M4wAAAAAAAAAAAAEluZm8AAAAPAAAAEAAABVgANTU1NTU1Q0NDQ0NDUFBQUFBQXl5eXl5ea2tra2tra3l5eXl5eYaGhoaGhpSUlJSUlKGhoaGhoaGvr6+vr6+8vLy8vLzKysrKysrX19fX19fX5eXl5eXl8vLy8vLy////////AAAAAExhdmM1OC4xMwAAAAAAAAAAAAAAACQEKAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP/jOMAAAAAAAAAAAABJbmZvAAAADwAAAA0AAAeDADMzMzMzMzMzMzMzMzMzZmZmZmZmZmZmZmZmZmaAgICAgICAgICAgICAgIDMzMzMzMzMzMzMzMzMzP//////////////////////////AAAAAExhdmM1OC4xMwAAAAAAAAAAAAAAACQCAAAAAAAAB4MxS+2OAAAAAAD/4zjMAAAAAAAAAAAASW5mbwAAAA8AAAANAAAHgwAzMzMzMzMzMzMzMzMzM2ZmZmZmZmZmZmZmZmZmgICAgICAgICAgICAgICAzMzMzMzMzMzMzMzMzMz//////////////////////////wAAAABMYXZjNTguMTMAAAAAAAAAAAAAAAAkAgAAAAAAAAeDMUvtjgAAAAAAAAAAAAAAAAD/4zjMAAAAAAAAAAAASW5mbwAAAA8AAAADAAAHgwAzMzMzMzMzZmZmZmZmZoCAgICAgIDMzMzMzMzM////////AAAAAExhdmM1OC4xMwAAAAAAAAAAAAAAACQCAAAAAAAAB4MxS+2OAAAAAAAA/+M4zAAAAAAAAAAAAEluZm8AAAAPAAAAAwAAB4MAMzMzMzMzM2ZmZmZmZmaAgICAgICAzMzMzMzMzP///////wAAAABMYXZjNTguMTMAAAAAAAAAAAAAAAAkAgAAAAAAAAeDMUvtjgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA');
+    // Success sound
+    const successSound = new Audio('data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA/+M4wAAAAAAAAAAAAEluZm8AAAAPAAAAEAAABVgANTU1NTU1Q0NDQ0NDUFBQUFBQXl5eXl5ea2tra2tra3l5eXl5eYaGhoaGhpSUlJSUlKGhoaGhoaGvr6+vr6+8vLy8vLzKysrKysrX19fX19fX5eXl5eXl8vLy8vLy////////AAAAAExhdmM1OC4xMwAAAAAAAAAAAAAAACQEKAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP/jOMAAAAAAAAAAAABJbmZvAAAADwAAAA0AAAeDADMzMzMzMzMzMzMzMzMzZmZmZmZmZmZmZmZmZmaAgICAgICAgICAgICAgIDMzMzMzMzMzMzMzMzMzP//////////////////////////AAAAAExhdmM1OC4xMwAAAAAAAAAAAAAAACQCAAAAAAAAB4MxS+2OAAAAAAD/4zjMAAAAAAAAAAAASW5mbwAAAA8AAAANAAAHgwAzMzMzMzMzMzMzMzMzM2ZmZmZmZmZmZmZmZmZmgICAgICAgICAgICAgICAzMzMzMzMzMzMzMzMzMz//////////////////////////wAAAABMYXZjNTguMTMAAAAAAAAAAAAAAAAkAgAAAAAAAAeDMUvtjgAAAAAAAAAAAAAAAAD/4zjMAAAAAAAAAAAASW5mbwAAAA8AAAADAAAHgwAzMzMzMzMzZmZmZmZmZoCAgICAgIDMzMzMzMzM////////AAAAAExhdmM1OC4xMwAAAAAAAAAAAAAAACQCAAAAAAAAB4MxS+2OAAAAAAAA/+M4zAAAAAAAAAAAAEluZm8AAAAPAAAAAwAAB4MAMzMzMzMzM2ZmZmZmZmaAgICAgICAzMzMzMzMzP///////wAAAABMYXZjNTguMTMAAAAAAAAAAAAAAAAkAgAAAAAAAAeDMUvtjgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA');
 
-        // Initialize game
-        function initializeGame() {
-            const gameContainer = document.getElementById('gameContainer');
+    // Error sound
+    const errorSound = new Audio('data:audio/mpeg;base64,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AAAAAAAAAAAAAAAAAAAAAD/+1BkAAAEiUTT6eYbcAAADSAAAAQVBRs/9hgAAAAANIAAAAT/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////');
+
+    let selectedWord = null;
+    let gameScore = 0;
+    let totalAttempts = 0;
+    let correctAttempts = 0;
+    let hintDisplayed = false;
+
+    function handleWordClick(e) {
+        e.stopPropagation();
+        
+        if (selectedWord === this) {
+            this.classList.remove('selected');
+            selectedWord = null;
+        } else if (selectedWord) {
+            const targetRow = this.parentElement;
+            const selectedRow = selectedWord.parentElement;
             
-            sentences.forEach((sentence, rowIndex) => {
-                const row = document.createElement('div');
-                row.className = 'sentence-row';
-                row.setAttribute('data-correct', sentence.correct.toLowerCase());
-                
-                // Create and shuffle word blocks
-                const words = sentence.scrambled.split(' ');
-                shuffleArray(words);
-                
-                words.forEach(word => {
-                    const block = document.createElement('div');
-                    block.className = 'word-block';
-                    block.textContent = word;
-                    block.draggable = true;
-                    
-                    block.addEventListener('dragstart', handleDragStart);
-                    block.addEventListener('dragend', handleDragEnd);
-                    
-                    row.appendChild(block);
-                });
-                
-                row.addEventListener('dragover', handleDragOver);
-                row.addEventListener('drop', handleDrop);
-                
-                gameContainer.appendChild(row);
+            if (targetRow === selectedRow) {
+                targetRow.insertBefore(selectedWord, this);
+                selectedWord.classList.remove('selected');
+                selectedWord = null;
+                checkRowOrder(targetRow);
+            } else {
+                selectedWord.classList.remove('selected');
+                selectedWord = null;
+            }
+        } else {
+            selectedWord = this;
+            this.classList.add('selected');
+        }
+    }
+
+    function handleRowClick(e) {
+        if (e.target === this && selectedWord) {
+            const selectedRow = selectedWord.parentElement;
+            if (selectedRow === this) {
+                this.appendChild(selectedWord);
+                selectedWord.classList.remove('selected');
+                selectedWord = null;
+                checkRowOrder(this);
+            } else {
+                selectedWord.classList.remove('selected');
+                selectedWord = null;
+            }
+        }
+    }
+
+    // Initialize game
+    function initializeGame() {
+        const gameContainer = document.getElementById('gameContainer');
+        
+        // Create score display
+        const scoreDisplay = document.createElement('div');
+        scoreDisplay.id = 'scoreDisplay';
+        scoreDisplay.className = 'score-display';
+        scoreDisplay.innerHTML = 'Score: 0 | Accuracy: 0%';
+        scoreDisplay.style.textAlign = 'center';
+        scoreDisplay.style.fontSize = '1.2rem';
+        scoreDisplay.style.fontWeight = 'bold';
+        scoreDisplay.style.padding = '10px';
+        scoreDisplay.style.marginBottom = '20px';
+        scoreDisplay.style.backgroundColor = '#f0f0f0';
+        scoreDisplay.style.borderRadius = '8px';
+        scoreDisplay.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+        
+        gameContainer.appendChild(scoreDisplay);
+        
+        sentences.forEach((sentence, rowIndex) => {
+            // Create row container to hold both the sentence row and the feedback button
+            const rowContainer = document.createElement('div');
+            rowContainer.className = 'row-container';
+            rowContainer.style.display = 'flex';
+            rowContainer.style.alignItems = 'center';
+            rowContainer.style.gap = '10px';
+            rowContainer.style.marginBottom = '1.5rem';
+            rowContainer.style.position = 'relative';
+            
+            // Create sentence row
+            const row = document.createElement('div');
+            row.className = 'sentence-row';
+            row.setAttribute('data-correct', sentence.correct.toLowerCase());
+            row.setAttribute('data-index', rowIndex);
+            row.addEventListener('click', handleRowClick);
+            row.style.flex = '1';
+            
+            // Create feedback button
+            const feedbackBtn = document.createElement('button');
+            feedbackBtn.className = 'feedback-btn';
+            feedbackBtn.innerHTML = '👌';
+            feedbackBtn.style.fontSize = '1.5rem';
+            feedbackBtn.style.background = 'transparent';
+            feedbackBtn.style.border = 'none';
+            feedbackBtn.style.cursor = 'pointer';
+            feedbackBtn.style.marginLeft = '10px';
+            feedbackBtn.style.padding = '5px 10px';
+            feedbackBtn.style.borderRadius = '50%';
+            feedbackBtn.style.transition = 'all 0.3s ease';
+
+            feedbackBtn.addEventListener('click', function() {
+                checkAndDisplayFeedback(row, feedbackBtn);
             });
-        }
-
-        // Drag and drop handlers
-        let draggedElement = null;
-
-        function handleDragStart(e) {
-            draggedElement = this;
-            this.classList.add('dragging');
-        }
-
-        function handleDragEnd(e) {
-            this.classList.remove('dragging');
-        }
-
-        function handleDragOver(e) {
-            e.preventDefault();
-        }
-
-        function handleDrop(e) {
-            e.preventDefault();
-            const row = e.currentTarget;
             
-            if (draggedElement) {
-                const afterElement = getDragAfterElement(row, e.clientX);
-                if (afterElement) {
-                    afterElement.parentElement.insertBefore(draggedElement, afterElement);
-                } else {
-                    row.appendChild(draggedElement);
-                }
-                
-                checkRowOrder(row);
-            }
-        }
-
-        function getDragAfterElement(container, x) {
-            const draggableElements = [...container.querySelectorAll('.word-block:not(.dragging)')];
+            // Create hint button
+            const hintBtn = document.createElement('button');
+            hintBtn.className = 'hint-btn';
+            hintBtn.innerHTML = '💡';
+            hintBtn.title = 'Get a hint';
+            hintBtn.style.fontSize = '1.5rem';
+            hintBtn.style.background = 'transparent';
+            hintBtn.style.border = 'none';
+            hintBtn.style.cursor = 'pointer';
+            hintBtn.style.marginLeft = '5px';
+            hintBtn.style.padding = '5px';
+            hintBtn.style.borderRadius = '50%';
+            hintBtn.style.transition = 'all 0.2s ease';
             
-            return draggableElements.reduce((closest, child) => {
-                const box = child.getBoundingClientRect();
-                const offset = x - box.left - box.width / 2;
-                
-                if (offset < 0 && offset > closest.offset) {
-                    return { offset: offset, element: child };
-                } else {
-                    return closest;
-                }
-            }, { offset: Number.NEGATIVE_INFINITY }).element;
-        }
+            hintBtn.addEventListener('click', function() {
+                showHint(row);
+            });
+            
+            const words = sentence.scrambled.split(' ');
+            shuffleArray(words);
+            
+            words.forEach(word => {
+                const block = document.createElement('div');
+                block.className = 'word-block';
+                block.textContent = word;
+                block.addEventListener('click', handleWordClick);
+                row.appendChild(block);
+            });
+            
+            // Add elements to container
+            rowContainer.appendChild(row);
+            rowContainer.appendChild(hintBtn);
+            rowContainer.appendChild(feedbackBtn);
+            
+            // Add container to game container
+            gameContainer.appendChild(rowContainer);
+        });
 
-        function XcheckRowOrder(row) {
-            const currentOrder = Array.from(row.children)
-                .map(block => block.textContent)
-                .join(' ')
-                .toLowerCase()
-                .trim(); // Remove espaços em branco extras
-
-            if (currentOrder === row.getAttribute('data-correct')) {
-                if (!row.classList.contains('completed')) {
-                    celebrate();
-                    row.classList.add('completed');
-                }
-            } else {
-                row.classList.remove('completed');
+        // Add styles for correct/incorrect states
+        const style = document.createElement('style');
+        style.textContent = `
+            .feedback-btn.correct {
+                background-color: #4CAF50;
+                color: white;
+                transform: scale(1.1);
             }
-        }
-
-        function checkRowOrder(row) {
-            const currentOrder = Array.from(row.children)
-                .map(block => block.textContent)
-                .join(' ')
-                .toLowerCase()
-                .trim();
-
-            const correctAnswer = row.getAttribute('data-correct');
-
-            if (currentOrder === correctAnswer) {
-                if (!row.classList.contains('completed')) {
-                    successSound.play();
-                    celebrate();
-                    row.classList.add('completed');
-                }
-            } else {
-                row.classList.remove('completed');
+            
+            .feedback-btn.incorrect {
+                background-color: #F44336;
+                color: white;
+                transform: scale(1.1);
             }
-        }
+            
+            .hint-btn:hover {
+                background-color: #FFC107;
+                transform: scale(1.1);
+            }
+            
+            @keyframes shake {
+                0% { transform: translateX(0); }
+                10% { transform: translateX(-5px); }
+                20% { transform: translateX(5px); }
+                30% { transform: translateX(-5px); }
+                40% { transform: translateX(5px); }
+                50% { transform: translateX(-5px); }
+                60% { transform: translateX(5px); }
+                70% { transform: translateX(-5px); }
+                80% { transform: translateX(5px); }
+                90% { transform: translateX(-5px); }
+                100% { transform: translateX(0); }
+            }
+            
+            .row-container {
+                position: relative;
+            }
+            
+            .feedback-message {
+                position: absolute;
+                right: 60px;
+                background-color: #333;
+                color: white;
+                padding: 5px 10px;
+                border-radius: 4px;
+                font-size: 0.9rem;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            }
+            
+            .feedback-message.show {
+                opacity: 1;
+            }
+            
+            .hint-highlight {
+                animation: highlight-pulse 1.5s infinite;
+            }
+            
+            @keyframes highlight-pulse {
+                0% { box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.7); }
+                70% { box-shadow: 0 0 0 10px rgba(255, 193, 7, 0); }
+                100% { box-shadow: 0 0 0 0 rgba(255, 193, 7, 0); }
+            }
+            
+            .progress-container {
+                height: 10px;
+                width: 100%;
+                background-color: #f0f0f0;
+                border-radius: 5px;
+                margin-top: 20px;
+                overflow: hidden;
+            }
+            
+            .progress-bar {
+                height: 100%;
+                width: 0%;
+                background-color: #4CAF50;
+                transition: width 0.5s ease;
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Add progress bar
+        const progressContainer = document.createElement('div');
+        progressContainer.className = 'progress-container';
+        const progressBar = document.createElement('div');
+        progressBar.className = 'progress-bar';
+        progressBar.id = 'progressBar';
+        progressContainer.appendChild(progressBar);
+        gameContainer.appendChild(progressContainer);
+    }
 
-        function celebrate() {
-            // Play success sound
+    function checkAndDisplayFeedback(row, feedbackBtn) {
+        const currentOrder = Array.from(row.children)
+            .map(block => block.textContent)
+            .join(' ')
+            .toLowerCase()
+            .trim();
+
+        const correctAnswer = row.getAttribute('data-correct');
+        
+        // Increment total attempts
+        totalAttempts++;
+        
+        // Remove any existing message
+        const existingMessage = row.parentElement.querySelector('.feedback-message');
+        if (existingMessage) {
+            existingMessage.remove();
+        }
+        
+        // Create feedback message element
+        const feedbackMessage = document.createElement('div');
+        feedbackMessage.className = 'feedback-message';
+        
+        if (currentOrder === correctAnswer) {
+            // Correct answer
+            feedbackBtn.className = 'feedback-btn correct';
+            feedbackBtn.innerHTML = '✅';
             successSound.play();
             
-            // Trigger confetti
-            confetti({
-                particleCount: 100,
-                spread: 70,
-                origin: { y: 0.6 }
-            });
+            // Only increment score if this is the first time this row is correct
+            if (!row.classList.contains('completed')) {
+                gameScore += 10;
+                correctAttempts++;
+            }
+            
+            feedbackMessage.textContent = "Correct! Well done!";
+            feedbackMessage.style.backgroundColor = "#4CAF50";
+            
+            row.classList.add('completed');
+            celebrate();
+        } else {
+            // Incorrect answer
+            feedbackBtn.className = 'feedback-btn incorrect';
+            feedbackBtn.innerHTML = '❌';
+            errorSound.play();
+            
+            feedbackMessage.textContent = "Try again!";
+            feedbackMessage.style.backgroundColor = "#F44336";
+            
+            // Shake the row to indicate it's wrong
+            row.style.animation = 'shake 0.5s';
+            setTimeout(() => {
+                row.style.animation = '';
+            }, 500);
+            
+            row.classList.remove('completed');
         }
+        
+        // Update score display
+        updateScoreDisplay();
+        
+        // Add message to container and show it
+        row.parentElement.appendChild(feedbackMessage);
+        setTimeout(() => {
+            feedbackMessage.classList.add('show');
+        }, 10);
+        
+        // Hide message after 3 seconds
+        setTimeout(() => {
+            feedbackMessage.classList.remove('show');
+            setTimeout(() => {
+                feedbackMessage.remove();
+            }, 300);
+        }, 3000);
+        
+        // Reset button after 2 seconds
+        setTimeout(() => {
+            feedbackBtn.className = 'feedback-btn';
+            feedbackBtn.innerHTML = '👌';
+        }, 2000);
+        
+        // Update progress bar
+        updateProgressBar();
+        
+        // Check if all sentences are completed
+        checkGameCompletion();
+    }
 
-        function shuffleArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
+    function checkRowOrder(row) {
+        const currentOrder = Array.from(row.children)
+            .map(block => block.textContent)
+            .join(' ')
+            .toLowerCase()
+            .trim();
+
+        const correctAnswer = row.getAttribute('data-correct');
+
+        if (currentOrder === correctAnswer) {
+            if (!row.classList.contains('completed')) {
+                row.classList.add('completed');
+            }
+        } else {
+            row.classList.remove('completed');
+        }
+    }
+
+    function showHint(row) {
+        if (hintDisplayed) return; // Only show one hint at a time
+        
+        hintDisplayed = true;
+        
+        const correctOrder = row.getAttribute('data-correct').split(' ');
+        const currentBlocks = Array.from(row.children);
+        
+        // Find the first word block that's in the wrong position
+        let hintIndex = -1;
+        
+        for (let i = 0; i < correctOrder.length; i++) {
+            if (i >= currentBlocks.length || currentBlocks[i].textContent.toLowerCase() !== correctOrder[i].toLowerCase()) {
+                hintIndex = i;
+                break;
             }
         }
-
-        function goBack() {
-            window.location.href = '.././index.html';
+        
+        if (hintIndex === -1) return; // No hint needed
+        
+        // Find the block that should be in this position
+        const correctWord = correctOrder[hintIndex];
+        let correctBlock = null;
+        
+        for (let i = 0; i < currentBlocks.length; i++) {
+            if (currentBlocks[i].textContent.toLowerCase() === correctWord.toLowerCase()) {
+                correctBlock = currentBlocks[i];
+                break;
+            }
         }
+        
+        if (correctBlock) {
+            // Highlight the correct block
+            correctBlock.classList.add('hint-highlight');
+            
+            // Create hint message
+            const hintMessage = document.createElement('div');
+            hintMessage.className = 'feedback-message';
+            hintMessage.textContent = `Try moving "${correctWord}" to position ${hintIndex + 1}`;
+            hintMessage.style.backgroundColor = "#FFC107";
+            hintMessage.style.color = "black";
+            
+            row.parentElement.appendChild(hintMessage);
+            setTimeout(() => {
+                hintMessage.classList.add('show');
+            }, 10);
+            
+            // Remove hint after 4 seconds
+            setTimeout(() => {
+                correctBlock.classList.remove('hint-highlight');
+                hintMessage.classList.remove('show');
+                setTimeout(() => {
+                    hintMessage.remove();
+                    hintDisplayed = false;
+                }, 300);
+            }, 4000);
+        }
+    }
 
-        // Initialize game when page loads
-        window.addEventListener('load', initializeGame); // Adicione o parêntese aqui
+    function updateScoreDisplay() {
+        const accuracy = totalAttempts > 0 ? Math.round((correctAttempts / totalAttempts) * 100) : 0;
+        document.getElementById('scoreDisplay').innerHTML = `Score: ${gameScore} | Accuracy: ${accuracy}%`;
+    }
+
+    function updateProgressBar() {
+        const totalSentences = sentences.length;
+        const completedRows = document.querySelectorAll('.sentence-row.completed').length;
+        const progressPercentage = (completedRows / totalSentences) * 100;
+        
+        document.getElementById('progressBar').style.width = `${progressPercentage}%`;
+    }
+
+    function checkGameCompletion() {
+        const totalSentences = sentences.length;
+        const completedRows = document.querySelectorAll('.sentence-row.completed').length;
+        
+        if (completedRows === totalSentences) {
+            // Create completion message
+            const completionMessage = document.createElement('div');
+            completionMessage.className = 'completion-message';
+            completionMessage.style.position = 'fixed';
+            completionMessage.style.top = '50%';
+            completionMessage.style.left = '50%';
+            completionMessage.style.transform = 'translate(-50%, -50%)';
+            completionMessage.style.backgroundColor = '#4CAF50';
+            completionMessage.style.color = 'white';
+            completionMessage.style.padding = '20px';
+            completionMessage.style.borderRadius = '10px';
+            completionMessage.style.textAlign = 'center';
+            completionMessage.style.zIndex = '1000';
+            completionMessage.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)';
+            
+            const accuracy = totalAttempts > 0 ? Math.round((correctAttempts / totalAttempts) * 100) : 0;
+            
+            completionMessage.innerHTML = `
+                <h2>Congratulations!</h2>
+                <p>You've completed all sentences!</p>
+                <p>Final Score: ${gameScore}</p>
+                <p>Accuracy: ${accuracy}%</p>
+                <button id="playAgainBtn">Play Again</button>
+            `;
+            
+            document.body.appendChild(completionMessage);
+            
+            // Style the button
+            const playAgainBtn = document.getElementById('playAgainBtn');
+            playAgainBtn.style.backgroundColor = 'white';
+            playAgainBtn.style.color = '#4CAF50';
+            playAgainBtn.style.border = 'none';
+            playAgainBtn.style.padding = '10px 20px';
+            playAgainBtn.style.borderRadius = '5px';
+            playAgainBtn.style.margin = '10px';
+            playAgainBtn.style.cursor = 'pointer';
+            playAgainBtn.style.fontWeight = 'bold';
+            
+            playAgainBtn.addEventListener('click', function() {
+                document.body.removeChild(completionMessage);
+                resetGame();
+            });
+            
+            // Super celebration
+            const confettiSettings = { 
+                particleCount: 150,
+                spread: 180,
+                origin: { y: 0.6 }
+            };
+            
+            confetti(confettiSettings);
+            
+            // Multiple confetti bursts
+            setTimeout(() => {
+                confetti({
+                    ...confettiSettings,
+                    origin: { y: 0.6, x: 0.3 }
+                });
+            }, 500);
+            
+            setTimeout(() => {
+                confetti({
+                    ...confettiSettings,
+                    origin: { y: 0.6, x: 0.7 }
+                });
+            }, 1000);
+        }
+    }
+
+    function resetGame() {
+        // Reset game state
+        gameScore = 0;
+        totalAttempts = 0;
+        correctAttempts = 0;
+        
+        // Clear the game container
+        const gameContainer = document.getElementById('gameContainer');
+        gameContainer.innerHTML = '';
+        
+        // Reinitialize game
+        initializeGame();
+        
+        // Reset progress bar
+        document.getElementById('progressBar').style.width = '0%';
+        
+        // Update score display
+        updateScoreDisplay();
+    }
+
+    function celebrate() {
+        // Trigger confetti
+        confetti({
+            particleCount: 100,
+            spread: 70,
+            origin: { y: 0.6 }
+        });
+    }
+
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
+
+    function goBack() {
+        window.location.href = '.././index.html';
+    }
+
+    // Initialize game when page loads
+    window.addEventListener('load', initializeGame);
      </script>

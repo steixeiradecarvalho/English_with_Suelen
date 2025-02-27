@@ -155,6 +155,11 @@
       text-decoration: none; /* Remove sublinhado do link */
       display: inline-block; /* Permite estilizar como bloco */
     }
+    .draggable-word.selected {
+      background: linear-gradient(45deg, #ff6b6b 0%, #ff8e8e 100%);
+      transform: scale(1.05);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+    }
   </style>
 </head>
 <body>
@@ -162,16 +167,16 @@
     <h1 class="title">🎯 Complete the Sentences</h1>
     
     <div class="word-bank" id="wordBank">
-      <div class="draggable-word" draggable="true">WATCH</div>
-      <div class="draggable-word" draggable="true">GO</div>
-      <div class="draggable-word" draggable="true">WASH</div>
-      <div class="draggable-word" draggable="true">SLEEP</div>
-      <div class="draggable-word" draggable="true">DRIVE</div>
-      <div class="draggable-word" draggable="true">GET</div>
-      <div class="draggable-word" draggable="true">READ</div>
-      <div class="draggable-word" draggable="true">WRITE</div>
-      <div class="draggable-word" draggable="true">THINK</div>
-      <div class="draggable-word" draggable="true">SEE</div>
+      <div class="draggable-word" >WATCH</div>
+      <div class="draggable-word" >GO</div>
+      <div class="draggable-word" >WASH</div>
+      <div class="draggable-word" >SLEEP</div>
+      <div class="draggable-word" >DRIVE</div>
+      <div class="draggable-word" >GET</div>
+      <div class="draggable-word" >READ</div>
+      <div class="draggable-word" >WRITE</div>
+      <div class="draggable-word" >THINK</div>
+      <div class="draggable-word" >SEE</div>
     </div>
 
     <div class="sentences">
@@ -198,67 +203,51 @@
   </div>
 
   <script>
-    let draggingElement = null;
+    let selectedWord = null;
 
-    // Configurar elementos arrastáveis
+    // Handle word selection
     document.querySelectorAll('.draggable-word').forEach(word => {
-      word.addEventListener('dragstart', handleDragStart);
-      word.addEventListener('dragend', handleDragEnd);
+      word.addEventListener('click', function() {
+        if (this === selectedWord) {
+          this.classList.remove('selected');
+          selectedWord = null;
+        } else {
+          if (selectedWord) selectedWord.classList.remove('selected');
+          this.classList.add('selected');
+          selectedWord = this;
+        }
+      });
     });
 
-    // Configurar zonas de soltura
+    // Handle dropzone clicks
     document.querySelectorAll('.dropzone').forEach(dropzone => {
-      dropzone.addEventListener('dragover', handleDragOver);
-      dropzone.addEventListener('dragleave', handleDragLeave);
-      dropzone.addEventListener('drop', handleDrop);
-    });
+      dropzone.addEventListener('click', function() {
+        if (!selectedWord || this.classList.contains('correct')) return;
 
-    function handleDragStart(e) {
-      draggingElement = e.target;
-      e.target.classList.add('dragging');
-      e.dataTransfer.setData('text/plain', e.target.textContent);
-    }
+        const correctAnswer = this.dataset.answer;
+        const selectedText = selectedWord.textContent;
 
-    function handleDragEnd(e) {
-      e.target.classList.remove('dragging');
-      draggingElement = null;
-    }
-
-    function handleDragOver(e) {
-      e.preventDefault();
-      if (!e.target.classList.contains('correct')) {
-        e.target.classList.add('hover');
-      }
-    }
-
-    function handleDragLeave(e) {
-      e.target.classList.remove('hover');
-    }
-
-    function handleDrop(e) {
-      e.preventDefault();
-      const dropzone = e.target;
-      const word = e.dataTransfer.getData('text/plain');
-      
-      dropzone.classList.remove('hover');
-      
-      if (!dropzone.classList.contains('correct')) {
-        if (word === dropzone.dataset.answer) {
-          dropzone.textContent = word;
-          dropzone.classList.add('correct');
-          draggingElement.style.display = 'none';
+        if (selectedText === correctAnswer) {
+          this.textContent = selectedText;
+          this.classList.add('correct');
+          selectedWord.style.display = 'none';
+          selectedWord.classList.remove('selected');
+          selectedWord = null;
           showFeedback('Correct! 🎉', true);
           checkAllComplete();
         } else {
-          dropzone.classList.add('incorrect');
+          this.classList.add('incorrect');
           showFeedback('Try again! 🔄', false);
           setTimeout(() => {
-            dropzone.classList.remove('incorrect');
+            this.classList.remove('incorrect');
           }, 1000);
+          selectedWord.classList.remove('selected');
+          selectedWord = null;
         }
-      }
-    }
+      });
+    });
 
+    // Keep existing feedback and completion check functions
     function showFeedback(message, isSuccess) {
       const feedback = document.getElementById('feedback');
       feedback.textContent = message;

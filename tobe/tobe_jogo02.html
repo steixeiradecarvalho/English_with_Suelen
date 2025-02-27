@@ -153,20 +153,25 @@
             justify-content: center;
         }
 
-        .draggable {
+        .clickable {
             background: #007bff;
             color: white;
             padding: 10px 20px;
             border-radius: 8px;
-            cursor: move;
+            cursor: pointer;
             user-select: none;
             transition: transform 0.2s ease;
             font-weight: bold;
         }
 
-        .draggable:hover {
+        .clickable:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .clickable.selected {
+            box-shadow: 0 0 0 3px yellow, 0 4px 12px rgba(0, 0, 0, 0.2);
+            transform: scale(1.05);
         }
 
         .correct {
@@ -175,14 +180,23 @@
             color: white;
         }
 
-        /* Particular desse código - Não pertence ao template */
-        .draggable:nth-child(1) { background-color: #e84118; }
-        .draggable:nth-child(2) { background-color: #4a69bd; }
-        .draggable:nth-child(3) { background-color: #6ab04c; }
-        .draggable:nth-child(4) { background-color: #f0932b; }
-        .draggable:nth-child(5) { background-color: #eb4d4b; }
-        .draggable:nth-child(6) { background-color: #22a6b3; }
-        .draggable:nth-child(7) { background-color: #be2edd; }
+        .instructions {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 10px 15px;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+            color: #495057;
+        }
+
+        /* Cores diferentes para as palavras */
+        .clickable:nth-child(1) { background-color: #e84118; }
+        .clickable:nth-child(2) { background-color: #4a69bd; }
+        .clickable:nth-child(3) { background-color: #6ab04c; }
+        .clickable:nth-child(4) { background-color: #f0932b; }
+        .clickable:nth-child(5) { background-color: #eb4d4b; }
+        .clickable:nth-child(6) { background-color: #22a6b3; }
+        .clickable:nth-child(7) { background-color: #be2edd; }
 
     </style>
 </head>
@@ -203,7 +217,10 @@
         <div class="content">
             <div class="game-container">
                 <h2 class="game-title">Complete with "To Be"</h2>
-                (Atente à letra maiúscula das opções para início de frase)
+                <div class="instructions">
+                    <p>Instruções: Primeiro toque em uma palavra para selecioná-la, depois toque no espaço em branco para colocá-la.<br>Se estiver certo, o espaço branco se tornará verde.</p>
+                    <p>(Atente à letra maiúscula das opções para início de frase)</p>
+                </div>
                 <div id="sentences"></div>
                 <div class="words-container" id="words"></div>
             </div>
@@ -232,7 +249,7 @@
 
         // Script do jogo
         const sentences = [
-            { text: ["", " you my friend"], correct: "Are" },
+            { text: ["", " you my friend?"], correct: "Are" },
             { text: ["You ", " my sister (negative)"], correct: "aren't" },
             { text: ["", " they at home?"], correct: "Are" },
             { text: ["It ", " a hot day (negative)"], correct: "isn't" },
@@ -241,6 +258,7 @@
         ];
 
         const words = ["am", "are", "is", "isn't", "aren't", "Are", "Is"];
+        let selectedWord = null;
 
         function createSentences() {
             const container = document.getElementById("sentences");
@@ -260,9 +278,18 @@
             const container = document.getElementById("words");
             words.sort(() => Math.random() - 0.5).forEach(word => {
                 const div = document.createElement("div");
-                div.className = "draggable";
-                div.setAttribute("draggable", "true");
+                div.className = "clickable";
                 div.textContent = word;
+                div.addEventListener('click', function() {
+                    // Deselect any previously selected word
+                    document.querySelectorAll('.clickable.selected').forEach(el => {
+                        el.classList.remove('selected');
+                    });
+                    
+                    // Select this word
+                    this.classList.add('selected');
+                    selectedWord = this.textContent;
+                });
                 container.appendChild(div);
             });
         }
@@ -276,42 +303,27 @@
             });
         }
 
-        function initDragAndDrop() {
-            const draggables = document.querySelectorAll('.draggable');
+        function initClickToPlace() {
             const dropzones = document.querySelectorAll('.dropzone');
 
-            draggables.forEach(draggable => {
-                draggable.addEventListener('dragstart', function(e) {
-                    e.dataTransfer.setData('text/plain', e.target.textContent);
-                    setTimeout(() => e.target.classList.add('dragging'), 0);
-                });
-
-                draggable.addEventListener('dragend', function(e) {
-                    e.target.classList.remove('dragging');
-                });
-            });
-
             dropzones.forEach(dropzone => {
-                dropzone.addEventListener('dragover', function(e) {
-                    e.preventDefault();
-                    this.classList.add('active');
-                });
-
-                dropzone.addEventListener('dragleave', function(e) {
-                    this.classList.remove('active');
-                });
-
-                dropzone.addEventListener('drop', function(e) {
-                    e.preventDefault();
-                    const word = e.dataTransfer.getData('text/plain');
-                    const correct = this.getAttribute('data-correct');
-                    
-                    this.textContent = word;
-                    this.classList.remove('active');
-
-                    if (word === correct && !this.classList.contains('correct')) {
-                        this.classList.add('correct');
-                        setTimeout(triggerConfetti, 100);
+                dropzone.addEventListener('click', function() {
+                    if (selectedWord) {
+                        const correct = this.getAttribute('data-correct');
+                        
+                        this.textContent = selectedWord;
+                        
+                        // Check if correct and not already marked as correct
+                        if (selectedWord === correct && !this.classList.contains('correct')) {
+                            this.classList.add('correct');
+                            setTimeout(triggerConfetti, 100);
+                        }
+                        
+                        // Clear selection
+                        document.querySelectorAll('.clickable.selected').forEach(el => {
+                            el.classList.remove('selected');
+                        });
+                        selectedWord = null;
                     }
                 });
             });
@@ -321,7 +333,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             createSentences();
             createWords();
-            initDragAndDrop();
+            initClickToPlace();
         });
     </script>
 </body>

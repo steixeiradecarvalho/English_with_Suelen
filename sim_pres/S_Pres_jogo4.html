@@ -59,24 +59,24 @@
       perspective: 1000px;
     }
 
-    .draggable-word {
+    .clickable-word {
       background: linear-gradient(45deg, var(--primary), var(--secondary));
       color: var(--text);
       padding: 12px 25px;
       border-radius: 25px;
-      cursor: grab;
+      cursor: pointer;
       transition: all 0.3s ease;
       position: relative;
       transform-style: preserve-3d;
       box-shadow: 0 5px 15px rgba(0,0,0,0.2);
     }
 
-    .draggable-word:hover {
+    .clickable-word:hover {
       transform: translateY(-5px) rotate(3deg);
       box-shadow: 0 8px 20px rgba(255,97,216,0.3);
     }
 
-    .draggable-word::after {
+    .clickable-word::after {
       content: '';
       position: absolute;
       inset: -2px;
@@ -87,8 +87,15 @@
       transition: opacity 0.3s ease;
     }
 
-    .draggable-word:hover::after {
+    .clickable-word:hover::after {
       opacity: 1;
+    }
+
+    .clickable-word.selected {
+      transform: scale(1.1) translateY(-5px);
+      box-shadow: 0 8px 20px rgba(255,97,216,0.6);
+      z-index: 10;
+      background: linear-gradient(45deg, var(--accent), var(--primary));
     }
 
     .quiz-card {
@@ -119,6 +126,7 @@
       transition: all 0.3s ease;
       position: relative;
       overflow: hidden;
+      cursor: pointer;
     }
 
     .dropzone.hover {
@@ -136,6 +144,7 @@
       align-items: center;
       justify-content: center;
       animation: celebrate 0.8s ease;
+      cursor: default;
     }
 
     .dropzone.incorrect {
@@ -205,6 +214,7 @@
       opacity: 0;
       transition: opacity 0.3s ease;
       text-align: center;
+      z-index: 100;
     }
 
     .feedback.show {
@@ -228,6 +238,16 @@
       background: var(--accent);
       opacity: 0;
     }
+    
+    .instructions {
+      background: rgba(255,255,255,0.1);
+      border-radius: 15px;
+      padding: 15px;
+      margin-bottom: 20px;
+      font-size: 1.1em;
+      line-height: 1.4;
+    }
+    
     footer {
       background: rgba(255,255,255,0.1);
       backdrop-filter: blur(10px);
@@ -255,17 +275,23 @@
         transparent
       );
     }
+    
     #backButton {
       padding: 10px 20px;
       font-size: 16px;
       cursor: pointer;
       margin-top: 15px;
-      background-color: #5bc0de; /* Cor de fundo azul */
-      color: white;          /* Cor do texto branca */
-      border: none;          /* Remove a borda padrão */
-      border-radius: 5px;    /* Arredonda os cantos */
-      text-decoration: none; /* Remove sublinhado do link */
-      display: inline-block; /* Permite estilizar como bloco */
+      background-color: #5bc0de;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .dropzone.active {
+      border-color: var(--accent);
+      box-shadow: 0 0 20px rgba(65,233,213,0.4);
     }
   </style>
 </head>
@@ -273,21 +299,26 @@
   <div class="container">
     <h1 class="title">✨ English Verbs Quiz ✨</h1>
     
+    <div class="instructions">
+      Tap a word from the bank below, then tap the blank space in the sentence to place it.<br>
+      (Toque em uma palavra da lista abaixo e depois toque no espaço em branco na frase para colocá-la)
+    </div>
+    
     <div class="word-bank" id="wordBank">
-      <div class="draggable-word" draggable="true">WATCH</div>
-      <div class="draggable-word" draggable="true">GO</div>
-      <div class="draggable-word" draggable="true">WASH</div>
-      <div class="draggable-word" draggable="true">SLEEP</div>
-      <div class="draggable-word" draggable="true">DRIVE</div>
-      <div class="draggable-word" draggable="true">GET</div>
-      <div class="draggable-word" draggable="true">READ</div>
-      <div class="draggable-word" draggable="true">WRITE</div>
-      <div class="draggable-word" draggable="true">THINK</div>
-      <div class="draggable-word" draggable="true">SEE</div>
+      <div class="clickable-word">WATCH</div>
+      <div class="clickable-word">GO</div>
+      <div class="clickable-word">WASH</div>
+      <div class="clickable-word">SLEEP</div>
+      <div class="clickable-word">DRIVE</div>
+      <div class="clickable-word">GET</div>
+      <div class="clickable-word">READ</div>
+      <div class="clickable-word">WRITE</div>
+      <div class="clickable-word">THINK</div>
+      <div class="clickable-word">SEE</div>
     </div>
 
     <div id="quizContainer" class="quiz-card">
-      <!-- Questões serão inseridas aqui -->
+      <!-- Questions will be inserted here -->
     </div>
 
     <div class="navigation">
@@ -299,7 +330,7 @@
     <div id="feedback" class="feedback"></div>
   </div>
   <div class="voltar">
-    <a id="backButton" href=".././index.html">Voltar</a> <footer></footer>
+    <a id="backButton" href=".././index.html">Home</a>
   </div>
 
   <script>
@@ -327,9 +358,18 @@
     ];
 
     let currentQuestion = 0;
-    let draggingElement = null;
+    let selectedWord = null;
 
     function showQuestion(index) {
+      // Reset all words visibility
+      document.querySelectorAll('.clickable-word').forEach(word => {
+        word.style.display = 'block';
+        word.classList.remove('selected');
+      });
+      
+      selectedWord = null;
+      
+      // Setup question
       const question = questions[index];
       const container = document.getElementById('quizContainer');
       
@@ -347,10 +387,49 @@
 
     function setupDropzones() {
       document.querySelectorAll('.dropzone').forEach(dropzone => {
-        dropzone.addEventListener('dragover', handleDragOver);
-        dropzone.addEventListener('dragleave', handleDragLeave);
-        dropzone.addEventListener('drop', handleDrop);
+        dropzone.addEventListener('click', handleDropzoneClick);
       });
+    }
+
+    function handleWordClick(e) {
+      if (e.target.style.display === 'none') return;
+      
+      const word = e.target;
+      if (word.classList.contains('selected')) {
+        // Deselect if clicking the same word
+        word.classList.remove('selected');
+        selectedWord = null;
+      } else {
+        // Deselect previous and select new
+        document.querySelectorAll('.clickable-word').forEach(w => w.classList.remove('selected'));
+        word.classList.add('selected');
+        selectedWord = word;
+        
+        // Visual feedback
+        showFeedback(`"${word.textContent}" selected`, false, 800);
+      }
+    }
+
+    function handleDropzoneClick(e) {
+      const dropzone = e.target;
+      if (!selectedWord || dropzone.classList.contains('correct')) return;
+
+      const isCorrect = selectedWord.textContent === dropzone.dataset.answer;
+      
+      if (isCorrect) {
+        dropzone.textContent = selectedWord.textContent;
+        dropzone.classList.add('correct');
+        selectedWord.style.display = 'none';
+        showFeedback('Correct! 🎉', true);
+      } else {
+        dropzone.classList.add('incorrect');
+        showFeedback('Try again! 🔄', false);
+        setTimeout(() => dropzone.classList.remove('incorrect'), 1000);
+      }
+
+      // Clear selection
+      selectedWord.classList.remove('selected');
+      selectedWord = null;
     }
 
     function updateNavigation() {
@@ -358,14 +437,14 @@
       document.getElementById('nextBtn').disabled = currentQuestion === questions.length - 1;
     }
 
-    function showFeedback(message, isSuccess) {
+    function showFeedback(message, isSuccess, duration = 2000) {
       const feedback = document.getElementById('feedback');
       feedback.textContent = message;
       feedback.className = `feedback ${isSuccess ? 'success' : 'error'} show`;
       
       setTimeout(() => {
         feedback.className = 'feedback';
-      }, 2000);
+      }, duration);
 
       if (isSuccess) {
         createConfetti();
@@ -399,18 +478,9 @@
       }
     }
 
-    // Event Listeners
-    document.querySelectorAll('.draggable-word').forEach(word => {
-      word.addEventListener('dragstart', e => {
-        draggingElement = e.target;
-        e.target.style.opacity = '0.5';
-        e.dataTransfer.setData('text/plain', e.target.textContent);
-      });
-
-      word.addEventListener('dragend', e => {
-        e.target.style.opacity = '1';
-        draggingElement = null;
-      });
+    // Add event listeners to clickable words
+    document.querySelectorAll('.clickable-word').forEach(word => {
+      word.addEventListener('click', handleWordClick);
     });
 
     document.getElementById('prevBtn').addEventListener('click', () => {
@@ -427,41 +497,7 @@
       }
     });
 
-    function handleDragOver(e) {
-      e.preventDefault();
-      if (!e.target.classList.contains('correct')) {
-        e.target.classList.add('hover');
-      }
-    }
-
-    function handleDragLeave(e) {
-      e.target.classList.remove('hover');
-    }
-
-    function handleDrop(e) {
-      e.preventDefault();
-      const dropzone = e.target;
-      const word = e.dataTransfer.getData('text/plain');
-      
-      dropzone.classList.remove('hover');
-      
-      if (!dropzone.classList.contains('correct')) {
-        if (word === dropzone.dataset.answer) {
-          dropzone.textContent = word;
-          dropzone.classList.add('correct');
-          draggingElement.style.display = 'none';
-          showFeedback('Correct! 🎉', true);
-        } else {
-          dropzone.classList.add('incorrect');
-          showFeedback('Try again! 🔄', false);
-          setTimeout(() => {
-            dropzone.classList.remove('incorrect');
-          }, 1000);
-        }
-      }
-    }
-
-    // Iniciar o quiz
+    // Start the quiz
     showQuestion(0);
   </script>
   <footer>

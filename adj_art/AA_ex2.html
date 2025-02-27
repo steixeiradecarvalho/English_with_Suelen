@@ -123,6 +123,21 @@
         .home-btn:hover {
             background-color: #388E3C;
         }
+
+        .translation-symbol {
+            color: #1a73e8;
+            cursor: pointer;
+            text-decoration: underline;
+            margin-left: 5px;
+            font-size: 0.9em;
+        }
+
+        .translation-text {
+            color: #666;
+            font-style: italic;
+            margin-left: 8px;
+            font-size: 0.9em;
+        }
         
         @media (max-width: 480px) {
             h1 {
@@ -143,10 +158,12 @@
                 gap: 10px;
             }
         }
+
     </style>
 </head>
 <body>
-    <h1>Choose the correct articles, a or an<br>(Indique o artigo correto em cada frase)</h1>
+    <h1>Choose the correct articles, a or an<br>- Indique o artigo correto em cada frase -</h1>
+    <h3 style="color: green;">toque em(?) para tradução</h3>
     <div class="container" id="quiz-container">
         <!-- Questions will be added here dynamically -->
     </div>
@@ -164,52 +181,62 @@
                 {
                     before: "This is ",
                     after: " new car",
-                    correct: "a"
+                    correct: "a",
+                    translation: "Este é um carro novo"
                 },
                 {
                     before: "This is ",
                     after: " ugly monster",
-                    correct: "an"
+                    correct: "an",
+                    translation: "Este é um monstro feio"
                 },
                 {
                     before: "This is ",
                     after: " red bike",
-                    correct: "a"
+                    correct: "a",
+                    translation: "Esta é uma bicicleta vermelha"
                 },
                 {
                     before: "It is ",
                     after: " small ball",
-                    correct: "a"
+                    correct: "a",
+                    translation: "É uma bola pequena"
                 },
                 {
                     before: "It is ",
                     after: " elephant",
-                    correct: "an"
+                    correct: "an",
+                    translation: "É um elefante"
                 },
                 {
                     before: "This is ",
                     after: " old train",
-                    correct: "an"
+                    correct: "an",
+                    translation: "Este é um trem antigo"
                 },
                 {
                     before: "It is ",
                     after: " green toy plane",
-                    correct: "a"
+                    correct: "a",
+                    translation: "É um avião de brinquedo verde"
                 },
                 {
                     before: "It is ",
                     after: " pink umbrella",
-                    correct: "a"
+                    correct: "a",
+                    translation: "É um guarda-chuva rosa"
                 },
                 {
                     before: "This is ",
                     after: " new yellow go-kart",
-                    correct: "a"
+                    correct: "a",
+                    translation: "Este é um kart amarelo novo"
                 },
                 {
                     before: "It's ",
                     after: " short ruler",
-                    correct: "a"
+                    correct: "a",
+                    translation: "É uma régua curta"
                 }
             ];
             
@@ -217,7 +244,6 @@
             let score = 0;
             const scoreElement = document.getElementById('score');
             
-            // Function to create questions
             function renderQuestions() {
                 quizContainer.innerHTML = '';
                 score = 0;
@@ -256,7 +282,7 @@
                     buttonsDiv.appendChild(anButton);
                     questionText.appendChild(buttonsDiv);
                     
-                    // Selected article span (initially hidden)
+                    // Selected article span
                     const selectedArticle = document.createElement('span');
                     selectedArticle.className = 'selected-article';
                     selectedArticle.style.display = 'none';
@@ -268,21 +294,32 @@
                     afterSpan.textContent = question.after;
                     questionText.appendChild(afterSpan);
                     
+                    // Translation symbol
+                    const translationSymbol = document.createElement('span');
+                    translationSymbol.className = 'translation-symbol';
+                    translationSymbol.textContent = '(?)';
+                    translationSymbol.onclick = () => showTranslation(index);
+                    questionText.appendChild(translationSymbol);
+                    
+                    // Translation text
+                    const translationText = document.createElement('span');
+                    translationText.className = 'translation-text';
+                    translationText.id = `translation-${index}`;
+                    translationText.style.display = 'none';
+                    questionText.appendChild(translationText);
+                    
                     questionDiv.appendChild(questionText);
                     quizContainer.appendChild(questionDiv);
                 });
             }
             
-            // Function to check answers
             function checkAnswer(questionIndex, selectedArticle) {
                 const questionDiv = document.getElementById(`question-${questionIndex}`);
                 const selectedArticleSpan = document.getElementById(`selected-article-${questionIndex}`);
                 const correctArticle = questions[questionIndex].correct;
                 
-                // Remove any previous classes
                 questionDiv.classList.remove('correct', 'incorrect');
                 
-                // Hide buttons and show selected article
                 const buttonsDiv = questionDiv.querySelector('.buttons');
                 buttonsDiv.style.display = 'none';
                 
@@ -298,12 +335,19 @@
                 }
             }
             
-            // Reset button functionality
-            document.getElementById('reset-btn').addEventListener('click', renderQuestions);
+            function showTranslation(index) {
+                const translationText = document.getElementById(`translation-${index}`);
+                translationText.textContent = questions[index].translation;
+                translationText.style.display = 'inline';
+                setTimeout(() => {
+                    translationText.style.display = 'none';
+                }, 2000);
+            }
             
-            // Initial render
+            document.getElementById('reset-btn').addEventListener('click', renderQuestions);
             renderQuestions();
         });
     </script>
+
 </body>
 </html>

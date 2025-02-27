@@ -75,6 +75,12 @@
       background-color: #5bc0de;
     }
 
+    .draggable.selected {
+      border: 2px solid #007bff;
+      transform: scale(1.05);
+      box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+    }
+
     /* Regra para que o retângulo colorido ocupe 100% da largura do drop box */
     .drop-box > .draggable {
       width: 100%;
@@ -252,7 +258,7 @@
     </div>
     <div id="result"></div>
     <button id="checkButton" onclick="checkAnswers()">Verificar Respostas</button>    
-     <a id="backButton" href=".././index.html">Voltar</a>
+     <a id="backButton" href=".././index.html">Home</a>
   </div>
   <script>
     const subjects = ["He", "Love", "She", "Mary", "Mary and John", "John", "Peter", "you", "we", "The movie", "your father", "your brother and sister"];
@@ -273,11 +279,9 @@
 
     // Agora, armazenamos o grupo e também a referência do elemento
     let answers = {};
-
-    let draggedElement = null;
+    let selectedElement = null;
 
     const draggableArea = document.getElementById("draggableArea");
-    const dropAreaContainers = document.querySelectorAll(".drop-area-container");
     const resultElement = document.getElementById("result");
 
     // Cria elementos arrastáveis
@@ -285,46 +289,39 @@
       const draggable = document.createElement("div");
       draggable.classList.add("draggable");
       draggable.textContent = subject;
-      draggable.draggable = true;
 
-      draggable.addEventListener("dragstart", () => {
-        draggedElement = draggable;
-      });
-
-      draggable.addEventListener("dragend", () => {
-        draggedElement = null;
+      draggable.addEventListener("click", function() {
+        if (selectedElement === this) {
+          this.classList.remove("selected");
+          selectedElement = null;
+        } else {
+          if (selectedElement) {
+            selectedElement.classList.remove("selected");
+          }
+          this.classList.add("selected");
+          selectedElement = this;
+        }
       });
 
       draggableArea.appendChild(draggable);
     });
 
-    // Permite drop nas áreas de drop
-    dropAreaContainers.forEach(container => {
-      container.addEventListener("dragover", e => {
-        e.preventDefault();
-        container.querySelectorAll('.drop-box').forEach(box => box.classList.add("highlight"));
-      });
+    // Handle drop box clicks
+    document.querySelectorAll('.drop-box').forEach(box => {
+      box.addEventListener('click', function() {
+        if (!selectedElement) return;
 
-      container.addEventListener("dragleave", () => {
-        container.querySelectorAll('.drop-box').forEach(box => box.classList.remove("highlight"));
-      });
+        const container = this.closest('.drop-area-container');
+        const group = container.dataset.group;
+        const dropArea = container.querySelector('.drop-area');
+        const emptyBox = Array.from(dropArea.children).find(box => box.children.length === 0);
 
-      container.addEventListener("drop", () => {
-        if (draggedElement) {
-          const subject = draggedElement.textContent;
-          const group = container.dataset.group;
-          const dropBoxes = container.querySelectorAll(".drop-box");
-
-          // Procura o primeiro drop box vazio
-          for (let box of dropBoxes) {
-            if (box.childElementCount === 0) {
-              box.appendChild(draggedElement);
-              // Armazena o grupo e a referência do elemento para verificação
-              answers[subject] = { group: group, element: draggedElement };
-              break;
-            }
-          }
-          container.querySelectorAll('.drop-box').forEach(box => box.classList.remove("highlight"));
+        if (emptyBox) {
+          emptyBox.appendChild(selectedElement);
+          const subject = selectedElement.textContent;
+          answers[subject] = { group: group, element: selectedElement };
+          selectedElement.classList.remove("selected");
+          selectedElement = null;
         }
       });
     });
@@ -334,10 +331,8 @@
       for (const subject in answers) {
         if (answers[subject].group === correctAnswers[subject]) {
           correct++;
-          // Se a resposta estiver correta, opcionalmente, restaura a cor original
           answers[subject].element.style.backgroundColor = "";
         } else {
-          // Resposta incorreta: altera a cor do retângulo para vermelho
           answers[subject].element.style.backgroundColor = "red";
         }
       }

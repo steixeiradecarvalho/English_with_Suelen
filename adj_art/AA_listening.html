@@ -127,6 +127,25 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
 
+        .home-button {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 12px 25px; 
+            background: #2980b9;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+            text-align: center;
+            justify-content: center;
+        }
+
+        .home-button:hover {
+            background: #3498db;
+            transform: scale(1.05);
+        }
+
         .translation {
             display: none;
             margin-top: 10px;
@@ -325,7 +344,8 @@
             </div>
         </div>
 
-        <a id="backButton" href=".././index.html">Voltar</a>
+        <!-- a id="backButton" href=".././index.html">Home</a -->
+        <a href="./../index.html" class="home-button">Home</a>
     </div>
 
     <footer>

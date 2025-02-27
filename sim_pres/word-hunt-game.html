@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Hunt Challenge</title>
+    <style>
+        :root {
+            --primary: #4e54c8;
+            --secondary: #8f94fb;
+            --accent: #ff6b6b;
+            --light: #f9f9f9;
+            --dark: #333;
+            --success: #4CAF50;
+            --padding: 1rem;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--light);
+            min-height: 100vh;
+            padding: var(--padding);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 500px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+        }
+        
+        h1 {
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 0.5rem;
+            color: var(--light);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .game-info {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            padding: 0.5rem 1rem;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
+        }
+        
+        .timer, .score, .level {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .game-board {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 1;
+            display: grid;
+            gap: 0.2rem;
+            padding: 0.5rem;
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(5px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            touch-action: none;
+        }
+        
+        .letter-cell {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            font-weight: bold;
+            background-color: rgba(255, 255, 255, 0.7);
+            color: var(--dark);
+            border-radius: 5px;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.2s;
+        }
+        
+        .letter-cell.selected {
+            background-color: var(--accent);
+            color: white;
+            transform: scale(0.95);
+            box-shadow: 0 0 8px var(--accent);
+        }
+        
+        .letter-cell.found {
+            background-color: var(--success);
+            color: white;
+            animation: pulse 1s;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .word-list {
+            width: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            justify-content: center;
+        }
+        
+        .word-item {
+            padding: 0.5rem 1rem;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            transition: all 0.3s;
+        }
+        
+        .word-item.found {
+            background-color: var(--success);
+            text-decoration: line-through;
+        }
+        
+        .line {
+            position: absolute;
+            height: 8px;
+            background-color: var(--accent);
+            border-radius: 4px;
+            pointer-events: none;
+            opacity: 0.7;
+            transform-origin: left center;
+            z-index: 10;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        button {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 50px;
+            background-color: var(--accent);
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        button:active {
+            transform: translateY(1px);
+        }
+        
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s;
+        }
+        
+        .modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .modal-content {
+            width: 90%;
+            max-width: 400px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            transform: translateY(-20px);
+            transition: all 0.3s;
+        }
+        
+        .modal.active .modal-content {
+            transform: translateY(0);
+        }
+        
+        .modal h2 {
+            margin-bottom: 1rem;
+            font-size: 1.8rem;
+        }
+        
+        .modal p {
+            margin-bottom: 1.5rem;
+        }
+        
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background-color: var(--accent);
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0.8;
+            z-index: 200;
+        }
+        
+        @media (max-width: 480px) {
+            .letter-cell {
+                font-size: 1.1rem;
+            }
+            
+            h1 {
+                font-size: 1.6rem;
+            }
+        }
+
+        .settings-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 90;
+        }
+
+        .settings-btn svg {
+            width: 24px;
+            height: 24px;
+            fill: white;
+        }
+
+        .settings-panel {
+            position: fixed;
+            top: 0;
+            right: -300px;
+            width: 300px;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2);
+            padding: 2rem;
+            z-index: 95;
+            transition: right 0.3s ease;
+            overflow-y: auto;
+        }
+
+        .settings-panel.active {
+            right: 0;
+        }
+
+        .settings-panel h2 {
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            padding-bottom: 0.5rem;
+        }
+
+        .settings-panel .setting-item {
+            margin-bottom: 1.5rem;
+        }
+
+        .settings-panel label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .settings-panel select, .settings-panel input {
+            width: 100%;
+            padding: 0.8rem;
+            border-radius: 5px;
+            border: none;
+            background-color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 0.5rem;
+        }
+
+        .settings-panel .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            padding: 0;
+            box-shadow: none;
+        }
+
+        .settings-panel .close-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: white;
+        }
+
+        .tutorial-step {
+            position: absolute;
+            padding: 1rem;
+            background-color: white;
+            color: var(--dark);
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            max-width: 250px;
+            z-index: 120;
+            animation: pulse 2s infinite;
+        }
+
+        .tutorial-step::before {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-style: solid;
+        }
+
+        .tutorial-step.top::before {
+            border-width: 0 10px 10px 10px;
+            border-color: transparent transparent white transparent;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .tutorial-step.bottom::before {
+            border-width: 10px 10px 0 10px;
+            border-color: white transparent transparent transparent;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .tutorial-step.left::before {
+            border-width: 10px 0 10px 10px;
+            border-color: transparent transparent transparent white;
+            left: -10px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .tutorial-step.right::before {
+            border-width: 10px 10px 10px 0;
+            border-color: transparent white transparent transparent;
+            right: -10px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .tutorial-step button {
+            padding: 0.5rem 1rem;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .difficulty-selector {
+            display: flex;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .difficulty-btn {
+            flex: 1;
+            padding: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .difficulty-btn.active {
+            background-color: var(--primary);
+            transform: scale(1.05);
+        }
+
+        .progress-container {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            height: 10px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: var(--accent);
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .achievements {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            color: var(--dark);
+            padding: 1rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transform: translateX(120%);
+            transition: transform 0.3s;
+            z-index: 90;
+        }
+
+        .achievements.active {
+            transform: translateX(0);
+        }
+
+        .achievements h3 {
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        .achievements p {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Word Hunt Challenge</h1>
+        
+        <div class="game-info">
+            <div class="timer">
+                <span>Time</span>
+                <span id="time">02:00</span>
+            </div>
+            <div class="score">
+                <span>Score</span>
+                <span id="score">0</span>
+            </div>
+            <div class="level">
+                <span>Level</span>
+                <span id="level">1</span>
+            </div>
+        </div>
+        
+        <div class="difficulty-selector">
+            <button class="difficulty-btn active" data-difficulty="easy">Easy</button>
+            <button class="difficulty-btn" data-difficulty="medium">Medium</button>
+            <button class="difficulty-btn" data-difficulty="hard">Hard</button>
+        </div>
+        
+        <div class="progress-container">
+            <div id="progress-bar" class="progress-bar"></div>
+        </div>
+        
+        <div id="game-board" class="game-board"></div>
+        
+        <div id="word-list" class="word-list"></div>
+        
+        <div class="controls">
+            <button id="new-game">New Game</button>
+            <button id="hint">Hint</button>
+        </div>
+    </div>
+    
+    <div id="start-modal" class="modal active">
+        <div class="modal-content">
+            <h2>Word Hunt Challenge</h2>
+            <p>Find all the hidden words by swiping through letters in all directions. Complete all words before the time runs out!</p>
+            <button id="show-tutorial">Show Tutorial</button>
+            <button id="start-game">Start Game</button>
+        </div>
+    </div>
+    
+    <div id="level-complete-modal" class="modal">
+        <div class="modal-content">
+            <h2>Level Complete!</h2>
+            <p>Great job! You found all the words.</p>
+            <p>Score: <span id="level-score">0</span></p>
+            <p>Time Bonus: <span id="time-bonus">0</span></p>
+            <button id="next-level">Next Level</button>
+        </div>
+    </div>
+    
+    <div id="game-over-modal" class="modal">
+        <div class="modal-content">
+            <h2>Game Over</h2>
+            <p>Time's up! You found <span id="found-words">0</span> words.</p>
+            <p>Final Score: <span id="final-score">0</span></p>
+            <button id="play-again">Play Again</button>
+        </div>
+    </div>
+    
+    <div class="settings-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/>
+        </svg>
+    </div>
+    
+    <div class="settings-panel">
+        <button class="close-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+            </svg>
+        </button>
+        <h2>Settings</h2>
+        <div class="setting-item">
+            <label for="game-time">Game Time (seconds)</label>
+            <input type="number" id="game-time" min="30" max="300" value="120">
+        </div>
+        <div class="setting-item">
+            <label for="theme-select">Theme</label>
+            <select id="theme-select">
+                <option value="default">Default Blue</option>
+                <option value="dark">Dark Mode</option>
+                <option value="nature">Nature Green</option>
+                <option value="sunset">Sunset Orange</option>
+            </select>
+        </div>
+        <div class="setting-item">
+            <label for="sound-toggle">Sound Effects</label>
+            <select id="sound-toggle">
+                <option value="on">On</option>
+                <option value="off">Off</option>
+            </select>
+        </div>
+        <button id="reset-stats">Reset Statistics</button>
+    </div>
+    
+    <div class="achievements" id="achievement-notification">
+        <h3>Achievement Unlocked!</h3>
+        <p id="achievement-text">Word Master: Found 5 words in a row!</p>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Game variables
+            const gridSizes = [8, 9, 10]; // Grid sizes for different levels
+            let currentLevel = 1;
+            let score = 0;
+            let timeRemaining = 120; // 2 minutes in seconds
+            let timer;
+            let words = [];
+            let foundWords = [];
+            let selectedCells = [];
+            let currentWord = '';
+            let gridSize;
+            let grid = [];
+            let hintUsed = false;
+            let difficulty = 'easy';
+            let streakCount = 0;
+            let soundEnabled = true;
+            let gameTime = 120;
+            let totalScore = 0;
+            let gamesPlayed = 0;
+            let wordsFound = 0;
+            
+            // Word lists for different levels and difficulties
+            const wordLists = {
+                easy: [
+                    // Level 1
+                    ['CAT', 'DOG', 'FISH', 'BIRD', 'FROG', 'LION', 'BEAR'],
+                    // Level 2
+                    ['APPLE', 'GRAPE', 'LEMON', 'MANGO', 'PEACH', 'BANANA'],
+                    // Level 3
+                    ['PYTHON', 'COFFEE', 'PUZZLE', 'CODING', 'GAMING', 'MATRIX']
+                ],
+                medium: [
+                    // Level 1
+                    ['WATER', 'EARTH', 'FLAME', 'CLOUD', 'STORM', 'RIVER', 'OCEAN'],
+                    // Level 2
+                    ['LAPTOP', 'PHONE', 'TABLET', 'CAMERA', 'SCREEN', 'ROUTER'],
+                    // Level 3
+                    ['RHYTHM', 'MELODY', 'GUITAR', 'PIANO', 'VIOLIN', 'DRUMS', 'FLUTE']
+                ],
+                hard: [
+                    // Level 1
+                    ['QUANTUM', 'GRAVITY', 'NEUTRON', 'PROTON', 'ELECTRON', 'ATOM'],
+                    // Level 2
+                    ['STRATEGY', 'PLANNING', 'EXECUTE', 'ANALYZE', 'IMPROVE', 'DESIGN'],
+                    // Level 3
+                    ['ALGORITHM', 'DATABASE', 'FUNCTION', 'VARIABLE', 'COMPILER', 'BROWSER']
+                ]
+            };
+            
+            // DOM elements
+            const gameBoard = document.getElementById('game-board');
+            const wordList = document.getElementById('word-list');
+            const scoreElement = document.getElementById('score');
+            const levelElement = document.getElementById('level');
+            const timeElement = document.getElementById('time');
+            const startModal = document.getElementById('start-modal');
+            const levelCompleteModal = document.getElementById('level-complete-modal');
+            const gameOverModal = document.getElementById('game-over-modal');
+            const startGameButton = document.getElementById('start-game');
+            const showTutorialButton = document.getElementById('show-tutorial');
+            const newGameButton = document.getElementById('new-game');
+            const nextLevelButton = document.getElementById('next-level');
+            const playAgainButton = document.getElementById('play-again');
+            const hintButton = document.getElementById('hint');
+            const levelScoreElement = document.getElementById('level-score');
+            const timeBonusElement = document.getElementById('time-bonus');
+            const finalScoreElement = document.getElementById('final-score');
+            const foundWordsElement = document.getElementById('found-words');
+            const progressBar = document.getElementById('progress-bar');
+            const settingsButton = document.querySelector('.settings-btn');
+            const settingsPanel = document.querySelector('.settings-panel');
+            const closePanelButton = document.querySelector('.close-btn');
+            const gameTimeInput = document.getElementById('game-time');
+            const themeSelect = document.getElementById('theme-select');
+            const soundToggle = document.getElementById('sound-toggle');
+            const resetStatsButton = document.getElementById('reset-stats');
+            const difficultyButtons = document.querySelectorAll('.difficulty-btn');
+            const achievementNotification = document.getElementById('achievement-notification');
+            const achievementText = document.getElementById('achievement-text');
+            
+            // Theme colors
+            const themes = {
+                default: {
+                    primary: '#4e54c8',
+                    secondary: '#8f94fb',
+                    accent: '#ff6b6b'
+                },
+                dark: {
+                    primary: '#2d3436',
+                    secondary: '#636e72',
+                    accent: '#74b9ff'
+                },
+                nature: {
+                    primary: '#1e8449',
+                    secondary: '#52be80',
+                    accent: '#f39c12'
+                },
+                sunset: {
+                    primary: '#d35400',
+                    secondary: '#e67e22',
+                    accent: '#3498db'
+                }
+            };
+            
+            // Sounds
+            let selectSound = new Audio();
+            let foundSound = new Audio();
+            let levelCompleteSound = new Audio();
+            let gameOverSound = new Audio();
+            
+            // Load settings from localStorage
+            function loadSettings() {
+                if (localStorage.getItem('wordHuntSettings')) {
+                    const settings = JSON.parse(localStorage.getItem('wordHuntSettings'));
+                    gameTime = settings.gameTime || 120;
+                    gameTimeInput.value = gameTime;
+                    
+                    if (settings.theme) {
+                        themeSelect.value = settings.theme;
+                        applyTheme(settings.theme);
+                    }
+                    
+                    soundEnabled = settings.sound !== 'off';
+                    soundToggle.value = settings.sound || 'on';
+                }
+                
+                // Load stats
+                if (localStorage.getItem('wordHuntStats')) {
+                    const stats = JSON.parse(localStorage.getItem('wordHuntStats'));
+                    totalScore = stats.totalScore || 0;
+                    gamesPlayed = stats.gamesPlayed || 0;
+                    wordsFound = stats.wordsFound || 0;
+                }
+            }
+            
+            // Save settings to localStorage
+            function saveSettings() {
+                const settings = {
+                    gameTime: parseInt(gameTimeInput.value),
+                    theme: themeSelect.value,
+                    sound: soundToggle.value
+                };
+                
+                localStorage.setItem('wordHuntSettings', JSON.stringify(settings));
+                
+                // Apply settings
+                gameTime = settings.gameTime;
+                applyTheme(settings.theme);
+                soundEnabled = settings.sound !== 'off';
+            }
+            
+            // Save stats to localStorage
+            function saveStats() {
+                const stats = {
+                    totalScore: totalScore,
+                    gamesPlayed: gamesPlayed,
+                    wordsFound: wordsFound
+                };
+                
+                localStorage.setItem('wordHuntStats', JSON.stringify(stats));
+            }
+            
+            // Apply theme
+            function applyTheme(themeName) {
+                const root = document.documentElement;
+                const theme = themes[themeName] || themes.default;
+                
+                root.style.setProperty('--primary', theme.primary);
+                root.style.setProperty('--secondary', theme.secondary);
+                root.style.setProperty('--accent', theme.accent);
+            }
+            
+            // Settings panel event listeners
+            settingsButton.addEventListener('click', () => {
+                settingsPanel.classList.add('active');
+            });
+            
+            closePanelButton.addEventListener('click', () => {
+                settingsPanel.classList.remove('active');
+                saveSettings();
+            });
+            
+            gameTimeInput.addEventListener('change', () => {
+                let value = parseInt(gameTimeInput.value);
+                if (value < 30) value = 30;
+                if (value > 300) value = 300;
+                gameTimeInput.value = value;
+            });
+            
+            themeSelect.addEventListener('change', () => {
+                applyTheme(themeSelect.value);
+            });
+            
+            resetStatsButton.addEventListener('click', () => {
+                totalScore = 0;
+                gamesPlayed = 0;
+                wordsFound = 0;
+                saveStats();
+                alert('Statistics have been reset!');
+            });
+            
+            // Difficulty selection
+            difficultyButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // Remove active class from all buttons
+                    difficultyButtons.forEach(btn => btn.classList.remove('active'));
+                    // Add active class to clicked button
+                    button.classList.add('active');
+                    // Set difficulty
+                    difficulty = button.dataset.difficulty;
+                    // Reset and setup new game with selected difficulty
+                    if (timer) {
+                        clearInterval(timer);
+                        setupLevel();
+                        timeRemaining = gameTime;
+                        updateUI();
+                        startTimer();
+                    }
+                });
+            });
+            
+            // Show achievement notification
+            function showAchievement(text) {
+                achievementText.textContent = text;
+                achievementNotification.classList.add('active');
+                
+                setTimeout(() => {
+                    achievementNotification.classList.remove('active');
+                }, 3000);
+            }
+            
+            // Show tutorial
+            function showTutorial() {
+                const tutorialSteps = [
+                    {
+                        target: '.game-board',
+                        text: 'Swipe through connected letters to find hidden words.',
+                        position: 'bottom'
+                    },
+                    {
+                        target: '.word-list',
+                        text: 'Find all these words to complete the level.',
+                        position: 'top'
+                    },
+                    {
+                        target: '.timer',
+                        text: 'Complete the level before time runs out!',
+                        position: 'bottom'
+                    },
+                    {
+                        target: '#hint',
+                        text: 'Use a hint if you get stuck.',
+                        position: 'left'
+                    }
+                ];
+                
+                let currentStep = 0;
+                
+                function showStep(step) {
+                    const target = document.querySelector(tutorialSteps[step].target);
+                    const rect = target.getBoundingClientRect();
+                    
+                    const tutorialDiv = document.createElement('div');
+                    tutorialDiv.className = `tutorial-step ${tutorialSteps[step].position}`;
+                    tutorialDiv.innerHTML = `
+                        <p>${tutorialSteps[step].text}</p>
+                        <button id="next-tutorial">Next</button>
+                    `;
+                    
+                    document.body.appendChild(tutorialDiv);
+                    
+                    // Position the tutorial div
+                    const tutorialRect = tutorialDiv.getBoundingClientRect();
+                    
+                    let top, left;
+                    
+                    switch(tutorialSteps[step].position) {
+                        case 'top':
+                            top = rect.top - tutorialRect.height - 20;
+                            left = rect.left +

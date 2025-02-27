@@ -2,6 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Add viewport for responsiveness -->
     <title>Drag and Drop Exercise</title>
     <style>
         :root {
@@ -16,83 +17,89 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: var(--background-color);
             margin: 0;
-            padding: 20px;
+            padding: 10px; /* Reduce padding for smaller screens */
             min-height: 100vh;
         }
 
         h2 {
             color: var(--primary-color);
             text-align: center;
-            font-size: 2em;
-            margin-bottom: 30px;
+            font-size: 1.5em; /* Smaller heading for mobile */
+            margin-bottom: 20px;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 100%; /* Full width on mobile */
             margin: 0 auto;
-            padding: 20px;
+            padding: 10px;
         }
 
         .words-container {
             background: white;
-            padding: 20px;
-            border-radius: 15px;
+            padding: 15px;
+            border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 8px;
             justify-content: center;
         }
 
         .word {
             background: var(--primary-color);
             color: white;
-            padding: 10px 20px;
+            padding: 8px 16px;
             border-radius: 20px;
-            cursor: move;
+            cursor: pointer; /* Change to pointer for tap */
             transition: all 0.3s ease;
             font-weight: bold;
         }
 
-        .word:hover {
+        .word:hover, .word.selected {
             transform: scale(1.05);
             background: var(--secondary-color);
         }
 
+        .word.used {
+            opacity: 0.3;
+            pointer-events: none; /* Disable used words */
+        }
+
         .images-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Adjust for smaller screens */
+            gap: 20px;
             justify-items: center;
         }
 
         .image-box {
             background: white;
-            padding: 15px;
+            padding: 10px;
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             text-align: center;
             width: 100%;
-            max-width: 300px;
+            max-width: 250px; /* Slightly smaller for mobile */
             transition: all 0.3s ease;
         }
 
         .image-box img {
             width: 100%;
-            height: 200px;
+            height: 150px; /* Reduce height for mobile */
             object-fit: cover;
             border-radius: 8px;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
 
         .label {
-            font-size: 1.1em;
+            font-size: 1em; /* Slightly smaller text */
             color: #333;
-            margin-top: 10px;
-            padding: 10px;
+            margin-top: 8px;
+            padding: 8px;
             border: 2px dashed #ccc;
             border-radius: 8px;
+            cursor: pointer;
         }
 
         .correct {
@@ -119,43 +126,69 @@
 
         #message {
             text-align: center;
-            margin-top: 20px;
-            font-size: 1.2em;
+            margin-top: 15px;
+            font-size: 1.1em;
             font-weight: bold;
             color: var(--success-color);
         }
-        .word.hidden {
-            display: none;
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .nav-button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+
+        .nav-button:hover {
+            background-color: #0056b3;
         }
         
-        /* Adicionar estilo para palavra usada */
-        .word.used {
-            opacity: 0;
-            transform: scale(0);
-            transition: all 0.3s ease;
-        }
-        .label.highlight {
-            background: rgba(69, 183, 209, 0.1);
+        /* Media query for mobile */
+        @media (max-width: 600px) {
+            .words-container {
+                gap: 6px;
+            }
+            .word {
+                padding: 6px 12px;
+                font-size: 0.9em;
+            }
+            .image-box {
+                max-width: 100%;
+            }
+            .label {
+                font-size: 0.9em;
+            }
         }
     </style>
 </head>
 <body>
-    <h2>Complete os labels arrastando as palavras corretas</h2>
+    <h2>Complete os labels tocando nas palavras e nos destinos</h2>
     
     <div class="container">
         <div class="words-container">
-            <div class="word" draggable="true">small</div>
-            <div class="word" draggable="true">big</div>
-            <div class="word" draggable="true">new</div>
-            <div class="word" draggable="true">old</div>
-            <div class="word" draggable="true">clean</div>
-            <div class="word" draggable="true">dirty</div>
-            <div class="word" draggable="true">deep</div>
-            <div class="word" draggable="true">shallow</div>
-            <div class="word" draggable="true">expensive</div>
-            <div class="word" draggable="true">cheap</div>
-            <div class="word" draggable="true">quiet</div>
-            <div class="word" draggable="true">noisy</div>
+            <div class="word">small</div>
+            <div class="word">big</div>
+            <div class="word">new</div>
+            <div class="word">old</div>
+            <div class="word">clean</div>
+            <div class="word">dirty</div>
+            <div class="word">deep</div>
+            <div class="word">shallow</div>
+            <div class="word">expensive</div>
+            <div class="word">cheap</div>
+            <div class="word">quiet</div>
+            <div class="word">noisy</div>
         </div>
 
         <div class="images-grid">
@@ -163,110 +196,69 @@
                 <img src="./images/deepocean.jpeg" alt="Deep ocean">
                 <div class="label">The ______ ocean has many mysterious creatures.</div>
             </div>
-
             <div class="image-box" data-correct="dirty">
                 <img src="./images/dirtyroom.jpeg" alt="Dirty room">
                 <div class="label">This ______ room needs to be cleaned.</div>
             </div>
-
             <div class="image-box" data-correct="expensive">
                 <img src="./images/expensiveap.jpeg" alt="Expensive apartment">
                 <div class="label">That's an ______ apartment in downtown.</div>
             </div>
-
             <div class="image-box" data-correct="new">
                 <img src="./images/newcar.jpeg" alt="New car">
                 <div class="label">Look at this ______ car in the showroom!</div>
             </div>
-
             <div class="image-box" data-correct="quiet">
                 <img src="./images/quietforest.jpeg" alt="Quiet forest">
                 <div class="label">The ______ forest is perfect for meditation.</div>
             </div>
         </div>
     </div>
+    <div class="navigation">
+        <a href=".././index.html" class="nav-button">Home</a>
+    </div>
 
     <div id="message"></div>
 
     <script>
-        let draggedElement = null;
-        let currentLabel = null;
-        let startX, startY;
+        let selectedWord = null;
 
-        // Eventos de toque para palavras
+        // Handle word selection
         document.querySelectorAll('.word').forEach(word => {
-            word.addEventListener('touchstart', function(e) {
-                e.preventDefault();
-                draggedElement = this.cloneNode(true);
-                draggedElement.style.position = 'fixed';
-                draggedElement.style.pointerEvents = 'none';
-                draggedElement.style.zIndex = '1000';
-                document.body.appendChild(draggedElement);
-                
-                const touch = e.touches[0];
-                startX = touch.clientX - this.offsetWidth/2;
-                startY = touch.clientY - this.offsetHeight/2;
-                
-                updatePosition(touch);
-                this.style.opacity = '0.4';
-            });
+            word.addEventListener('click', function() {
+                if (this.classList.contains('used')) return;
 
-            word.addEventListener('touchend', function(e) {
-                if (!draggedElement) return;
-                
-                this.style.opacity = '1';
-                draggedElement.remove();
-                draggedElement = null;
-                
-                if (currentLabel) {
-                    const correct = currentLabel.parentElement.dataset.correct;
-                    const answer = this.textContent.trim();
-                    
-                    if (answer === correct) {
-                        currentLabel.classList.add('correct');
-                        currentLabel.textContent = currentLabel.textContent.replace('______', answer);
-                        checkCompletion();
-                    } else {
-                        currentLabel.classList.add('incorrect');
-                        setTimeout(() => currentLabel.classList.remove('incorrect'), 1000);
-                    }
+                if (selectedWord) {
+                    selectedWord.classList.remove('selected'); // Deselect previous word
                 }
-                currentLabel = null;
+                selectedWord = this;
+                this.classList.add('selected');
             });
         });
 
-        // Eventos de toque para as áreas de destino
-        document.querySelectorAll('.image-box').forEach(box => {
-            const label = box.querySelector('.label');
-            
-            box.addEventListener('touchmove', function(e) {
-                if (!draggedElement) return;
-                const touch = e.touches[0];
-                updatePosition(touch);
-                
-                const rect = label.getBoundingClientRect();
-                const isOver = touch.clientX > rect.left && 
-                            touch.clientX < rect.right && 
-                            touch.clientY > rect.top && 
-                            touch.clientY < rect.bottom;
-                
-                if (isOver && !label.classList.contains('highlight')) {
-                    label.classList.add('highlight');
-                    currentLabel = label;
-                } else if (!isOver && label.classList.contains('highlight')) {
-                    label.classList.remove('highlight');
-                    currentLabel = null;
+        // Handle label placement
+        document.querySelectorAll('.label').forEach(label => {
+            label.addEventListener('click', function() {
+                if (!selectedWord || this.classList.contains('correct')) return;
+
+                const correctAnswer = this.parentElement.dataset.correct;
+                const answer = selectedWord.textContent.trim();
+
+                if (answer === correctAnswer) {
+                    this.classList.add('correct');
+                    this.textContent = this.textContent.replace('______', answer);
+                    selectedWord.classList.add('used');
+                    selectedWord.classList.remove('selected');
+                    selectedWord = null;
+                    checkCompletion();
+                } else {
+                    this.classList.add('incorrect');
+                    setTimeout(() => this.classList.remove('incorrect'), 1000);
                 }
             });
         });
 
-        function updatePosition(touch) {
-            if (!draggedElement) return;
-            draggedElement.style.left = `${touch.clientX - draggedElement.offsetWidth/2}px`;
-            draggedElement.style.top = `${touch.clientY - draggedElement.offsetHeight/2}px`;
-        }
-
-        // Mantenha a função checkCompletion original
+        // Check if all labels are correctly filled
         function checkCompletion() {
             const correctLabels = document.querySelectorAll('.correct').length;
             if (correctLabels === 5) {

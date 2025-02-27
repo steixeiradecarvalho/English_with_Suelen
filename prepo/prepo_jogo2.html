@@ -285,6 +285,23 @@
             text-align: center;
         }
 
+        .home-button {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 12px 25px;
+            background: #2980b9;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .home-button:hover {
+            background: #3498db;
+            transform: scale(1.05);
+        }
+
         @media (min-width: 600px) {
             .question-counter {
                 font-size: 16px;
@@ -326,12 +343,13 @@
         <button id="startButton">Start Game 🚗</button>
     </div>
 
+    <a href="../index.html" class="home-button">Home</a>
+
     <div class="game-over" id="gameOverScreen">
         <h2>🏁 Game Over!</h2>
         <p>Your Score: <span id="finalScore">0</span></p>
         <div class="final-buttons">
-            <button class="final-button restart-button" id="restartButton">Start Game 🚗</button>
-            <a href="./../index.html" class="final-button return-button">Home</a>
+            <button class="final-button restart-button" id="restartButton">Replay 🚗</button>
         </div>
     </div>
 

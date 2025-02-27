@@ -157,6 +157,29 @@
             position: relative;
             flex-grow: 1;
         }
+
+         /* Navigation Styles */
+         .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .nav-button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+
+        .nav-button:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
@@ -190,7 +213,7 @@
             <div class="input-container">
                 <div class="input-group">
                     <input type="text" class="answer-input" 
-                           data-correct="What´s your name?" 
+                           data-correct="What's your name?" 
                            placeholder="Type what you hear..."
                            oninput="checkAnswer(this)">
                     <button class="show-answer-button" onclick="toggleAnswer(this)">
@@ -198,7 +221,7 @@
                     </button>
                 </div>
                 <div class="feedback"></div>
-                <div class="answer-reveal">What´s your name?</div>
+                <div class="answer-reveal">What's your name?</div>
             </div>
         </div>
 
@@ -313,7 +336,10 @@
                 </div>
                 <div class="feedback"></div>
                 <div class="answer-reveal">Where is the restroom?</div>
-            </div>
+            </div>            
+    </div>
+    <div class="navigation">
+        <a href=".././index.html" class="nav-button">Home</a>
     </div>
 
     <script>
@@ -331,10 +357,10 @@
 
         function checkAnswer(input) {
             const userAnswer = input.value.trim();
-            const correctAnswer = input.dataset.correct;
+            const correctAnswer = input.dataset.correct.trim(); // Remove espaços do data-correct
             const feedbackElement = input.parentElement.nextElementSibling;
 
-            // Remove previous classes
+            // Remove classes anteriores
             input.classList.remove('correct', 'incorrect');
             feedbackElement.classList.remove('correct', 'incorrect');
 
@@ -343,16 +369,31 @@
                 return;
             }
 
-            if (userAnswer.toLowerCase() === correctAnswer.toLowerCase()) {
+            // Normaliza para minúsculas e remove espaços
+            const expected = correctAnswer.toLowerCase();
+            const received = userAnswer.toLowerCase();
+
+            let isCorrect;
+
+            // Verifica se a resposta correta termina com '?'
+            if (expected.endsWith('?')) {
+                const expectedWithoutQ = expected.slice(0, -1); // Remove o último caractere ('?')
+                isCorrect = received === expected || received === expectedWithoutQ;
+            } else {
+                isCorrect = received === expected;
+            }
+
+            if (isCorrect) {
                 input.classList.add('correct');
                 feedbackElement.classList.add('correct');
-                feedbackElement.textContent = 'Correct!';
+                feedbackElement.textContent = 'Correto!';
             } else {
                 input.classList.add('incorrect');
                 feedbackElement.classList.add('incorrect');
-                feedbackElement.textContent = 'Try again!';
+                feedbackElement.textContent = 'Tente novamente!';
             }
         }
+
 
         function toggleAnswer(button) {
             // Hide previous reveal if exists

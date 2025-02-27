@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leo's Treasure Hunt</title>
+    <style>
+        :root {
+            --primary: #FFD700;
+            --secondary: #FF6B6B;
+            --accent: #4CAF50;
+            --background: #F9F7F7;
+            --text: #333333;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+        
+        .game-header {
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+        
+        .game-title {
+            font-size: 1.8rem;
+            color: var(--secondary);
+            text-shadow: 2px 2px 0 var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .game-subtitle {
+            font-size: 1rem;
+            color: var(--text);
+        }
+        
+        .game-area {
+            position: relative;
+            width: 100%;
+            height: 70vh;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        
+        .scene {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            background-size: cover;
+            background-position: center;
+            display: none;
+        }
+        
+        .scene.active {
+            display: block;
+        }
+        
+        .start-screen {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(to bottom, #87CEEB, #E0F7FA);
+            text-align: center;
+        }
+        
+        .leo-character {
+            width: 150px;
+            height: 150px;
+            margin-bottom: 1rem;
+        }
+        
+        .clue-box {
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-top: 1rem;
+            text-align: center;
+        }
+        
+        .game-controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+        }
+        
+        .btn {
+            background-color: var(--primary);
+            color: var(--text);
+            border: none;
+            border-radius: 50px;
+            padding: 0.8rem 1.5rem;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 0 rgba(0,0,0,0.1);
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 rgba(0,0,0,0.1);
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 0 rgba(0,0,0,0.1);
+        }
+        
+        .btn-hint {
+            background-color: var(--secondary);
+        }
+        
+        .game-progress {
+            margin-top: 1rem;
+            height: 20px;
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background-color: var(--accent);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .clickable {
+            position: absolute;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .clickable:hover {
+            transform: scale(1.1);
+        }
+        
+        .feedback {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0,0,0,0.7);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            display: none;
+            z-index: 100;
+        }
+        
+        @keyframes celebrate {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        
+        .celebration {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 99;
+            display: none;
+        }
+        
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: var(--primary);
+            animation: fall 3s linear forwards;
+            z-index: 99;
+        }
+
+        .scene-explanation {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            width: 80%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            cursor: pointer; 
+        }
+
+        .instruction-card {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 15px;
+            border-radius: 15px;
+            margin: 10px auto;
+            max-width: 300px;
+            text-align: center;
+            font-size: 0.9em;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        @keyframes fall {
+            0% { transform: translateY(-10px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+        }
+        
+        @media (min-width: 768px) {
+            .container {
+                max-width: 760px;
+            }
+            
+            .game-title {
+                font-size: 2.5rem;
+            }
+            
+            .game-subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .leo-character {
+                width: 200px;
+                height: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="game-header">
+            <h1 class="game-title">Leo's friend's kitchen</h1>
+            <h2 class="game-subtitle">Help Leo find the food!</h2>
+        </div>
+        
+        <div class="game-area">
+            <div class="scene start-screen active">
+                <img src="./imagens/leo.png" alt="Leo the Lion" class="leo-character">
+                <h2>Welcome to Leo's friend's kitchen!</h2>
+                <h2 style="color: red;">Bem-vindo à cozinha do amigo do Leo!</h2>
+                <p>The Lion, who loves to eat, is in his human friend's kitchen. He can eat anything. Let's help him find food.</p>
+                <p style="color: red;">AO Leão, que adora comer, está na cozinha do seu amigo humano. Ele pode comer de tudo. Vamos ajudá-lo a encontrar comida.<br></p>
+                <button class="btn" id="start-btn">Start Adventure!<br>Comece a Aventura!</button>
+                <div class="instruction-card">
+                    Clique ou toque na instrução do cenário, para ver em português.
+                </div>
+            </div>
+            
+            <div class="scene" id="kitchen-scene">
+                <div class="scene-explanation" data-translation="O Leão precisa encontrar 4 ovos, um grande bife, 2 pães, 2 fatias de queijo e uma fatia de presunto.">
+                    The Lion needs to find 4 eggs, a big beef, 2 breads, 2 cheese slices, and a ham slice.
+                </div>
+            </div>
+            
+            <div class="clue-box" id="current-clue">
+                Click Start to begin your adventure!
+            </div>
+        </div>
+        
+        <div class="game-controls">
+            <button class="btn btn-hint" id="hint-btn" style="display: none;">Get Hint<br>Obtenha Dica</button>
+            <div class="game-progress">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            <button class="btn" id="next-btn" style="display: none;">Next Challenge<br>Próximo Desafio</button>
+        </div>
+        
+        <div class="feedback" id="feedback-message"></div>
+        <div class="celebration" id="celebration"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Game state
+            const gameState = {
+                currentScene: 'start',
+                foundItems: 0,
+                totalProgress: 0,
+                hintsUsed: 0,
+                scenes: [
+                {
+                        id: 'kitchen-scene',
+                        background: './imagens/kitchen-bg.jpg',
+                        clue: 'Help Leo find: 4 eggs, 1 beef, 2 breads, 2 cheese slices, and 1 ham!',
+                        totalItems: 10,
+                        items: [
+                            // Ovos
+                            { x: 15, y: 15  , width: 30, height: 40, id: 'egg1' },
+                            { x: 32, y: 52  , width: 30, height: 40, id: 'egg2' },
+                            { x: 45, y: 65, width: 30, height: 40, id: 'egg3' },
+                            { x: 60, y: 72, width: 30, height: 40, id: 'egg4' },
+                            
+                            // Bife
+                            { x: 52, y: 50, width: 80, height: 60, id: 'beef' },
+                            
+                            // Pães
+                            { x: 25, y: 73, width: 40, height: 30, id: 'bread1' },
+                            { x: 90, y: 57, width: 40, height: 30, id: 'bread2' },
+                            
+                            // Queijos
+                            { x: 48, y: 70, width: 35, height: 35, id: 'cheese1' },
+                            { x: 67, y: 70, width: 35, height: 35, id: 'cheese2' },
+                            
+                            // Presunto
+                            { x: 55, y: 75, width: 40, height: 25, id: 'ham' }
+                        ]
+                    },
+                ]
+            };
+            
+                        
+            // DOM elements
+            const startBtn = document.getElementById('start-btn');
+            const hintBtn = document.getElementById('hint-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const clueBox = document.getElementById('current-clue');
+            const progressBar = document.getElementById('progress-bar');
+            const feedbackMessage = document.getElementById('feedback-message');
+            const celebrationElement = document.getElementById('celebration');
+            
+            // Event listeners
+            startBtn.addEventListener('click', startGame);
+            hintBtn.addEventListener('click', giveHint);
+            nextBtn.addEventListener('click', nextScene);
+            
+            // Start game function
+            function startGame() {
+                gameState.currentScene = 'kitchen-scene';
+                showScene(gameState.currentScene);
+                updateProgress();
+            }
+            
+            // Show scene function
+            function showScene(sceneId) {
+                // Hide all scenes
+                document.querySelectorAll('.scene').forEach(scene => {
+                    scene.classList.remove('active');
+                });
+                
+                // Show current scene
+                const currentScene = document.getElementById(sceneId);
+                currentScene.classList.add('active');
+                
+                // Find the scene data
+                const sceneData = gameState.scenes.find(scene => scene.id === sceneId);
+                
+                // Set background
+                currentScene.style.backgroundImage = `url(${sceneData.background})`;
+                
+                // Clear previous items
+                currentScene.querySelectorAll('.clickable').forEach(item => item.remove());
+                
+                // Add items
+                sceneData.items.forEach(item => {
+                    if (!item.found) {
+                        const itemElement = document.createElement('div');
+                        itemElement.classList.add('clickable');
+                        itemElement.id = item.id;
+                        itemElement.style.left = item.x + '%';
+                        itemElement.style.top = item.y + '%';
+                        itemElement.style.width = item.width + 'px';
+                        itemElement.style.height = item.height + 'px';
+                        
+                        // Add background image based on item type
+                        if (item.id.includes('egg')) {
+                            itemElement.style.backgroundImage = 'url(./imagens/egg.png)';
+                        } else if (item.id === 'beef') {
+                            itemElement.style.backgroundImage = 'url(./imagens/beef.png)';
+                        } else if (item.id.includes('bread')) {
+                            itemElement.style.backgroundImage = 'url(./imagens/bread.png)';
+                        } else if (item.id.includes('cheese')) {
+                            itemElement.style.backgroundImage = 'url(./imagens/cheese-slice.png)';
+                        } else if (item.id === 'ham') {
+                            itemElement.style.backgroundImage = 'url(./imagens/ham-slice.png)';
+                        }
+                        
+                        itemElement.style.backgroundSize = 'contain';
+                        itemElement.style.backgroundRepeat = 'no-repeat';
+                        itemElement.style.backgroundPosition = 'center';
+                        
+                        itemElement.addEventListener('click', () => handleItemClick(item, itemElement));
+                        
+                        currentScene.appendChild(itemElement);
+                    }
+                });
+                
+                // Update clue text
+                clueBox.textContent = sceneData.clue;
+                
+                // Reset found items counter for this scene
+                gameState.foundItems = 0;
+                
+                // Hide next button until scene is completed
+                nextBtn.style.display = 'none';
+
+                toggleHintButton();
+            }
+            
+            // Handle item click
+            function handleItemClick(item, element) {
+                const sceneData = gameState.scenes.find(scene => scene.id === gameState.currentScene);
+                
+                // Mark item as found
+                item.found = true;
+                element.style.display = 'none';
+                
+                // Increase found items counter
+                gameState.foundItems++;
+                
+                // Show feedback
+                showFeedback('Great job! You found it!');
+                
+                // Check if all items in the scene are found
+                if (gameState.foundItems >= sceneData.totalItems) {                                        
+                    showFeedback('All food collected! Time to eat!');
+                    showCelebration();
+                    nextBtn.style.display = 'block';
+                    nextBtn.textContent = 'Play Again'; // Altera o texto do botão
+                }
+                
+                // Update progress
+                updateProgress();
+            }
+            
+            // Next scene function
+            function nextScene() {
+                resetGame();
+            }
+            
+            // Give hint function
+            function giveHint() {
+                gameState.hintsUsed++;
+                
+                const sceneData = gameState.scenes.find(scene => scene.id === gameState.currentScene);
+                const unfoundItems = sceneData.items.filter(item => !item.found);
+                
+                if (unfoundItems.length > 0) {
+                    // Pick a random unfound item
+                    const randomItem = unfoundItems[Math.floor(Math.random() * unfoundItems.length)];
+                    
+                    // Highlight the item briefly
+                    const itemElement = document.getElementById(randomItem.id);
+                    if (itemElement) {
+                        itemElement.style.boxShadow = '0 0 20px yellow';
+                        itemElement.style.zIndex = '10';
+                        
+                        // Remove highlight after 2 seconds
+                        setTimeout(() => {
+                            itemElement.style.boxShadow = '';
+                            itemElement.style.zIndex = '';
+                        }, 2000);
+                    }
+                    
+                    showFeedback('Look for the highlighted item!');
+                } else {
+                    showFeedback('You\'ve found everything in this scene!<br>Você já achou todos os ítens dessa cena!');
+                }
+            }
+            
+            // Update progress function
+            function updateProgress() {
+                let totalItems = 0;
+                let totalFoundItems = 0;
+                
+                gameState.scenes.forEach(scene => {
+                    totalItems += scene.totalItems;
+                    scene.items.forEach(item => {
+                        if (item.found) totalFoundItems++;
+                    });
+                });
+                
+                const progressPercentage = (totalFoundItems / totalItems) * 100;
+                progressBar.style.width = progressPercentage + '%';
+            }
+            
+            // Show feedback function
+            function showFeedback(message) {
+                feedbackMessage.textContent = message;
+                feedbackMessage.style.display = 'block';
+                
+                // Hide after 3 seconds
+                setTimeout(() => {
+                    feedbackMessage.style.display = 'none';
+                }, 3000);
+            }
+
+            function toggleHintButton() {
+                const isStartScreen = document.querySelector('.scene.active').classList.contains('start-screen');
+                hintBtn.style.display = isStartScreen ? 'none' : 'block';
+            }
+
+            document.querySelectorAll('.scene-explanation').forEach(explanation => {
+                explanation.addEventListener('click', function() {
+                    const original = this.textContent;
+                    const translation = this.dataset.translation;
+                    
+                    this.textContent = translation;
+                    setTimeout(() => {
+                        this.textContent = original;
+                    }, 1200);
+                });
+            });
+
+            
+            // Show celebration function
+            function showCelebration() {
+                celebrationElement.style.display = 'block';
+                
+                // Create confetti
+                for (let i = 0; i < 50; i++) {
+                    const confetti = document.createElement('div');
+                    confetti.classList.add('confetti');
+                    confetti.style.left = Math.random() * 100 + 'vw';
+                    confetti.style.backgroundColor = getRandomColor();
+                    confetti.style.width = (Math.random() * 10 + 5) + 'px';
+                    confetti.style.height = (Math.random() * 10 + 5) + 'px';
+                    confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                    
+                    celebrationElement.appendChild(confetti);
+                }
+                
+                // Remove celebration after animation completes
+                setTimeout(() => {
+                    celebrationElement.style.display = 'none';
+                    celebrationElement.innerHTML = '';
+                }, 5000);
+            }
+            
+            // Get random color function for confetti
+            function getRandomColor() {
+                const colors = ['#FFD700', '#FF6B6B', '#4CAF50', '#87CEEB', '#FF8C00', '#BA55D3'];
+                return colors[Math.floor(Math.random() * colors.length)];
+            }
+            
+            // Reset game function
+            function resetGame() {
+                // Reset found status for all items
+                gameState.scenes.forEach(scene => {
+                    scene.items.forEach(item => {
+                        item.found = false;
+                    });
+                });
+                
+                // Reset counters
+                gameState.foundItems = 0;
+                gameState.hintsUsed = 0;
+                
+                // Go back to start screen
+                gameState.currentScene = 'start-screen';
+                
+                // Hide all scenes
+                document.querySelectorAll('.scene').forEach(scene => {
+                    scene.classList.remove('active');
+                });
+                
+                // Show start screen
+                document.querySelector('.start-screen').classList.add('active');
+                
+                // Reset progress bar
+                progressBar.style.width = '0%';
+                
+                // Reset button text
+                nextBtn.textContent = 'Next Challenge';
+            }
+        });
+    </script>
+</body>
+</html>

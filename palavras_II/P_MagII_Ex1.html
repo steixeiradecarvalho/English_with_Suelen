@@ -11,7 +11,7 @@
             margin: 0 auto;
             padding: 20px;
             background-color: #f0f8ff;
-            min-height: 100vh; /* Ensure footer sticks to bottom */
+            min-height: 100vh;
         }
 
         .expressions-list {
@@ -40,6 +40,20 @@
             padding: 8px 15px;
             border-radius: 20px;
             font-size: 16px;
+            cursor: pointer;
+            position: relative;
+            transition: background-color 0.3s;
+        }
+
+        .expressions-list li:hover {
+            background: #d0e9f3;
+        }
+
+        .translation-text {
+            display: none;
+            color: #2c3e50;
+            font-size: 14px;
+            margin-top: 5px;
         }
 
         .image-grid {
@@ -99,68 +113,42 @@
             color: #f44336;
         }
 
-        .expressions-list li {
-            background: #e8f4f8;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-size: 16px;
-            cursor: pointer;
-            position: relative;
-            transition: background-color 0.3s;
-        }
-
-        .expressions-list li:hover {
-            background: #d0e9f3;
-        }
-
-        .translation-popup {
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #2c3e50;
-            color: white;
-            padding: 8px 12px;
-            border-radius: 4px;
-            font-size: 14px;
-            margin-top: 8px;
-            white-space: nowrap;
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s, visibility 0.3s;
-        }
-
-        .translation-popup::before {
-            content: '';
-            position: absolute;
-            top: -6px;
-            left: 50%;
-            transform: translateX(-50%);
-            border-width: 0 6px 6px 6px;
-            border-style: solid;
-            border-color: transparent transparent #2c3e50 transparent;
-        }s
-
-        .expressions-list li:hover .translation-popup {
-            opacity: 1;
-            visibility: visible;
-        }
-        /* Footer Style */
         footer {
             background-color: #343a40;
             color: white;
             text-align: center;
             padding: 10px 0;
-            margin-top: 20px; /* Space above footer */
+            margin-top: 20px;
         }
-        /* Instruction Style */
+
         .instruction {
             font-size: 18px;
             font-weight: bold;
             color: #007bff;
             text-align: center;
             margin-bottom: 20px;
+        }
+        /* Navigation Styles */
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .nav-button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+
+        .nav-button:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
@@ -170,11 +158,11 @@
     <div class="expressions-list">
         <h2>Expressões: <span style="font-size: 0.7em; color: #888888;">(clique na expressão para ver sua tradução)</span></h2>
         <ul>
-            <li>Good Night<span class="translation-popup">Boa noite</span></li>
-            <li>Good Afternoon<span class="translation-popup">Boa tarde</span></li>
-            <li>Good Morning<span class="translation-popup">Bom dia</span></li>
-            <li>What's your name?<span class="translation-popup">Qual é o seu nome?</span></li>
-            <li>How old are you?<span class="translation-popup">Quantos anos você tem?</span></li>
+            <li>Good Night<span class="translation-text">Boa noite</span></li>
+            <li>Good Afternoon<span class="translation-text">Boa tarde</span></li>
+            <li>Good Morning<span class="translation-text">Bom dia</span></li>
+            <li>What's your name?<span class="translation-text">Qual é o seu nome?</span></li>
+            <li>How old are you?<span class="translation-text">Quantos anos você tem?</span></li>
         </ul>
     </div>
 
@@ -205,7 +193,7 @@
 
         <div class="image-card">
             <div class="image-container">
-                <img src="./Iam30old.jpeg   " alt="Expression 4">
+                <img src="./Iam30old.jpeg" alt="Expression 4">
             </div>
             <input type="text" class="answer-input" data-correct="how old are you?" placeholder="Type the correct expression...">
             <div class="feedback-message"></div>
@@ -221,20 +209,24 @@
         <div class="instruction">
             * Escreva a expressão correta
         </div>
-        
+    </div>
+
+    <div class="navigation">
+        <a href=".././index.html" class="nav-button">Home</a>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const inputs = document.querySelectorAll('.answer-input');
+            const expressionItems = document.querySelectorAll('.expressions-list li');
 
+            // Input validation
             inputs.forEach(input => {
                 input.addEventListener('input', () => {
                     const userAnswer = input.value.trim();
                     const correctAnswer = input.dataset.correct;
                     const feedbackElement = input.nextElementSibling;
 
-                    // Remove previous classes
                     input.classList.remove('correct', 'incorrect');
                     feedbackElement.classList.remove('correct', 'incorrect');
 
@@ -254,11 +246,33 @@
                     }
                 });
             });
+
+            // Translation display on click
+            expressionItems.forEach(item => {
+                const translation = item.querySelector('.translation-text');
+                
+                item.addEventListener('click', (e) => {
+                    e.preventDefault(); // Prevent any default behavior
+                    e.stopPropagation(); // Stop event bubbling
+                    
+                    // Hide all other translations
+                    document.querySelectorAll('.translation-text').forEach(text => {
+                        text.style.display = 'none';
+                    });
+
+                    // Show the clicked translation
+                    translation.style.display = 'block';
+                    
+                    // Hide after 2 seconds
+                    setTimeout(() => {
+                        translation.style.display = 'none';
+                    }, 1200);
+                });
+            });
         });
     </script>
     <footer>
-        &copy; 2025 World Teaching School
+        © 2025 World Teaching School
     </footer>
 </body>
 </html>
-

@@ -229,6 +229,12 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            cursor: pointer;
+        }
+
+        .target-box.highlight {
+            background-color: #e3f2fd;
+            border: 3px dashed #2196f3;
         }
 
         .pronoun {
@@ -240,10 +246,10 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            cursor: move;
+            cursor: pointer;
             background-color: #ffffff;
             user-select: none;
-            transition: transform 0.2s;
+            transition: all 0.2s;
             padding: 5px;
         }
 
@@ -265,25 +271,39 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
+        .pronoun.selected {
+            transform: scale(1.05);
+            background-color: #e8f4fc;
+            border: 2px solid #2196f3;
+            box-shadow: 0 0 8px rgba(33, 150, 243, 0.5);
+        }
+
         .target-box h2 {
             color: #007bff;
             margin-bottom: 20px;
             font-size: 24px;
         }
 
-        .correct {
+        .target-box.correct {
             border-color: #27ae60 !important;
             background-color: #d1f2eb !important;
+            animation: flash-correct 0.8s;
         }
 
-        .incorrect {
+        .target-box.incorrect {
             border-color: #e74c3c !important;
             background-color: #fadbd8 !important;
+            animation: flash-incorrect 0.8s;
         }
 
-        .drag-over {
-            background-color: #e3f2fd;
-            border: 3px dashed #2196f3;
+        @keyframes flash-correct {
+            0%, 100% { background-color: #d1f2eb; }
+            50% { background-color: #27ae60; }
+        }
+
+        @keyframes flash-incorrect {
+            0%, 100% { background-color: #fadbd8; }
+            50% { background-color: #e74c3c; }
         }
 
         #reset-btn {
@@ -301,6 +321,38 @@
 
         #reset-btn:hover {
             background-color: #0056b3;
+        }
+
+        .status-message {
+            margin-top: 15px;
+            padding: 10px 15px;
+            text-align: center;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: opacity 0.5s;
+            opacity: 0;
+        }
+
+        .status-message.show {
+            opacity: 1;
+        }
+
+        .status-message.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status-message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .status-message.info {
+            background-color: #cce5ff;
+            color: #004085;
+            border: 1px solid #b8daff;
         }
 
         @media (max-width: 768px) {
@@ -369,37 +421,39 @@
                     <h1 class="game-title">Jogo de Concordância Pronominal</h1>
                     
                     <div class="game-instructions">
-                        <p><strong>Instruções:</strong> Arraste cada pronome para o box correspondente ao verbo correto (<em>am</em>, <em>is</em> ou <em>are</em>). Descubra os pares corretos tentando combinar cada pronome com sua forma verbal apropriada do verbo <em>to be</em>.</p>
+                        <p><strong>Instruções:</strong> Clique em um pronome para selecioná-lo, depois clique no box do verbo correto (<em>am</em>, <em>is</em> ou <em>are</em>) para colocá-lo. Descubra os pares corretos tentando combinar cada pronome com sua forma verbal apropriada do verbo <em>to be</em>.</p>
                     </div>
+
+                    <div class="status-message" id="statusMessage"></div>
                     
                     <div class="container">
                         <div class="pronouns-box" id="pronounsContainer">
                             <h2>Pronomes</h2>
-                            <div class="pronoun" draggable="true" data-correct="am">
+                            <div class="pronoun" data-correct="am">
                                 <img src="I.png" alt="I">
                                 <span>I</span>
                             </div>
-                            <div class="pronoun" draggable="true" data-correct="are">
+                            <div class="pronoun" data-correct="are">
                                 <img src="you.png" alt="you">
                                 <span>you</span>
                             </div>
-                            <div class="pronoun" draggable="true" data-correct="is">
+                            <div class="pronoun" data-correct="is">
                                 <img src="he.png" alt="he">
                                 <span>he</span>
                             </div>
-                            <div class="pronoun" draggable="true" data-correct="is">
+                            <div class="pronoun" data-correct="is">
                                 <img src="she.png" alt="she">
                                 <span>she</span>
                             </div>
-                            <div class="pronoun" draggable="true" data-correct="is">
+                            <div class="pronoun" data-correct="is">
                                 <img src="it.png" alt="it">
                                 <span>it</span>
                             </div>
-                            <div class="pronoun" draggable="true" data-correct="are">
+                            <div class="pronoun" data-correct="are">
                                 <img src="we.png" alt="we">
                                 <span>we</span>
                             </div>
-                            <div class="pronoun" draggable="true" data-correct="are">
+                            <div class="pronoun" data-correct="are">
                                 <img src="they.png" alt="they">
                                 <span>they</span>
                             </div>
@@ -445,79 +499,88 @@
         }
 
         // Script do jogo de concordância pronominal
-        let draggedItem = null;
+        let selectedPronoun = null;
+        const statusMessage = document.getElementById('statusMessage');
 
-        // Configuração inicial dos eventos
-        document.querySelectorAll('.pronoun').forEach(item => {
-            item.addEventListener('dragstart', handleDragStart);
-            item.addEventListener('dragend', handleDragEnd);
+        // Configurar eventos de clique para pronomes
+        document.querySelectorAll('.pronoun').forEach(pronoun => {
+            pronoun.addEventListener('click', selectPronoun);
         });
 
+        // Configurar eventos de clique para caixas de destino
         document.querySelectorAll('.target-box').forEach(box => {
-            box.addEventListener('dragover', handleDragOver);
-            box.addEventListener('dragenter', handleDragEnter);
-            box.addEventListener('dragleave', handleDragLeave);
-            box.addEventListener('drop', handleDrop);
+            box.addEventListener('click', handleTargetBoxClick);
         });
 
-        function handleDragStart(e) {
-            draggedItem = this;
-            this.classList.add('dragging');
-            setTimeout(() => {
-                this.style.opacity = '0.5';
-            }, 0);
-            // Adicionar dados à operação de arrastar
-            e.dataTransfer.setData('text/plain', '');
-            e.dataTransfer.effectAllowed = 'move';
+        function selectPronoun() {
+            // Remover seleção atual
+            document.querySelectorAll('.pronoun').forEach(pronoun => {
+                pronoun.classList.remove('selected');
+            });
+
+            // Se clicar no mesmo pronome duas vezes, desselecione
+            if (this === selectedPronoun) {
+                selectedPronoun = null;
+                updateStatusMessage('', '');
+            } else {
+                // Selecionar novo pronome
+                this.classList.add('selected');
+                selectedPronoun = this;
+                updateStatusMessage('Agora selecione um verbo para colocar o pronome', 'info');
+            }
         }
 
-        function handleDragEnd(e) {
-            this.classList.remove('dragging');
-            this.style.opacity = '1';
-            draggedItem = null;
-        }
-
-        function handleDragOver(e) {
-            e.preventDefault();
-            e.dataTransfer.dropEffect = 'move';
-        }
-
-        function handleDragEnter(e) {
-            e.preventDefault();
-            this.classList.add('drag-over');
-        }
-
-        function handleDragLeave(e) {
-            this.classList.remove('drag-over');
-        }
-
-        function handleDrop(e) {
-            e.preventDefault();
-            this.classList.remove('drag-over');
-            
-            if (!draggedItem) return;
+        function handleTargetBoxClick() {
+            if (!selectedPronoun) {
+                updateStatusMessage('Selecione um pronome primeiro!', 'error');
+                return;
+            }
 
             const targetBox = this;
-            const correctAnswer = draggedItem.dataset.correct;
+            const correctAnswer = selectedPronoun.dataset.correct;
             const isCorrect = targetBox.id === `${correctAnswer}Box`;
 
             // Efeito visual de feedback
-            targetBox.classList.add(isCorrect ? 'correct' : 'incorrect');
+            if (isCorrect) {
+                targetBox.classList.add('correct');
+                updateStatusMessage('Correto! 👍', 'success');
+                
+                // Mover o pronome para a caixa
+                targetBox.appendChild(selectedPronoun);
+                selectedPronoun.classList.remove('selected');
+                selectedPronoun = null;
+                
+                // Verificar se o jogo está completo
+                setTimeout(() => {
+                    checkCompletion();
+                }, 300);
+            } else {
+                targetBox.classList.add('incorrect');
+                updateStatusMessage('Incorreto! Tente novamente.', 'error');
+            }
+
+            // Remover classes após efeito
             setTimeout(() => {
                 targetBox.classList.remove('correct', 'incorrect');
             }, 800);
+        }
 
-            if (isCorrect) {
-                targetBox.appendChild(draggedItem);
-                draggedItem.style.cursor = 'default';
-                checkCompletion();
+        function updateStatusMessage(text, type) {
+            statusMessage.textContent = text;
+            statusMessage.className = 'status-message';
+            
+            if (text) {
+                statusMessage.classList.add('show', type);
+            } else {
+                statusMessage.classList.remove('show');
             }
         }
 
         function checkCompletion() {
-            const remaining = document.querySelectorAll('#pronounsContainer .pronoun').length;
+            const remaining = document.querySelectorAll('#pronounsContainer > .pronoun').length;
             if (remaining === 0) {
                 startConfetti();
+                updateStatusMessage('Parabéns! Você completou o jogo! 🎉', 'success');
             }
         }
 
@@ -555,9 +618,15 @@
         function resetGame() {
             const pronounsContainer = document.getElementById('pronounsContainer');
             document.querySelectorAll('.target-box .pronoun').forEach(item => {
-                item.style.cursor = 'move';
                 pronounsContainer.appendChild(item);
             });
+            
+            selectedPronoun = null;
+            document.querySelectorAll('.pronoun').forEach(pronoun => {
+                pronoun.classList.remove('selected');
+            });
+            
+            updateStatusMessage('Jogo reiniciado! Selecione um pronome para começar.', 'info');
         }
     </script>
 </body>

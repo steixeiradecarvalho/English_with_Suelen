@@ -3,610 +3,680 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Leo's English Safari</title>
+    <title>Leo's Treasure Hunt</title>
     <style>
         :root {
-            --platform-color: #8B4513;
-            --bg-color: #FFF8DC;
+            --primary: #FFD700;
+            --secondary: #FF6B6B;
+            --accent: #4CAF50;
+            --background: #F9F7F7;
+            --text: #333333;
         }
         
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
         }
         
         body {
-            font-family: 'Arial Rounded MT Bold', Arial, sans-serif;
-            background-color: var(--bg-color);
-            overflow: hidden;
-            touch-action: manipulation;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            overflow-x: hidden;
         }
         
-        #game-container {
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+        
+        .game-header {
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+        
+        .game-title {
+            font-size: 1.8rem;
+            color: var(--secondary);
+            text-shadow: 2px 2px 0 var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .game-subtitle {
+            font-size: 1rem;
+            color: var(--text);
+        }
+        
+        .game-area {
             position: relative;
             width: 100%;
-            height: 100vh;
+            height: 70vh;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
             overflow: hidden;
-            background-image: linear-gradient(#87CEEB, #FFF8DC);
         }
         
-        #game-area {
-            position: relative;
+        .scene {
             width: 100%;
             height: 100%;
-            overflow: hidden;
-        }
-        
-        #mission-text {
             position: absolute;
-            top: 20px;
-            left: 0;
-            width: 100%;
-            text-align: center;
-            background-color: rgba(255, 255, 255, 0.8);
-            padding: 10px;
-            border-radius: 10px;
-            z-index: 100;
-            font-size: 1rem;
-        }
-        
-        #player {
-            position: absolute;
-            font-size: 2rem;
-            z-index: 10;
-            transition: transform 0.1s ease;
-        }
-        
-        .platform {
-            position: absolute;
-            background-color: var(--platform-color);
-            border-radius: 8px;
-        }
-        
-        .collectible {
-            position: absolute;
-            font-size: 1.5rem;
-            z-index: 5;
-        }
-        
-        #controls {
-            position: fixed;
-            bottom: 20px;
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            z-index: 100;
-        }
-        
-        .control-btn {
-            width: 60px;
-            height: 60px;
-            background-color: rgba(255, 255, 255, 0.7);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 1.5rem;
-            user-select: none;
-            touch-action: manipulation;
-        }
-        
-        #score-container {
-            position: absolute;
-            top: 70px;
-            right: 20px;
-            background-color: rgba(255, 255, 255, 0.8);
-            padding: 10px;
-            border-radius: 10px;
-            z-index: 100;
-        }
-        
-        #level-complete {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: rgba(255, 255, 255, 0.9);
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            z-index: 200;
+            background-size: cover;
+            background-position: center;
             display: none;
         }
         
+        .scene.active {
+            display: block;
+        }
+        
+        .start-screen {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(to bottom, #87CEEB, #E0F7FA);
+            text-align: center;
+        }
+        
+        .leo-character {
+            width: 150px;
+            height: 150px;
+            margin-bottom: 1rem;
+        }
+        
+        .clue-box {
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-top: 1rem;
+            text-align: center;
+        }
+        
+        .game-controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+        }
+        
+        .btn {
+            background-color: var(--primary);
+            color: var(--text);
+            border: none;
+            border-radius: 50px;
+            padding: 0.8rem 1.5rem;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 0 rgba(0,0,0,0.1);
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 rgba(0,0,0,0.1);
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 0 rgba(0,0,0,0.1);
+        }
+        
+        .btn-hint {
+            background-color: var(--secondary);
+        }
+        
+        .game-progress {
+            margin-top: 1rem;
+            height: 20px;
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background-color: var(--accent);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .clickable {
+            position: absolute;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .clickable:hover {
+            transform: scale(1.1);
+        }
+        
+        .feedback {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0,0,0,0.7);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            display: none;
+            z-index: 100;
+        }
+        
+        @keyframes celebrate {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        
+        .celebration {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 99;
+            display: none;
+        }
+        
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: var(--primary);
+            animation: fall 3s linear forwards;
+            z-index: 99;
+        }
+
+        .scene-explanation {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            width: 80%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            cursor: pointer; 
+        }
+
+        .instruction-card {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 15px;
+            border-radius: 15px;
+            margin: 10px auto;
+            max-width: 300px;
+            text-align: center;
+            font-size: 0.9em;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        @keyframes fall {
+            0% { transform: translateY(-10px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+        }
+        
         @media (min-width: 768px) {
-            #controls {
-                display: none;
+            .container {
+                max-width: 760px;
             }
             
-            #mission-text {
+            .game-title {
+                font-size: 2.5rem;
+            }
+            
+            .game-subtitle {
                 font-size: 1.2rem;
+            }
+            
+            .leo-character {
+                width: 200px;
+                height: 200px;
             }
         }
     </style>
 </head>
 <body>
-    <div id="game-container">
-        <div id="mission-text">
-            <div class="english">Find five red pants</div>
-            <div class="portuguese">O Leão, precisa achar 5 calças vermelhas</div>
+    <div class="container">
+        <div class="game-header">
+            <h1 class="game-title">Leo's Treasure Hunt</h1>
+            <h2 class="game-subtitle">Help Leo find the treasure!</h2>
         </div>
         
-        <div id="score-container">
-            Found: <span id="score">0</span>/<span id="total-items">5</span>
+        <div class="game-area">
+            <div class="scene start-screen active">
+                <img src="./imagens/leo.png" alt="Leo the Lion" class="leo-character">
+                <h2>Welcome to Leo's Treasure Hunt!</h2>
+                <h2 style="color: red;">Bem-vindo à Caça ao Tesouro do Leo!</h2>
+                <p>Help Leo find the hidden treasure by completing challenges!</p>
+                <p style="color: red;">Ajude Leo a encontrar o tesouro escondido completando desafios!<br></p>
+                <button class="btn" id="start-btn">Start Adventure!<br>Comece a Aventura!</button>
+                <div class="instruction-card">
+                    Clique ou toque na instrução em cada cenário, para ver em português.
+                </div>
+            </div>
+            
+            <!-- Park Scene -->
+            <div class="scene" id="park-scene">
+                <!-- Scene elements will be added by JavaScript -->
+                <div class="scene-explanation" data-translation="O Leão precisa encontrar cinco calças vermelhas.">The Lion needs to find five red pants.</div>
+            </div>
+            
+            <!-- Market Scene -->
+            <div class="scene" id="market-scene">
+                <!-- Scene elements will be added by JavaScript -->
+                <div class="scene-explanation" data-translation="O Leão precisa encontrar vinte e duas maçãs.">The Lion needs to find twenty-two apples.</div>
+            </div>
+            
+            <!-- Beach Scene -->
+            <div class="scene" id="beach-scene">
+                <!-- Scene elements will be added by JavaScript -->
+                <div class="scene-explanation" data-translation="O Leão precisa encontrar pessoas com óculos de sol.">The Lion needs to find people with sunglasses.</div>
+            </div>
+            
+            <!-- City Scene -->
+            <div class="scene" id="city-scene">
+                <!-- Scene elements will be added by JavaScript -->
+                <div class="scene-explanation" data-translation="O Leão precisa encontrar uma menina com um vestido rosa e um menino com um boné marrom.">The Lion needs to find a girl with a pink dress and a boy with brown cap.</div>
+            </div>
+            
+            <!-- Treasure Cave Scene -->
+            <div class="scene" id="treasure-scene">
+                <!-- Scene elements will be added by JavaScript -->
+                <div class="scene-explanation" data-translation="Parabéns, você ajudou o leão a encontrar o tesouro!<br> Toque nele para abrir">Congratulations, you helped the lion find the treasure!<br> Tap on it to open it</div>
+            </div>
+            
+            <div class="clue-box" id="current-clue">
+                Click Start to begin your adventure!
+            </div>
         </div>
         
-        <div id="game-area">
-            <div id="player">🦁</div>
-            <!-- Platforms and collectibles will be generated by JS -->
+        <div class="game-controls">
+            <button class="btn btn-hint" id="hint-btn" style="display: none;">Get Hint<br>Obtenha Dica</button>
+            <div class="game-progress">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            <button class="btn" id="next-btn" style="display: none;">Next Challenge<br>Próximo Desafio</button>
         </div>
         
-        <div id="controls">
-            <div class="control-btn" id="left-btn">⬅️</div>
-            <div class="control-btn" id="jump-btn">⬆️</div>
-            <div class="control-btn" id="right-btn">➡️</div>
-        </div>
-        
-        <div id="level-complete">
-            <h2>Level Complete!</h2>
-            <p>Well done! You found all items.</p>
-            <button id="next-level-btn">Next Level</button>
-        </div>
+        <div class="feedback" id="feedback-message"></div>
+        <div class="celebration" id="celebration"></div>
     </div>
 
     <script>
-        // Game state
-        const gameState = {
-            player: {
-                x: 50,
-                y: 0,
-                width: 40,
-                height: 40,
-                velX: 0,
-                velY: 0,
-                speed: 5,
-                jumping: false,
-                grounded: false
-            },
-            keys: {},
-            gravity: 0.5,
-            friction: 0.8,
-            platforms: [],
-            collectibles: [],
-            collected: 0,
-            currentLevel: 1,
-            isLevelComplete: false
-        };
-
-        // Level configurations
-        const levels = [
-            {
-                mission: {
-                    english: "Find five red pants",
-                    portuguese: "O Leão, precisa achar 5 calças vermelhas"
-                },
-                totalItems: 5,
-                collectibleEmoji: "👖",
-                collectibleClass: "red-pants",
-                platforms: [
-                    {x: 0, y: 500, width: 800, height: 20},
-                    {x: 200, y: 400, width: 150, height: 20},
-                    {x: 450, y: 350, width: 150, height: 20},
-                    {x: 100, y: 250, width: 150, height: 20}
-                ],
-                collectibles: [
-                    {x: 50, y: 460},
-                    {x: 250, y: 360},
-                    {x: 500, y: 310},
-                    {x: 150, y: 210},
-                    {x: 700, y: 460}
+        document.addEventListener('DOMContentLoaded', function() {
+            // Game state
+            const gameState = {
+                currentScene: 'start',
+                foundItems: 0,
+                totalProgress: 0,
+                hintsUsed: 0,
+                scenes: [
+                    {
+                        id: 'park-scene',
+                        background: './imagens/park-bg.jpg',
+                        clue: 'Help Leo find five red pants!',
+                        totalItems: 5,
+                        items: [
+                            { x: 15, y: 20, width: 40, height: 30, id: 'pants1' },
+                            { x: 45, y: 60, width: 40, height: 30, id: 'pants2' },
+                            { x: 70, y: 30, width: 40, height: 30, id: 'pants3' },
+                            { x: 25, y: 75, width: 40, height: 30, id: 'pants4' },
+                            { x: 80, y: 80, width: 40, height: 30, id: 'pants5' }
+                        ]
+                    },
+                    {
+                        id: 'market-scene',
+                        background: './imagens/market-bg.jpg',
+                        clue: 'Help Leo find twenty-two apples on the baskets!',
+                        totalItems: 22,
+                        items: [] // Will be populated programmatically
+                    },
+                    {
+                        id: 'beach-scene',
+                        background: './imagens/beach-bg.jpg',
+                        clue: 'Help Leo find people with sunglasses!',
+                        totalItems: 8,
+                        items: [] // Will be populated programmatically
+                    },
+                    {
+                        id: 'city-scene',
+                        background: './imagens/city-bg.jpg',
+                        clue: 'Help Leo find a girl with a pink dress and a boy with a brown cap!',
+                        totalItems: 2,
+                        items: [
+                            { x: 35, y: 50, width: 40, height: 60, id: 'girl-pink-dress' },
+                            { x: 65, y: 45, width: 40, height: 60, id: 'boy-brown-cap' }
+                        ]
+                    },
+                    {
+                        id: 'treasure-scene',
+                        background: './imagens/cave-bg.jpg',
+                        clue: 'Use your keys to open the treasure chest!',
+                        totalItems: 1,
+                        items: [
+                            { x: 50, y: 50, width: 80, height: 60, id: 'treasure-chest' }
+                        ]
+                    }
                 ]
-            },
-            {
-                mission: {
-                    english: "Find twenty-two apples in the basket",
-                    portuguese: "O Leão, precisa achar 22 maçãs na cesta"
-                },
-                totalItems: 22,
-                collectibleEmoji: "🍎",
-                collectibleClass: "apple",
-                platforms: [
-                    {x: 0, y: 500, width: 800, height: 20},
-                    {x: 150, y: 420, width: 120, height: 20},
-                    {x: 350, y: 350, width: 120, height: 20},
-                    {x: 100, y: 280, width: 120, height: 20},
-                    {x: 500, y: 250, width: 120, height: 20}
-                ],
-                basket: {x: 600, y: 460, emoji: "🧺"}
-            },
-            {
-                mission: {
-                    english: "Find a girl with a pink dress and a boy with a brown cap",
-                    portuguese: "O Leão, precisa achar uma menina com um vestido rosa e um menino com um chapéu marrom"
-                },
-                totalItems: 2,
-                characters: [
-                    {x: 150, y: 460, emoji: "👩", type: "distractor"},
-                    {x: 250, y: 460, emoji: "👨", type: "distractor"},
-                    {x: 350, y: 460, emoji: "👧", type: "girl_pink_dress"},
-                    {x: 450, y: 460, emoji: "👦", type: "boy_brown_cap"},
-                    {x: 550, y: 460, emoji: "🧓", type: "distractor"},
-                    {x: 650, y: 460, emoji: "👶", type: "distractor"}
-                ],
-                platforms: [
-                    {x: 0, y: 500, width: 800, height: 20}
-                ]
-            },
-            {
-                mission: {
-                    english: "Find people with sunglasses",
-                    portuguese: "O Leão, precisa achar pessoas com óculos de sol"
-                },
-                totalItems: 3,
-                characters: [
-                    {x: 100, y: 460, emoji: "👨", type: "distractor"},
-                    {x: 200, y: 460, emoji: "😎", type: "sunglasses"},
-                    {x: 300, y: 460, emoji: "👩", type: "distractor"},
-                    {x: 400, y: 360, emoji: "😎", type: "sunglasses"},
-                    {x: 500, y: 460, emoji: "👧", type: "distractor"},
-                    {x: 600, y: 270, emoji: "😎", type: "sunglasses"},
-                    {x: 700, y: 460, emoji: "👴", type: "distractor"}
-                ],
-                platforms: [
-                    {x: 0, y: 500, width: 800, height: 20},
-                    {x: 350, y: 400, width: 150, height: 20},
-                    {x: 550, y: 310, width: 150, height: 20}
-                ]
+            };
+            
+            // Market scene apple positions (random generation)
+            for (let i = 0; i < 22; i++) {
+                gameState.scenes[1].items.push({
+                    x: Math.floor(Math.random() * 80) + 10,
+                    y: Math.floor(Math.random() * 80) + 10,
+                    width: 30,
+                    height: 30,
+                    id: 'apple' + (i + 1)
+                });
             }
-        ];
-
-        // DOM elements
-        const player = document.getElementById('player');
-        const gameArea = document.getElementById('game-area');
-        const missionText = document.getElementById('mission-text');
-        const scoreElement = document.getElementById('score');
-        const totalItemsElement = document.getElementById('total-items');
-        const levelCompleteModal = document.getElementById('level-complete');
-        const nextLevelBtn = document.getElementById('next-level-btn');
-
-        // Mobile controls
-        const leftBtn = document.getElementById('left-btn');
-        const jumpBtn = document.getElementById('jump-btn');
-        const rightBtn = document.getElementById('right-btn');
-
-        // Initialize game
-        function initGame() {
-            // Set up the current level
-            loadLevel(gameState.currentLevel);
+            
+            // Beach scene sunglasses people positions
+            for (let i = 0; i < 8; i++) {
+                gameState.scenes[2].items.push({
+                    x: Math.floor(Math.random() * 80) + 10,
+                    y: Math.floor(Math.random() * 80) + 10,
+                    width: 40,
+                    height: 50,
+                    id: 'sunglasses' + (i + 1)
+                });
+            }
+            
+            // DOM elements
+            const startBtn = document.getElementById('start-btn');
+            const hintBtn = document.getElementById('hint-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const clueBox = document.getElementById('current-clue');
+            const progressBar = document.getElementById('progress-bar');
+            const feedbackMessage = document.getElementById('feedback-message');
+            const celebrationElement = document.getElementById('celebration');
             
             // Event listeners
-            document.addEventListener('keydown', keyDownHandler);
-            document.addEventListener('keyup', keyUpHandler);
+            startBtn.addEventListener('click', startGame);
+            hintBtn.addEventListener('click', giveHint);
+            nextBtn.addEventListener('click', nextScene);
             
-            // Mobile control events
-            leftBtn.addEventListener('touchstart', () => gameState.keys[37] = true);
-            leftBtn.addEventListener('touchend', () => gameState.keys[37] = false);
-            rightBtn.addEventListener('touchstart', () => gameState.keys[39] = true);
-            rightBtn.addEventListener('touchend', () => gameState.keys[39] = false);
-            jumpBtn.addEventListener('touchstart', () => {
-                if (!gameState.player.jumping && gameState.player.grounded) {
-                    gameState.player.jumping = true;
-                    gameState.player.grounded = false;
-                    gameState.player.velY = -12;
+            // Start game function
+            function startGame() {
+                gameState.currentScene = 'park-scene';
+                showScene(gameState.currentScene);
+                updateProgress();
+            }
+            
+            // Show scene function
+            function showScene(sceneId) {
+                // Hide all scenes
+                document.querySelectorAll('.scene').forEach(scene => {
+                    scene.classList.remove('active');
+                });
+                
+                // Show current scene
+                const currentScene = document.getElementById(sceneId);
+                currentScene.classList.add('active');
+                
+                // Find the scene data
+                const sceneData = gameState.scenes.find(scene => scene.id === sceneId);
+                
+                // Set background
+                currentScene.style.backgroundImage = `url(${sceneData.background})`;
+                
+                // Clear previous items
+                currentScene.querySelectorAll('.clickable').forEach(item => item.remove());
+                
+                // Add items
+                sceneData.items.forEach(item => {
+                    if (!item.found) {
+                        const itemElement = document.createElement('div');
+                        itemElement.classList.add('clickable');
+                        itemElement.id = item.id;
+                        itemElement.style.left = item.x + '%';
+                        itemElement.style.top = item.y + '%';
+                        itemElement.style.width = item.width + 'px';
+                        itemElement.style.height = item.height + 'px';
+                        
+                        // Add background image based on item type
+                        if (item.id.includes('pants')) {
+                            itemElement.style.backgroundImage = 'url(./imagens/red-pants.png)';
+                        } else if (item.id.includes('apple')) {
+                            itemElement.style.backgroundImage = 'url(./imagens/apple.png)';
+                        } else if (item.id.includes('sunglasses')) {
+                            itemElement.style.backgroundImage = 'url(./imagens/person-sunglasses.png)';
+                        } else if (item.id === 'girl-pink-dress') {
+                            itemElement.style.backgroundImage = 'url(./imagens/girl-pink-dress.png)';
+                        } else if (item.id === 'boy-brown-cap') {
+                            itemElement.style.backgroundImage = 'url(./imagens/boy-brown-cap.png)';
+                        } else if (item.id === 'treasure-chest') {
+                            itemElement.style.backgroundImage = 'url(./imagens/treasure-chest-closed.png)';
+                        }
+                        
+                        itemElement.style.backgroundSize = 'contain';
+                        itemElement.style.backgroundRepeat = 'no-repeat';
+                        itemElement.style.backgroundPosition = 'center';
+                        
+                        itemElement.addEventListener('click', () => handleItemClick(item, itemElement));
+                        
+                        currentScene.appendChild(itemElement);
+                    }
+                });
+                
+                // Update clue text
+                clueBox.textContent = sceneData.clue;
+                
+                // Reset found items counter for this scene
+                gameState.foundItems = 0;
+                
+                // Hide next button until scene is completed
+                nextBtn.style.display = 'none';
+
+                toggleHintButton();
+            }
+            
+            // Handle item click
+            function handleItemClick(item, element) {
+                const sceneData = gameState.scenes.find(scene => scene.id === gameState.currentScene);
+                
+                // Mark item as found
+                item.found = true;
+                element.style.display = 'none';
+                
+                // Increase found items counter
+                gameState.foundItems++;
+                
+                // Show feedback
+                showFeedback('Great job! You found it!');
+                
+                // Check if all items in the scene are found
+                if (gameState.foundItems >= sceneData.totalItems) {
+                    // Show scene completion message
+                    showFeedback('Challenge completed! You can move to the next scene.');
+                    // Show confetti celebration
+                    showCelebration();
+                    // Show next button
+                    nextBtn.style.display = 'block';
+                    
+                    // If it's the treasure scene, show open treasure
+                    if (gameState.currentScene === 'treasure-scene') {
+                        const treasureChest = document.createElement('div');
+                        treasureChest.style.position = 'absolute';
+                        treasureChest.style.left = '50%';
+                        treasureChest.style.top = '50%';
+                        treasureChest.style.transform = 'translate(-50%, -50%)';
+                        treasureChest.style.width = '100px';
+                        treasureChest.style.height = '80px';
+                        treasureChest.style.backgroundImage = 'url(./imagens/treasure-chest-open.png)';
+                        treasureChest.style.backgroundSize = 'contain';
+                        treasureChest.style.backgroundRepeat = 'no-repeat';
+                        treasureChest.style.backgroundPosition = 'center';
+                        treasureChest.style.animation = 'celebrate 1s ease-in-out infinite';
+                        
+                        document.getElementById(gameState.currentScene).appendChild(treasureChest);
+                        
+                        showFeedback('Congratulations! You found the treasure!');
+                        nextBtn.textContent = 'Play Again';
+                    }
                 }
-            });
+                
+                // Update progress
+                updateProgress();
+            }
             
-            nextLevelBtn.addEventListener('click', () => {
-                gameState.currentLevel++;
-                if (gameState.currentLevel <= levels.length) {
-                    loadLevel(gameState.currentLevel);
-                    levelCompleteModal.style.display = 'none';
-                    gameState.isLevelComplete = false;
+            // Next scene function
+            function nextScene() {
+                const currentIndex = gameState.scenes.findIndex(scene => scene.id === gameState.currentScene);
+                if (currentIndex < gameState.scenes.length - 1) {
+                    gameState.currentScene = gameState.scenes[currentIndex + 1].id;
+                    showScene(gameState.currentScene);
                 } else {
-                    // Game complete
-                    missionText.innerHTML = `<div>Congratulations! You've completed all levels!</div>`;
-                    levelCompleteModal.innerHTML = `
-                        <h2>Game Complete!</h2>
-                        <p>Well done! You've completed all levels!</p>
-                        <button id="restart-btn">Play Again</button>
-                    `;
-                    document.getElementById('restart-btn').addEventListener('click', () => {
-                        gameState.currentLevel = 1;
-                        loadLevel(1);
-                        levelCompleteModal.style.display = 'none';
+                    // Reset game if this was the last scene
+                    resetGame();
+                }
+            }
+            
+            // Give hint function
+            function giveHint() {
+                gameState.hintsUsed++;
+                
+                const sceneData = gameState.scenes.find(scene => scene.id === gameState.currentScene);
+                const unfoundItems = sceneData.items.filter(item => !item.found);
+                
+                if (unfoundItems.length > 0) {
+                    // Pick a random unfound item
+                    const randomItem = unfoundItems[Math.floor(Math.random() * unfoundItems.length)];
+                    
+                    // Highlight the item briefly
+                    const itemElement = document.getElementById(randomItem.id);
+                    if (itemElement) {
+                        itemElement.style.boxShadow = '0 0 20px yellow';
+                        itemElement.style.zIndex = '10';
+                        
+                        // Remove highlight after 2 seconds
+                        setTimeout(() => {
+                            itemElement.style.boxShadow = '';
+                            itemElement.style.zIndex = '';
+                        }, 2000);
+                    }
+                    
+                    showFeedback('Look for the highlighted item!');
+                } else {
+                    showFeedback('You\'ve found everything in this scene!<br>Você já achou todos os ítens dessa cena!');
+                }
+            }
+            
+            // Update progress function
+            function updateProgress() {
+                let totalItems = 0;
+                let totalFoundItems = 0;
+                
+                gameState.scenes.forEach(scene => {
+                    totalItems += scene.totalItems;
+                    scene.items.forEach(item => {
+                        if (item.found) totalFoundItems++;
                     });
-                }
-            });
-            
-            // Start game loop
-            requestAnimationFrame(update);
-        }
-
-        // Load level
-        function loadLevel(levelIndex) {
-            const level = levels[levelIndex - 1];
-            
-            // Reset game state
-            gameState.player.x = 50;
-            gameState.player.y = 0;
-            gameState.collected = 0;
-            gameState.platforms = [];
-            gameState.collectibles = [];
-            
-            // Update UI
-            missionText.innerHTML = `
-                <div class="english">${level.mission.english}</div>
-                <div class="portuguese">${level.mission.portuguese}</div>
-            `;
-            
-            scoreElement.textContent = '0';
-            totalItemsElement.textContent = level.totalItems || '0';
-            
-            // Clear game area (except player)
-            const elementsToRemove = document.querySelectorAll('.platform, .collectible');
-            elementsToRemove.forEach(el => el.remove());
-            
-            // Create platforms
-            level.platforms.forEach(platform => {
-                createPlatform(platform.x, platform.y, platform.width, platform.height);
-            });
-            
-            // Create collectibles
-            if (level.collectibles) {
-                level.collectibles.forEach(item => {
-                    createCollectible(item.x, item.y, level.collectibleEmoji, level.collectibleClass);
                 });
+                
+                const progressPercentage = (totalFoundItems / totalItems) * 100;
+                progressBar.style.width = progressPercentage + '%';
             }
             
-            // Create basket (Level 2)
-            if (level.basket) {
-                const basket = document.createElement('div');
-                basket.className = 'collectible basket';
-                basket.textContent = level.basket.emoji;
-                basket.style.left = `${level.basket.x}px`;
-                basket.style.top = `${level.basket.y}px`;
-                basket.style.fontSize = '3rem';
-                gameArea.appendChild(basket);
+            // Show feedback function
+            function showFeedback(message) {
+                feedbackMessage.textContent = message;
+                feedbackMessage.style.display = 'block';
+                
+                // Hide after 3 seconds
+                setTimeout(() => {
+                    feedbackMessage.style.display = 'none';
+                }, 3000);
             }
-            
-            // Create characters (Level 3 & 4)
-            if (level.characters) {
-                level.characters.forEach(char => {
-                    const character = document.createElement('div');
-                    character.className = `collectible character ${char.type}`;
-                    character.dataset.type = char.type;
-                    character.textContent = char.emoji;
-                    character.style.left = `${char.x}px`;
-                    character.style.top = `${char.y}px`;
-                    gameArea.appendChild(character);
+
+            function toggleHintButton() {
+                const isStartScreen = document.querySelector('.scene.active').classList.contains('start-screen');
+                hintBtn.style.display = isStartScreen ? 'none' : 'block';
+            }
+
+            document.querySelectorAll('.scene-explanation').forEach(explanation => {
+                explanation.addEventListener('click', function() {
+                    const original = this.textContent;
+                    const translation = this.dataset.translation;
                     
-                    if (char.type === 'girl_pink_dress' || char.type === 'boy_brown_cap' || char.type === 'sunglasses') {
-                        gameState.collectibles.push({
-                            x: char.x,
-                            y: char.y,
-                            width: 30,
-                            height: 30,
-                            collected: false,
-                            element: character
-                        });
-                    }
+                    this.textContent = translation;
+                    setTimeout(() => {
+                        this.textContent = original;
+                    }, 1200);
                 });
-            }
-            
-            // Responsive adjustments
-            adjustForScreenSize();
-            window.addEventListener('resize', adjustForScreenSize);
-        }
-
-        // Create platform element
-        function createPlatform(x, y, width, height) {
-            const platform = document.createElement('div');
-            platform.className = 'platform';
-            platform.style.left = `${x}px`;
-            platform.style.top = `${y}px`;
-            platform.style.width = `${width}px`;
-            platform.style.height = `${height}px`;
-            gameArea.appendChild(platform);
-            
-            gameState.platforms.push({
-                x: x,
-                y: y,
-                width: width,
-                height: height
             });
-        }
 
-        // Create collectible item
-        function createCollectible(x, y, emoji, className) {
-            const collectible = document.createElement('div');
-            collectible.className = `collectible ${className}`;
-            collectible.textContent = emoji;
-            collectible.style.left = `${x}px`;
-            collectible.style.top = `${y}px`;
             
-            // Special style for red pants
-            if (className === 'red-pants') {
-                collectible.style.filter = 'hue-rotate(320deg) saturate(3)';
-            }
-            
-            gameArea.appendChild(collectible);
-            
-            gameState.collectibles.push({
-                x: x,
-                y: y,
-                width: 30,
-                height: 30,
-                collected: false,
-                element: collectible
-            });
-        }
-
-        // Key handlers
-        function keyDownHandler(e) {
-            gameState.keys[e.keyCode] = true;
-        }
-
-        function keyUpHandler(e) {
-            gameState.keys[e.keyCode] = false;
-        }
-
-        // Game loop
-        function update() {
-            if (!gameState.isLevelComplete) {
-                // Player movement
-                if (gameState.keys[37]) {
-                    // Left arrow
-                    if (gameState.player.velX > -gameState.player.speed) {
-                        gameState.player.velX--;
-                    }
-                }
+            // Show celebration function
+            function showCelebration() {
+                celebrationElement.style.display = 'block';
                 
-                if (gameState.keys[39]) {
-                    // Right arrow
-                    if (gameState.player.velX < gameState.player.speed) {
-                        gameState.player.velX++;
-                    }
-                }
-                
-                if (gameState.keys[38] || gameState.keys[32]) {
-                    // Up arrow or Space
-                    if (!gameState.player.jumping && gameState.player.grounded) {
-                        gameState.player.jumping = true;
-                        gameState.player.grounded = false;
-                        gameState.player.velY = -12;
-                    }
-                }
-                
-                // Apply physics
-                gameState.player.velX *= gameState.friction;
-                gameState.player.velY += gameState.gravity;
-                
-                gameState.player.grounded = false;
-                
-                // Collision detection with platforms
-                for (let i = 0; i < gameState.platforms.length; i++) {
-                    const p = gameState.platforms[i];
+                // Create confetti
+                for (let i = 0; i < 50; i++) {
+                    const confetti = document.createElement('div');
+                    confetti.classList.add('confetti');
+                    confetti.style.left = Math.random() * 100 + 'vw';
+                    confetti.style.backgroundColor = getRandomColor();
+                    confetti.style.width = (Math.random() * 10 + 5) + 'px';
+                    confetti.style.height = (Math.random() * 10 + 5) + 'px';
+                    confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
                     
-                    if (gameState.player.x + gameState.player.width > p.x &&
-                        gameState.player.x < p.x + p.width &&
-                        gameState.player.y + gameState.player.height > p.y &&
-                        gameState.player.y + gameState.player.height < p.y + p.height) {
-                        gameState.player.grounded = true;
-                        gameState.player.jumping = false;
-                        gameState.player.y = p.y - gameState.player.height;
-                        gameState.player.velY = 0;
-                    }
+                    celebrationElement.appendChild(confetti);
                 }
                 
-                // Update player position
-                gameState.player.x += gameState.player.velX;
-                gameState.player.y += gameState.player.velY;
-                
-                // Screen boundaries
-                if (gameState.player.x < 0) {
-                    gameState.player.x = 0;
-                } else if (gameState.player.x + gameState.player.width > gameArea.offsetWidth) {
-                    gameState.player.x = gameArea.offsetWidth - gameState.player.width;
-                }
-                
-                if (gameState.player.y < 0) {
-                    gameState.player.y = 0;
-                    gameState.player.velY = 0;
-                } else if (gameState.player.y + gameState.player.height > gameArea.offsetHeight) {
-                    gameState.player.y = gameArea.offsetHeight - gameState.player.height;
-                    gameState.player.grounded = true;
-                    gameState.player.jumping = false;
-                }
-                
-                // Update player element position
-                player.style.left = `${gameState.player.x}px`;
-                player.style.top = `${gameState.player.y}px`;
-                
-                // Check collectible collision
-                checkCollectibles();
-                
-                // Check if level complete
-                const currentLevel = levels[gameState.currentLevel - 1];
-                if (gameState.collected === currentLevel.totalItems) {
-                    gameState.isLevelComplete = true;
-                    levelCompleteModal.style.display = 'block';
-                }
+                // Remove celebration after animation completes
+                setTimeout(() => {
+                    celebrationElement.style.display = 'none';
+                    celebrationElement.innerHTML = '';
+                }, 5000);
             }
             
-            requestAnimationFrame(update);
-        }
-
-        // Check collision with collectibles
-        function checkCollectibles() {
-            for (let i = 0; i < gameState.collectibles.length; i++) {
-                const item = gameState.collectibles[i];
+            // Get random color function for confetti
+            function getRandomColor() {
+                const colors = ['#FFD700', '#FF6B6B', '#4CAF50', '#87CEEB', '#FF8C00', '#BA55D3'];
+                return colors[Math.floor(Math.random() * colors.length)];
+            }
+            
+            // Reset game function
+            function resetGame() {
+                // Reset found status for all items
+                gameState.scenes.forEach(scene => {
+                    scene.items.forEach(item => {
+                        item.found = false;
+                    });
+                });
                 
-                if (!item.collected &&
-                    gameState.player.x + gameState.player.width > item.x &&
-                    gameState.player.x < item.x + item.width &&
-                    gameState.player.y + gameState.player.height > item.y &&
-                    gameState.player.y < item.y + item.height) {
-                    
-                    // Special case for level 3 and 4
-                    if (gameState.currentLevel === 3) {
-                        const itemType = item.element.dataset.type;
-                        if (itemType === 'girl_pink_dress' || itemType === 'boy_brown_cap') {
-                            collectItem(item);
-                        }
-                    } else if (gameState.currentLevel === 4) {
-                        const itemType = item.element.dataset.type;
-                        if (itemType === 'sunglasses') {
-                            collectItem(item);
-                        }
-                    } else {
-                        collectItem(item);
-                    }
-                }
+                // Reset counters
+                gameState.foundItems = 0;
+                gameState.hintsUsed = 0;
+                
+                // Go back to start screen
+                gameState.currentScene = 'start-screen';
+                
+                // Hide all scenes
+                document.querySelectorAll('.scene').forEach(scene => {
+                    scene.classList.remove('active');
+                });
+                
+                // Show start screen
+                document.querySelector('.start-screen').classList.add('active');
+                
+                // Reset progress bar
+                progressBar.style.width = '0%';
+                
+                // Reset button text
+                nextBtn.textContent = 'Next Challenge';
             }
-        }
-
-        // Collect item
-        function collectItem(item) {
-            item.collected = true;
-            item.element.style.opacity = '0.3';
-            gameState.collected++;
-            scoreElement.textContent = gameState.collected;
-            
-            // Play collect sound (placeholder)
-            const collectSound = new Audio('data:audio/wav;base64,UklGRl9vT19WAVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU......');
-            collectSound.volume = 0.3;
-            collectSound.play().catch(e => console.log('Audio play failed:', e));
-        }
-
-        // Adjust for screen size
-        function adjustForScreenSize() {
-            const width = window.innerWidth;
-            const height = window.innerHeight;
-            
-            // Scale game elements
-            const scaleFactor = Math.min(width / 800, height / 600);
-            
-            // Adjust player size
-            player.style.fontSize = `${Math.max(2, 2 * scaleFactor)}rem`;
-            gameState.player.width = Math.max(40, 40 * scaleFactor);
-            gameState.player.height = Math.max(40, 40 * scaleFactor);
-            
-            // Adjust collectibles
-            document.querySelectorAll('.collectible').forEach(el => {
-                el.style.fontSize = `${Math.max(1.5, 1.5 * scaleFactor)}rem`;
-            });
-            
-            // Adjust basket (if exists)
-            const basket = document.querySelector('.basket');
-            if (basket) {
-                basket.style.fontSize = `${Math.max(3, 3 * scaleFactor)}rem`;
-            }
-        }
-
-        // Initialize the game when the page loads
-        window.addEventListener('load', initGame);
+        });
     </script>
 </body>
 </html>
