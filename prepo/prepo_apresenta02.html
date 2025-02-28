@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preposição: IN</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            min-height: 100vh;
+            font-family: 'Arial Rounded MT Bold', Arial, sans-serif;
+        }
+        .content-wrapper {
+            padding: 15px;
+        }
+        h1 { 
+            color: #007bff; 
+            font-size: 1.7em;
+            margin: 15px 0;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        .topic {
+            color: #343a40;
+            font-weight: 700;
+            margin: 20px 0;
+            padding-left: 15px;
+            border-left: 4px solid #007bff;
+        }
+        .subtopic {
+            color: #495057;
+            margin: 15px 0 10px 30px;
+            font-size: 0.95em;
+            position: relative;
+            line-height: 1.4;
+        }
+        .subtopic::before {
+            content: "📍";
+            position: absolute;
+            left: -25px;
+            font-size: 1.2em;
+        }
+        .example {
+            color: #28a745;
+            background-color: #e8f5e9;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 15px 0 20px 40px;
+            font-size: 0.9em;
+        }
+        .example-item {
+            display: block;
+            margin: 8px 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <img src="logoWTS.png" alt="World Teaching School Logo" class="logo" style="height: 40px;">
+        </div>
+        <div class="header-content">
+            <div class="course-info" style="color: #6c757d; font-size: 0.9em;">
+                <span class="course-name">Inglês Básico I</span> - 
+                <span class="module-name">Preposições</span>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="content-wrapper">
+            <div class="content">
+                <h1>Preposição: IN</h1>
+
+                <div id="topics-container">
+                    <!-- Tópico Principal -->
+                    <div class="topic">Quando usar:</div>
+                    
+                    <div class="subtopic">
+                        O "in" é usado para designar algo dentro de um determinado espaço; não necessariamente um espaço físico.<br>Para facilitar, usamos o "in" quando estamos nos referindo a:<br>
+                        • Cidades, estados e países<br>
+                        • Anos (sem data específica)<br>
+                        • Meses (sem data específica)<br>
+                        • Estações do ano<br>
+                        • etc.
+                    </div>
+
+                    <!-- Exemplos -->
+                    <div class="topic">Exemplos:</div>
+                    <div class="example">
+                        <span class="example-item">In Paris 🌆</span>
+                        <span class="example-item">In France 🇫🇷</span>
+                        <span class="example-item">In May 📅</span>
+                        <span class="example-item">In April 🌸</span>
+                        <span class="example-item">In Summer ☀️</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- Barra de navegação -->
+    <div class="navigation-bar">
+        <button class="nav-button prev-button" onclick="prevPage()">
+            <img src="volta.png" alt="Voltar">
+        </button>
+
+        <div class="progress-container">
+            <span class="progress-text" style="color: #007bff;">██▒▒</span>
+        </div>
+
+        <button class="nav-button next-button" onclick="nextPage()">
+            <img src="avanca.png" alt="Avançar">
+        </button>
+    </div>
+    <footer>
+        <p>© 2025 World Teaching School</p>
+    </footer>
+
+    <script>
+        // Configuração inicial
+        const moduleName = "Preposições";
+        document.getElementById('module-name').textContent = moduleName;
+
+        function nextPage() {
+            window.location.href = 'prepo_apresenta03.html';
+        }
+
+        function prevPage() {
+            window.location.href = 'prepo_apresenta01.html';
+        }
+
+        // Você pode usar JavaScript para adicionar conteúdo dinamicamente 
+        // aos containers de tópicos, traduções, exemplos, tabelas e imagens.
+
+        // Exemplo de como adicionar um tópico dinamicamente:
+        // const topicsContainer = document.getElementById('topics-container');
+        // const newTopic = document.createElement('p');
+        // newTopic.classList.add('topic'); // Add the CSS class
+        // newTopic.textContent = 'Novo Tópico';
+        // topicsContainer.appendChild(newTopic);
+    </script>
+</body>
+</html>
+

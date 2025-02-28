@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Template Apresentação Inglês</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Mobile First */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #f0f4ff 0%, #f5f0ff 100%);
+            min-height: 100vh;
+            padding: 15px;
+        }
+
+        .slide-container {
+            background: rgba(255, 255, 255, 0.97);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            max-width: 1200px;
+            width: 95%;
+            margin: 20px auto;
+            position: relative;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .title {
+            color: #1a237e;
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            line-height: 1.3;
+        }
+
+        .image-container {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .image-container:hover {
+            transform: translateY(-5px);
+        }
+
+        .calendar-image {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 15px;
+        }
+
+        .image-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+            padding: 20px;
+            color: white;
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .decorative-icons {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+        }
+
+        .icon-circle {
+            background: #00796b;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .icon-circle i {
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        /* Animação */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .image-container {
+            animation: slideIn 0.8s ease-out forwards;
+        }
+
+        /* Desktop */
+        @media (min-width: 768px) {
+            .title {
+                font-size: 2.5rem;
+                margin-bottom: 40px;
+            }
+
+            .image-caption {
+                font-size: 1.5rem;
+                padding: 30px;
+            }
+
+            .icon-circle {
+                width: 60px;
+                height: 60px;
+            }
+
+            .icon-circle i {
+                font-size: 2rem;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .slide-container {
+                padding: 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <img src="logoWTS.png" alt="World Teaching School Logo" class="logo">
+        </div>
+        <div class="header-content">
+            <div class="course-info">
+                <span class="course-name">Inglês Básico I</span> - 
+                <span class="module-name" id="module-name">Adjetivos e Artigos</span>
+            </div>
+        </div>
+    </header>    
+    
+    <main>
+        <div class="content-wrapper">
+            <div class="slide-container">
+                <!-- div class="header">
+                    <h1 class="title">Estações<br><span style="font-size: 0.7em;">Summer - Verão</span><br><span style="font-size: 0.7em;">Autumn - Outono</span><br><span style="font-size: 0.7em;">Winter - Inverno</span><br><span style="font-size: 0.7em;">Spring - primavera</span></h1>
+                </div -->
+                <div class="image-container">
+                    <img src="aa_slide02.png" alt="Posicionamento do Adjetivo" class="calendar-image">
+                    <!-- Optional: Uncomment to add caption -->
+                    <!-- <div class="image-caption">Days of the Week</div> -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="navigation-bar">
+        <button class="nav-button prev-button" onclick="prevPage()">
+            <img src="volta.png" alt="Voltar">
+        </button>
+
+        <div class="progress-container">
+            <span class="progress-text" style="color: #007bff;">██▒▒▒▒</span>
+        </div>
+
+        <button class="nav-button next-button" onclick="nextPage()">
+            <img src="avanca.png" alt="Avançar">
+        </button>
+    </div>
+    
+    <footer>
+        <p>© 2025 World Teaching School</p>
+    </footer>
+
+    <script>
+        // Configuração inicial
+        const moduleName = "Months";
+        document.getElementById('module-name').textContent = moduleName;
+
+        let currentPage = 4;
+        const totalPages = 10;
+
+        function nextPage() {
+            window.location.href = 'aa_apresenta03.html';
+        }
+
+        function prevPage() {
+            window.location.href = './aa_apresenta01.html';
+        }
+
+        // Efeito de parallax suave
+        window.addEventListener('scroll', () => {
+            const imageContainer = document.querySelector('.image-container');
+            const scrolled = window.pageYOffset;
+            imageContainer.style.transform = `translateY(${scrolled * 0.1}px)`;
+        });
+
+        // Ativa animação quando a imagem entra na viewport
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = "1";
+                }
+            });
+        });
+
+        observer.observe(document.querySelector('.image-container'));
+    </script>
+</body>
+</html>

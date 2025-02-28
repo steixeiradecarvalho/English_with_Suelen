@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adjetivos e Artigos</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Estilos otimizados para mobile */
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            min-height: 100vh;
+            font-family: 'Arial Rounded MT Bold', Arial, sans-serif;
+        }
+        .content-wrapper {
+            padding: 15px;
+        }
+        h1 { 
+            color: #007bff; 
+            font-size: 1.7em;
+            margin: 15px 0;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        .topic {
+            color: #343a40;
+            font-weight: 700;
+            margin: 15px 0;
+            padding-left: 10px;
+            border-left: 4px solid #007bff;
+        }
+        .subtopic {
+            color: #495057;
+            margin: 10px 0 10px 30px;
+            font-size: 0.95em;
+            position: relative;
+        }
+        .subtopic::before {
+            content: "•";
+            color: #28a745;
+            position: absolute;
+            left: -15px;
+            font-size: 1.4em;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <img src="logoWTS.png" alt="World Teaching School Logo" class="logo" style="height: 40px;">
+        </div>
+        <div class="header-content">
+            <div class="course-info" style="color: #6c757d; font-size: 0.9em;">
+                <span class="course-name">Inglês Básico I</span> - 
+                <span class="module-name">Adjetivos e Artigos</span>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="content-wrapper">
+            <div class="content">
+                <h1>Artigos definidos e indefinidos<br> </h1> 
+                <h1 style="color: rgb(255, 0, 0);">Definite Article and Indefinite Article</h1>
+
+                <div id="topics-container">
+                    
+                    <p class="topic"><br>A função dos artigos indefinidos é indicar que o substantivo é vago, não definido.</p>
+                    
+                    <p class="topic"><br>O significado deles: A / An - Um ou Uma - Sempre no Singular.</p>
+                </div>
+
+                <!-- Espaço reservado para exemplos caso queira adicionar depois -->
+                <div id="examples-container" style="margin-top: 20px;">
+                    <!-- Exemplos poderiam ser adicionados aqui com classe .example -->
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- Barra de navegação -->
+    <div class="navigation-bar">
+        <button class="nav-button prev-button" onclick="prevPage()">
+            <img src="volta.png" alt="Voltar">
+        </button>
+
+        <div class="progress-container">
+            <span class="progress-text" style="color: #007bff;">█████▒</span>
+        </div>
+
+        <button class="nav-button next-button" onclick="nextPage()">
+            <img src="avanca.png" alt="Avançar">
+        </button>
+    </div>
+    
+    <footer>
+        <p>© 2025 World Teaching School</p>
+    </footer>
+
+    <script>
+        // Configuração inicial
+        const moduleName = "Adjetivos";
+        document.getElementById('module-name').textContent = moduleName;
+
+        let currentPage = 4;
+        const totalPages = 10;
+
+        function nextPage() {
+            window.location.href = 'aa_apresenta06.html';
+        }
+
+        function prevPage() {
+            window.location.href = './aa_apresenta04.html';
+        }
+
+        // Efeito de parallax suave
+        window.addEventListener('scroll', () => {
+            const imageContainer = document.querySelector('.image-container');
+            const scrolled = window.pageYOffset;
+            imageContainer.style.transform = `translateY(${scrolled * 0.1}px)`;
+        });
+
+        // Ativa animação quando a imagem entra na viewport
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = "1";
+                }
+            });
+        });
+
+        observer.observe(document.querySelector('.image-container'));
+    </script>
+</body>
+</html>
