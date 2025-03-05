@@ -1,0 +1,21 @@
+verb_ex03_He_closes_the_door.mp3
+verb_ex03_I_do_my_homework.mp3
+verb_ex03_I_have_a_cat.mp3
+verb_ex03_I_know_Japan.mp3
+verb_ex03_I_start_an_English_course.mp3
+verb_ex03_John_eats_a_cake.mp3
+verb_ex03_Mary and John speak English.mp3
+verb_ex03_Mary_does_her_homework.mp3
+verb_ex03_Mary_plays_piano.mp3
+verb_ex03_She_gets_a_taxi.mp3
+verb_ex03_She has a new car.mp3
+verb_ex03_She_studies_history.mp3
+verb_ex03_She_thinks_a_lot.mp3
+verb_ex03_We_speak_English.mp3
+verb_ex03_We_travel_to_Brazil.mp3
+verb_ex03_You_drive_a_beautiful_car.mp3
+verb_ex03_You_go_to_the_beach.mp3
+verb_ex03_You_like_Japanese_food.mp3
+verb_ex03_You_love_your_brother.mp3
+verb_ex03_You read a book.mp3
+y.txt

@@ -167,7 +167,7 @@
 <body>
     <div class="game-container">
         <h1 class="game-title">Spatial Greeting Rush</h1>  <!-- Título -->
-        <p class="game-instructions">Cumprimente os alienígenas. Complete 20 acertos em 90 segundos</p> <!-- Instruções -->
+        <p class="game-instructions">Cumprimente os alienígenas. Complete 10 acertos em 180 segundos</p> <!-- Instruções -->
 
         <div class="game-header">
             <span id="score">⭐ 0</span>
@@ -192,10 +192,20 @@
         // Dados incorporados diretamente para evitar problemas de carregamento
         const greetingsData = [
             { prompt: "Hello!", correctAnswer: "Hi there!", options: ["Goodbye!", "Hi there!", "What's up?", "Good night!"] },
+            { prompt: "Hi!", correctAnswer: "Hello!", options: ["Bye!", "Hello!", "Good evening!", "See you tomorrow!"] },
             { prompt: "Good morning!", correctAnswer: "Morning! How are you?", options: ["Good night!", "See you later!", "Morning! How are you?", "What's your name?"] },
-            { prompt: "How are you?", correctAnswer: "I'm fine, thanks!", options: ["I'm fine, thanks!", "My name is John.", "Nice to meet you.", "Goodbye!"] },
-            { prompt: "Nice to meet you!", correctAnswer: "Nice to meet you too!", options: ["Goodbye!", "What's your name?", "Nice to meet you too!", "I don't know."] },
-            { prompt: "See you later!", correctAnswer: "See you!", options: ["Hello!", "Good morning!", "What's up?", "See you!"] }
+            { prompt: "Good afternoon!", correctAnswer: "Good afternoon! How’s it going?", options: ["Good night!", "See you soon!", "Good afternoon! How’s it going?", "Bye bye!"] },
+            { prompt: "Good evening!", correctAnswer: "Good evening to you!", options: ["Good morning!", "Bye!", "Good evening to you!", "How are you going?"] },
+            { prompt: "Good night!", correctAnswer: "Sweet dreams!", options: ["Hello!", "See you!", "Sweet dreams!", "Good afternoon!"] },
+            { prompt: "Bye!", correctAnswer: "Goodbye!", options: ["Hi there!", "Goodbye!", "How are you?", "Good evening!"] },
+            { prompt: "Bye bye!", correctAnswer: "See you later!", options: ["Good morning!", "See you later!", "Hi!", "I’m fine, thanks!"] },
+            { prompt: "See you!", correctAnswer: "See you soon!", options: ["Good night!", "What’s up?", "See you soon!", "Hello!"] },
+            { prompt: "See you tomorrow!", correctAnswer: "Until tomorrow!", options: ["Good evening!", "Until tomorrow!", "Bye bye!", "How are you?"] },
+            { prompt: "See you soon!", correctAnswer: "Looking forward to it!", options: ["Goodbye!", "Good afternoon!", "Looking forward to it!", "Nice to meet you!"] },
+            { prompt: "How are you?", correctAnswer: "I’m fine, thanks!", options: ["I’m fine, thanks!", "My name is John.", "Nice to meet you.", "Goodbye!"] },
+            { prompt: "How are you going?", correctAnswer: "I’m good, you?", options: ["See you tomorrow!", "I’m good, you?", "Good night!", "Hi there!"] },
+            { prompt: "Nice to meet you!", correctAnswer: "Nice to meet you too!", options: ["Goodbye!", "What’s your name?", "Nice to meet you too!", "I don’t know."] },
+            { prompt: "See you later!", correctAnswer: "See you!", options: ["Hello!", "Good morning!", "What’s up?", "See you!"] }
         ];
 
         class GreetingRush {
@@ -214,7 +224,7 @@
                 
                 this.gameState = {
                     score: 0,
-                    timeLeft: 90,
+                    timeLeft: 180,
                     interactions: 0,    // Manteremos essa variável, mas para outro propósito
                     correctCount: 0,    // Esta será a variável importante para contagem
                     activeAliens: [],
@@ -254,7 +264,7 @@
                 
                 // Resetar estado do jogo
                 this.gameState.score = 0;
-                this.gameState.timeLeft = 90;
+                this.gameState.timeLeft = 180;
                 this.gameState.interactions = 0;
                 this.gameState.correctCount = 0;
                 this.gameState.activeAliens = [];
@@ -269,7 +279,7 @@
                 this.startTimer();
                 
                 // Iniciar geração de aliens
-                this.spawnAlienInterval = setInterval(() => this.spawnAlien(), 3000);
+                this.spawnAlienInterval = setInterval(() => this.spawnAlien(), 4000); // CONFIG ***************
                 
                 // Spawn do primeiro alien imediatamente
                 setTimeout(() => this.spawnAlien(), 500);
@@ -303,7 +313,7 @@
             }
 
             spawnAlien() {
-                if (this.gameState.activeAliens.length >= 5) return;
+                if (this.gameState.activeAliens.length >= 2) return; // CONFIG ******************
                 // Verificar se temos dados de saudações
                 if (!this.greetingsData || this.greetingsData.length === 0) {
                     console.error("Dados de saudações não disponíveis");
@@ -327,7 +337,7 @@
                 
                 const animation = alienContainer.animate(
                     [{ top: alienContainer.style.top }, { top: '100%' }],
-                    { duration: 5000, easing: 'linear' }
+                    { duration: 30000, easing: 'linear' }                  // CONFIG ****************
                 );
 
                 const alienData = {
@@ -376,13 +386,13 @@
                 // Mostrar opções de resposta
                 this.showAnswerOptions(question);
                 
-                // Remover alien após 5 segundos se não for clicado
+                // Remover alien após 25 segundos se não for clicado
                 setTimeout(() => {
                     if (this.gameArea.contains(alienContainer)) {
                         alienContainer.remove();
                         this.gameState.activeAliens = this.gameState.activeAliens.filter(a => a.element !== alienContainer);
                     }
-                }, 5000);
+                }, 45000);  // CONFIG ***********************************************
             }
 
             handleAlienReachBottom(alienData) {
@@ -452,7 +462,7 @@
                     this.showFeedback(true);
                     
                     // Verificar se atingiu 20 acertos
-                    if (this.gameState.correctCount >= 20) {
+                    if (this.gameState.correctCount >= 10) { // CONFIG *******************
                         // Adicionando method call explícito
                         this.triggerConfetti();
                         // Finalizando o jogo após atingir 20 acertos
@@ -502,7 +512,7 @@
                 this.scoreElement.textContent = `⭐ ${this.gameState.score}`;
                 this.timerElement.textContent = `⏱️ ${this.gameState.timeLeft}s`;
                 // Agora mostramos os acertos, não as interações
-                this.interactionsElement.textContent = `📝 ${this.gameState.correctCount}/20`;
+                this.interactionsElement.textContent = `📝 ${this.gameState.correctCount}/10`;
             }
             triggerConfetti() {
                 const count = 200;

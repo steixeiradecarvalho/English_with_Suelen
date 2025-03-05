@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Course - Greetings Challenge</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Estilos Base (Mobile-First) */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            color: #343a40;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+            font-size: 16px;
+        }
+
+        .container {
+            width: 100%;
+            margin: 0 auto;
+            padding: 10px;
+            flex: 1;
+        }
+
+        h1, h2, h3 {
+            color: #007bff;
+            font-size: 1.5rem;
+        }
+
+        .exercise-box {
+            background-color: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 15px;
+        }
+
+        .exercise-header {
+            margin-bottom: 15px;
+        }
+
+        .exercise-tips {
+            margin-bottom: 15px;
+        }
+
+        .tip-item {
+            color: #6c757d;
+            font-style: italic;
+            margin-bottom: 8px;
+            padding-left: 10px;
+        }
+
+        .question {
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        .question-content {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .input-field {
+            padding: 8px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            transition: border-color 0.3s, background-color 0.3s;
+            width: 100%;
+            min-height: 44px;
+            font-size: 1rem;
+            max-width: 250px;
+        }
+
+        .input-field:focus {
+            border-color: #80bdff;
+            outline: none;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+        .input-field.correct {
+            background-color: #d4edda;
+            border-color: #28a745;
+        }
+
+        .input-field.incorrect {
+            background-color: #f8d7da;
+            border-color: #dc3545;
+        }
+
+        .audio-container, .hint-container, .translation-container {
+            display: inline-block;
+            position: relative;
+            margin-left: 5px;
+        }
+
+        .hint, .translation {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: #f8f9fa;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            padding: 5px 10px;
+            z-index: 100;
+            font-size: 0.9rem;
+        }
+
+        .audio-icon, .hint-icon, .translation-icon {
+            cursor: pointer;
+            color: #007bff;
+            font-size: 1.2rem;
+        }
+
+        .result-icon {
+            margin-left: 10px;
+            font-size: 1.2rem;
+        }
+
+        .results {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+            background-color: #f2f2f2;
+            font-size: 0.9rem;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+
+        .button {
+            background-color: #007bff;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.3s;
+            width: 100%;
+            max-width: 150px;
+            min-height: 44px;
+            font-size: 1rem;
+        }
+
+        .button:hover {
+            background-color: #0056b3;
+        }
+
+        footer {
+            background-color: #343a40;
+            color: white;
+            text-align: center;
+            padding: 8px 0;
+            font-size: 0.9rem;
+        }
+
+        /* Ajustes para Telas Maiores */
+        @media (min-width: 768px) {
+            .container {
+                max-width: 800px;
+                padding: 20px;
+            }
+
+            h1, h2, h3 {
+                font-size: 2rem;
+            }
+
+            .exercise-box {
+                padding: 20px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                margin-bottom: 20px;
+            }
+
+            .input-field {
+                width: 300px;
+            }
+
+            .button {
+                width: auto;
+                padding: 10px 20px;
+            }
+
+            .question-content {
+                flex-wrap: nowrap;
+                gap: 10px;
+            }
+        }
+
+        @media (hover: none) {
+            .button:hover {
+                background-color: #007bff;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="exercise-box">
+            <div class="exercise-header">
+                <h2 id="exercise-title">Greetings Challenge</h2>
+                <p id="exercise-description">Listen to the audio and write the full sentence in English. Get instant feedback as you type!</p>
+                <p id="hint-instruction">Click 📝 for the sentence in English, 🌐 for the translation in Portuguese, or 🎵 to hear it again.</p>
+            </div>
+
+            <div class="exercise-tips" id="exercise-tips"></div>
+            <div id="questions-container"></div>
+
+            <button class="button" onclick="showResults()">Show Final Results</button>
+            <div id="result" class="results"></div>
+        </div>
+
+        <div class="navigation">
+            <a href="../index.html" class="button">Home</a>
+        </div>
+    </div>
+
+    <script>
+        const exerciseConfig = {
+            title: "Greetings Challenge",
+            description: "Ouça o áudio e esceva a sentença em inglês.",
+            hintInstruction: "Clique em 📝 para ver o verbo em Inglês, 🌐 para a tradução em Portugês, ou 🎵 para ouvir a sentença.",
+            tips: [
+                { text: "", emphasis: true },
+                { text: "", emphasis: false }
+            ],
+            questions: [
+                { id: "q1", correctAnswer: "How are you?", translation: "Como você está?", audio: "./audio/greet_ex01_how_are_you.mp3" },
+                { id: "q2", correctAnswer: "Where are you from?", translation: "De onde você é?", audio: "./audio/greet_ex01_where_are_you_from.mp3" },
+                { id: "q3", correctAnswer: "What is your name?", translation: "Qual é o seu nome?", audio: "./audio/greet_ex01_What_is_your_name.mp3" },
+                { id: "q4", correctAnswer: "I am from Brazil.", translation: "Eu sou do Brasil.", audio: "./audio/greet_ex01_I_am_from_Brazil.mp3" },
+                { id: "q5", correctAnswer: "I am good.", translation: "Eu estou bem.", audio: "./audio/greet_ex01_I_am_good.mp3" },
+                { id: "q6", correctAnswer: "See you soon.", translation: "Até logo.", audio: "./audio/greet_ex01_See_you_soon.mp3" },
+                { id: "q7", correctAnswer: "Nice to meet you.", translation: "Prazer em conhecê-lo.", audio: "./audio/greet_ex01_Nice_to_meet_you.mp3" },
+                { id: "q8", correctAnswer: "Nice to meet you, too. My name is John.", translation: "Prazer em conhecê-lo também. Meu nome é John.", audio: "./audio/greet_ex01_Nice_to_meet_you_too_My_name_is_John.mp3" }
+            ]
+        };
+
+        function initializeExercise(config) {
+            document.getElementById("exercise-title").textContent = config.title;
+            document.getElementById("exercise-description").textContent = config.description;
+            document.getElementById("hint-instruction").textContent = config.hintInstruction;
+
+            const tipsContainer = document.getElementById("exercise-tips");
+            config.tips.forEach(tip => {
+                const tipElement = document.createElement("div");
+                tipElement.className = "tip-item";
+                tipElement.innerHTML = tip.emphasis ? `<strong>${tip.text}</strong>` : tip.text;
+                tipsContainer.appendChild(tipElement);
+            });
+
+            const questionsContainer = document.getElementById("questions-container");
+            config.questions.forEach(question => {
+                const questionElement = createQuestionElement(question);
+                questionsContainer.appendChild(questionElement);
+            });
+        }
+
+        function createQuestionElement(question) {
+            const div = document.createElement("div");
+            div.className = "question";
+            
+            const content = document.createElement("div");
+            content.className = "question-content";
+
+            const input = document.createElement("input");
+            input.className = "input-field";
+            input.id = question.id;
+            input.type = "text";
+            input.oninput = () => checkAnswer(question);
+
+            const audioContainer = createAudioElement(question.audio);
+            const hintContainer = createHintElement(question.correctAnswer);
+            const translationContainer = createTranslationElement(question.translation);
+            const resultIcon = document.createElement("span");
+            resultIcon.className = "result-icon";
+            resultIcon.id = `${question.id}-result`;
+
+            content.appendChild(input);
+            content.appendChild(audioContainer);
+            content.appendChild(hintContainer);
+            content.appendChild(translationContainer);
+            content.appendChild(resultIcon);
+            div.appendChild(content);
+
+            return div;
+        }
+
+        function createAudioElement(audioSrc) {
+            const container = document.createElement("div");
+            container.className = "audio-container";
+
+            const icon = document.createElement("span");
+            icon.className = "audio-icon";
+            icon.textContent = "🎵";
+            icon.tabIndex = "0";
+
+            const audio = document.createElement("audio");
+            audio.src = audioSrc;
+
+            container.appendChild(icon);
+
+            icon.addEventListener("click", () => audio.play());
+            icon.addEventListener("keydown", (e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    audio.play();
+                }
+            });
+
+            return container;
+        }
+
+        function createHintElement(sentence) {
+            const container = document.createElement("div");
+            container.className = "hint-container";
+
+            const icon = document.createElement("span");
+            icon.className = "hint-icon";
+            icon.textContent = "📝";
+            icon.tabIndex = "0";
+
+            const hint = document.createElement("span");
+            hint.className = "hint";
+            hint.textContent = sentence;
+
+            container.appendChild(icon);
+            container.appendChild(hint);
+
+            return container;
+        }
+
+        function createTranslationElement(translationText) {
+            const container = document.createElement("div");
+            container.className = "translation-container";
+
+            const icon = document.createElement("span");
+            icon.className = "translation-icon";
+            icon.textContent = "🌐";
+            icon.tabIndex = "0";
+
+            const translation = document.createElement("span");
+            translation.className = "translation";
+            translation.textContent = translationText;
+
+            container.appendChild(icon);
+            container.appendChild(translation);
+
+            return container;
+        }
+
+        function checkAnswer(question) {
+            const userAnswer = document.getElementById(question.id).value.trim().toLowerCase().replace(/[.,?!]/g, '');
+            const correctAnswerNormalized = question.correctAnswer.toLowerCase().replace(/[.,?!]/g, '');
+            const inputElement = document.getElementById(question.id);
+            const resultIcon = document.getElementById(`${question.id}-result`);
+
+            if (userAnswer === correctAnswerNormalized) {
+                inputElement.classList.add("correct");
+                inputElement.classList.remove("incorrect");
+                resultIcon.textContent = "✅";
+            } else if (userAnswer === "") {
+                inputElement.classList.remove("correct");
+                inputElement.classList.remove("incorrect");
+                resultIcon.textContent = "";
+            } else {
+                inputElement.classList.add("incorrect");
+                inputElement.classList.remove("correct");
+                resultIcon.textContent = "❌";
+            }
+        }
+
+        function showResults() {
+            let score = 0;
+            const questions = exerciseConfig.questions;
+            
+            questions.forEach(question => {
+                const userAnswer = document.getElementById(question.id).value.trim().toLowerCase().replace(/[.,?!]/g, '');
+                const correctAnswerNormalized = question.correctAnswer.toLowerCase().replace(/[.,?!]/g, '');
+                if (userAnswer === correctAnswerNormalized) {
+                    score++;
+                }
+            });
+
+            displayResults(score, questions.length);
+        }
+
+        function displayResults(score, total) {
+            const resultDiv = document.getElementById("result");
+            resultDiv.style.display = "block";
+            resultDiv.innerHTML = `
+                <h3>Your result: ${score}/${total}</h3>
+                <p>Correct answers:</p>
+                <ul>
+                    ${exerciseConfig.questions.map(q => 
+                        `<li><strong>${q.correctAnswer}</strong> (${q.translation})</li>`
+                    ).join("")}
+                </ul>
+            `;
+        }
+
+        function initializeHintHandlers() {
+            // Handlers para o ícone de frase em inglês
+            document.querySelectorAll(".hint-icon").forEach(icon => {
+                const showHint = () => {
+                    const hint = icon.nextElementSibling;
+                    if (hint) hint.style.display = "block";
+                };
+                
+                const hideHint = () => {
+                    const hint = icon.nextElementSibling;
+                    if (hint) hint.style.display = "none";
+                };
+
+                icon.addEventListener("mousedown", e => {
+                    e.preventDefault();
+                    showHint();
+                });
+                icon.addEventListener("mouseup", hideHint);
+                icon.addEventListener("mouseleave", hideHint);
+
+                icon.addEventListener("keydown", e => {
+                    if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        showHint();
+                    }
+                });
+                icon.addEventListener("keyup", e => {
+                    if (e.key === "Enter" || e.key === " ") {
+                        hideHint();
+                    }
+                });
+
+                icon.addEventListener("touchstart", e => {
+                    e.preventDefault();
+                    showHint();
+                }, { passive: false });
+                icon.addEventListener("touchend", hideHint);
+                icon.addEventListener("touchcancel", hideHint);
+            });
+
+            // Handlers para o ícone de tradução
+            document.querySelectorAll(".translation-icon").forEach(icon => {
+                const showTranslation = () => {
+                    const translation = icon.nextElementSibling;
+                    if (translation) translation.style.display = "block";
+                };
+                
+                const hideTranslation = () => {
+                    const translation = icon.nextElementSibling;
+                    if (translation) translation.style.display = "none";
+                };
+
+                icon.addEventListener("mousedown", e => {
+                    e.preventDefault();
+                    showTranslation();
+                });
+                icon.addEventListener("mouseup", hideTranslation);
+                icon.addEventListener("mouseleave", hideTranslation);
+
+                icon.addEventListener("keydown", e => {
+                    if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        showTranslation();
+                    }
+                });
+                icon.addEventListener("keyup", e => {
+                    if (e.key === "Enter" || e.key === " ") {
+                        hideTranslation();
+                    }
+                });
+
+                icon.addEventListener("touchstart", e => {
+                    e.preventDefault();
+                    showTranslation();
+                }, { passive: false });
+                icon.addEventListener("touchend", hideTranslation);
+                icon.addEventListener("touchcancel", hideTranslation);
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            initializeExercise(exerciseConfig);
+            initializeHintHandlers();
+        });
+    </script>
+
+    <footer>
+        © 2025 Word Teaching School
+    </footer>
+</body>
+</html>

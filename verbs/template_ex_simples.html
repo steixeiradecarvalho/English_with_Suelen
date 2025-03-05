@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Course - Exercise Template</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            color: #343a40;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            flex: 1;
+        }
+
+        h1, h2, h3 {
+            color: #007bff;
+        }
+
+        /* Common Elements */
+        .exercise-box {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        /* Exercise Components */
+        .exercise-header {
+            margin-bottom: 20px;
+        }
+
+        .exercise-instructions {
+            margin-bottom: 15px;
+        }
+
+        .exercise-tips {
+            margin-bottom: 20px;
+        }
+
+        .tip-item {
+            color: #6c757d;
+            font-style: italic;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        /* Question Styles */
+        .question {
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .question-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Input Types */
+        .input-field {
+            padding: 8px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            transition: border-color 0.3s;
+
+            min-height: 48px; /* Tamanho mínimo para touch */
+            font-size: 1rem; 
+        }
+
+        .input-field:focus {
+            border-color: #80bdff;
+            outline: none;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+        /* Translation Component */
+        .translation-container {
+            display: inline-block;
+            position: relative;
+            margin-left: 10px;
+        }
+
+        .translation {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: #f8f9fa;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            padding: 5px 10px;
+            z-index: 100;
+        }
+
+        .translation-icon {
+            cursor: pointer;
+            color: #007bff;
+        }
+
+        /* Results Section */
+        .results {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            display: none;
+            background-color: #f2f2f2;
+        }
+
+        .correct { color: #28a745; }
+        .incorrect { color: #dc3545; }
+
+        /* Navigation */
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.3s;
+            min-width: 120px;
+            min-height: 48px;
+        }
+
+        .button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #343a40;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            margin-top: 20px;
+        }
+
+        /* Media Queries para Telas Maiores */
+        @media (min-width: 768px) {
+        .container {
+            padding: 40px;
+        }
+        
+            .input-field {
+                width: 200px; /* Ajuste progressivo */
+            }
+        }
+
+        /* Remover hover em dispositivos touch */
+        @media (hover: none) {
+            .button:hover {
+                background-color: #007bff; /* Mantém cor original */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="exercise-box">
+            <!-- Exercise Header -->
+            <div class="exercise-header">
+                <h2 id="exercise-title">Exercise Title</h2>
+                <p id="exercise-description">Exercise description goes here.</p>
+                <p id="translation-instruction">Click the language icon for translation</p>
+            </div>
+
+            <!-- Exercise Tips/Rules -->
+            <div class="exercise-tips" id="exercise-tips">
+                <!-- Tips will be dynamically inserted here -->
+            </div>
+
+            <!-- Questions Container -->
+            <div id="questions-container">
+                <!-- Questions will be dynamically inserted here -->
+            </div>
+
+            <!-- Controls -->
+            <button class="button" onclick="checkAnswers()">Check answers</button>
+            
+            <!-- Results -->
+            <div id="result" class="results"></div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="navigation">
+            <a href="../index.html" class="button">Next Exercise</a>
+        </div>
+    </div>
+
+    <script>
+        // Exercise Configuration Object
+        const exerciseConfig = {
+            title: "Exercise Title",
+            description: "Exercise description",
+            translationInstruction: "Click the icon for translation",
+            tips: [
+                { text: "Tip 1", emphasis: false },
+                { text: "Tip 2", emphasis: true }
+            ],
+            questions: [
+                {
+                    id: "q1",
+                    text: "Question text",
+                    translation: "Question translation",
+                    correctAnswer: "correct answer",
+                    type: "text" // or "select" or other input types
+                }
+                // Add more questions as needed
+            ]
+        };
+
+        // Initialize Exercise
+        function initializeExercise(config) {
+            // Set header content
+            document.getElementById("exercise-title").textContent = config.title;
+            document.getElementById("exercise-description").textContent = config.description;
+            
+            // Generate tips
+            const tipsContainer = document.getElementById("exercise-tips");
+            config.tips.forEach(tip => {
+                const tipElement = document.createElement("div");
+                tipElement.className = "tip-item";
+                tipElement.innerHTML = tip.emphasis ? `<strong>${tip.text}</strong>` : tip.text;
+                tipsContainer.appendChild(tipElement);
+            });
+
+            // Generate questions
+            const questionsContainer = document.getElementById("questions-container");
+            config.questions.forEach(question => {
+                const questionElement = createQuestionElement(question);
+                questionsContainer.appendChild(questionElement);
+            });
+        }
+
+        // Create Question Element
+        function createQuestionElement(question) {
+            const div = document.createElement("div");
+            div.className = "question";
+            
+            const content = document.createElement("div");
+            content.className = "question-content";
+
+            // Create input based on question type
+            const input = document.createElement(question.type === "select" ? "select" : "input");
+            input.className = "input-field";
+            input.id = question.id;
+            if (question.type === "text") {
+                input.type = "text";
+            }
+
+            // Add question text
+            const textNode = document.createTextNode(` ${question.text}`);
+
+            // Add translation
+            const translationContainer = createTranslationElement(question.translation);
+
+            content.appendChild(input);
+            content.appendChild(textNode);
+            content.appendChild(translationContainer);
+            div.appendChild(content);
+
+            return div;
+        }
+
+        // Create Translation Element
+        function createTranslationElement(translationText) {
+            const container = document.createElement("div");
+            container.className = "translation-container";
+
+            const icon = document.createElement("i");
+            icon.className = "fas fa-language translation-icon";
+            icon.tabIndex = "0";
+
+            const translation = document.createElement("span");
+            translation.className = "translation";
+            translation.textContent = translationText;
+
+            container.appendChild(icon);
+            container.appendChild(translation);
+
+            return container;
+        }
+
+        // Check Answers
+        function checkAnswers() {
+            let score = 0;
+            const questions = exerciseConfig.questions;
+            
+            questions.forEach(question => {
+                const userAnswer = document.getElementById(question.id).value.trim().toLowerCase();
+                const questionElement = document.getElementById(question.id).parentElement.parentElement;
+
+                if (userAnswer === question.correctAnswer.toLowerCase()) {
+                    score++;
+                    questionElement.classList.add('correct');
+                    questionElement.classList.remove('incorrect');
+                } else {
+                    questionElement.classList.add('incorrect');
+                    questionElement.classList.remove('correct');
+                }
+            });
+
+            displayResults(score, questions.length);
+        }
+
+        // Display Results
+        function displayResults(score, total) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = `
+                <h3>Your result: ${score}/${total}</h3>
+                <p>Correct answers:</p>
+                <ul>
+                    ${exerciseConfig.questions.map(q => 
+                        `<li>${q.text}: <strong>${q.correctAnswer}</strong></li>`
+                    ).join('')}
+                </ul>
+            `;
+        }
+
+        // Initialize Translation Handlers
+        function initializeTranslationHandlers() {
+            document.querySelectorAll('.translation-icon').forEach(icon => {
+                const showTranslation = () => {
+                    const translation = icon.nextElementSibling;
+                    if (translation) translation.style.display = 'block';
+                };
+                
+                const hideTranslation = () => {
+                    const translation = icon.nextElementSibling;
+                    if (translation) translation.style.display = 'none';
+                };
+
+                // Mouse events
+                icon.addEventListener('mousedown', e => {
+                    e.preventDefault();
+                    showTranslation();
+                });
+                icon.addEventListener('mouseup', hideTranslation);
+                icon.addEventListener('mouseleave', hideTranslation);
+
+                // Keyboard support
+                icon.addEventListener('keydown', e => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        showTranslation();
+                    }
+                });
+                icon.addEventListener('keyup', e => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        hideTranslation();
+                    }
+                });
+
+                // Touch events
+                icon.addEventListener('touchstart', e => {
+                    e.preventDefault();
+                    showTranslation();
+                }, { passive: false });
+                icon.addEventListener('touchend', hideTranslation);
+                icon.addEventListener('touchcancel', hideTranslation);
+            });
+        }
+
+        // Initialize everything when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeExercise(exerciseConfig);
+            initializeTranslationHandlers();
+        });
+    </script>
+
+    <footer>
+        &copy; 2025 Word Teaching School
+    </footer>
+</body>
+</html>

@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Present Welcome</title>
+    <style>
+        body {
+            min-height: 100vh;
+            /* background: linear-gradient(135deg, #1e88e5, #0d47a1); */
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            flex-direction: column;
+            margin: 0;
+        }
+    
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            text-align: center;
+            padding: 2rem;
+            /* background: rgba(255, 255, 255, 0.1); */
+            background: linear-gradient(135deg, #1e88e5, #0d47a1);
+            border-radius: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(8px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+    
+        .container img {
+            width: 25%;
+            height: auto;
+            margin-bottom: 2rem;
+        }
+
+        .progress-container {
+            flex-grow: 1;
+            margin: 0 2rem;
+            font-family: monospace;
+            font-size: 24px;
+            text-align: center;
+            color: #e0e0e0;
+        }
+    
+        h1 {
+            font-size: 3.5rem;
+            margin-bottom: 2rem;
+            animation: fadeInDown 1s ease-out;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+    
+        .topic {
+            font-size: 1.8rem;
+            color: #90caf9;
+            line-height: 1.5;
+            max-width: 800px;
+            margin: 0 auto;
+            animation: fadeInUp 1s ease-out 0.5s both;
+        }
+    
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+    
+            .topic {
+                font-size: 1.4rem;
+            }
+        }
+    
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 2rem;
+            }
+    
+            .topic {
+                font-size: 1.2rem;
+            }
+    
+            .container {
+                padding: 1.5rem;
+            }
+        }
+    
+        @media (orientation: landscape) and (max-height: 600px) {
+            .container {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                align-items: center;
+                gap: 2rem;
+            }
+    
+            h1 {
+                margin-bottom: 0;
+            }
+        }
+        .nav-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        .navigation-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            margin: 0 auto;
+            max-width: 960px;
+            margin-bottom: 1rem;
+        }
+
+        .nav-button img {
+            width: 24px;   /* Smaller image size */
+            height: 24px;  /* Smaller image size */            
+        }
+        footer {
+            background-color: #007bff;
+            color: #ffffff;
+            text-align: center;
+            padding: 0.5rem;
+            width: 100%;
+        }
+        header {
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center horizontally within the header */            
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+            width: 100%;
+            margin: 0 auto;  /* Center the header on the page! */
+            max-width: 960px; /* Optional: limit the header width */
+            border-radius: 2rem;
+        }
+
+        .logo-container {  /* Style the logo container */
+            margin-bottom: 1rem; /* Space between logo and course info */
+        }
+
+        .header-content {
+            width: 100%;
+            text-align: center; /* Center the text */
+        }
+
+        .logo {
+            height: 50px;  /* Adjust logo size as needed */
+            display: block;  /* Ensures logo is centered correctly */
+
+        }
+        .course-name {
+            font-weight: bold;
+            color: #007bff;
+            font-size: 1.2rem;
+        }
+
+
+        .module-name {
+            color: #007bff;
+            font-size: 1.2rem;
+        }
+    </style>
+
+</head>
+<body>
+    <header>
+        <div class="logo-container">  <!-- Container for just the logo -->
+            <img src="logoWTS.png" alt="World Teaching School Logo" class="logo">
+        </div>
+        <div class="header-content">
+            <div class="course-info">
+                <span class="course-name">Inglês Básico I</span> - 
+                <span class="module-name" id="module-name">Greetings</span>
+            </div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <img src="greet_apresentaIMG.jpeg" alt="Imagem de abertura">
+        <h1>Bem-vindo ao estudo das Saudações e Cumprimentos</h1>
+        <div class="topic" style="color: #ff9800;">
+        Como cumprimentar, se apresentar e interagir de forma natural em inglês!
+        </div>        
+    </div>    
+    <div class="navigation-bar">
+        <button class="nav-button prev-button" onclick="prevPage()">
+            <!-- img src="volta.png" alt="Voltar" -->
+        </button>
+
+        <div class="progress-container">
+            <span class="progress-text" style="color: #007bff;">█▒▒▒▒▒▒</span>
+        </div>
+
+        <button class="nav-button next-button" onclick="nextPage()">
+            <img src="avanca.png" alt="Avançar">
+        </button>
+    </div>
+    <footer>
+        <p>© 2025 World Teaching School</p>
+    </footer>
+
+    <script>
+        // Configuração inicial
+        const moduleName = "Greetings";
+        document.getElementById('module-name').textContent = moduleName;
+
+        function nextPage() {
+            window.location.href = 'greet_apresenta02.html';
+        }
+
+        function prevPage() {
+            window.location.href = 'index.html';
+        }
+
+    </script>
+</body>
+</html>
+

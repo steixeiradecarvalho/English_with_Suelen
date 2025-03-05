@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GreetMaster: English Practice</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f0f0;
+            background-image: url('greet_IMG_ex02.png');
+            background-size: cover;
+            background-position: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background-color: transparent;
+            position: relative;
+            height: 100vh; /* Ocupa toda a altura da tela */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* Distribui o espaço entre cabeçalho e balões */
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            color: #333;
+        }
+
+        .header p {
+            font-size: 16px;
+            color: #555;
+        }
+
+        .dialogue-box {
+            align-self: flex-start; /* Alinha à esquerda */
+            padding: 15px 20px;
+            background-color: rgba(230, 242, 255, 0.8); /* Fundo semi-transparente */
+            border-radius: 50px 50px 50px 10px; /* Cantos arredondados */
+            max-width: 60%;
+            text-align: left;
+        }
+
+        .dialogue-text {
+            font-size: 18px;
+            color: #333;
+        }
+
+        .options {
+            align-self: flex-end; /* Alinha à direita */
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 60%;
+            
+        }
+
+        .option-btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 50px 50px 10px 50px; /* Cantos arredondados */
+            background-color: rgba(74, 144, 226, 0.8); /* Fundo semi-transparente */
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-align: right;
+        }
+
+        .option-btn:hover {
+            background-color: rgba(53, 122, 189, 0.8); /* Efeito hover semi-transparente */
+        }
+
+        .correct {
+            background-color: rgba(46, 204, 113, 0.8) !important; /* Resposta correta */
+        }
+
+        .incorrect {
+            background-color: rgba(231, 76, 60, 0.8) !important; /* Resposta incorreta */
+        }
+
+        .congratulations {
+            text-align: center;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.9); /* Fundo semi-transparente */
+            border-radius: 10px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .home-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="gameContainer">
+        <!-- Cabeçalho com nome do jogo e instruções -->
+        <div class="header">
+            <h1>GreetMaster: English Practice</h1>
+            <p>Escolha a resposta correta para continuar o diálogo. Boa sorte!</p>
+        </div>
+
+        <!-- Balão de diálogo (esquerda) -->
+        <div class="dialogue-box">
+            <p class="dialogue-text" id="dialogueText">Hello! How are you?</p>
+        </div>
+
+        <!-- Opções de resposta (direita) -->
+        <div class="options" id="optionsContainer">
+            <button class="option-btn" id="option1">Good morning.</button>
+            <button class="option-btn" id="option2">I am fine.</button>
+        </div>
+    </div>
+
+    <script>
+        const scenarios = [
+            {
+                dialogue: "Hello! How are you?",
+                options: ["Good morning.", "I am fine."],
+                correctOption: 1
+            },
+            {
+                dialogue: "Nice to meet you. What is your name?",
+                options: ["I am 14 years old.", "Nice to meet you too. My name is Mary."],
+                correctOption: 1
+            },
+            {
+                dialogue: "Where are you from?",
+                options: ["She is from Brazil.", "I am from Brazil."],
+                correctOption: 1
+            },
+            {
+                dialogue: "How old are you?",
+                options: ["I am fine.", "I am 24 years old."],
+                correctOption: 1
+            },
+            {
+                dialogue: "See you soon!",
+                options: ["Hello.", "See you soon!"],
+                correctOption: 1
+            }
+        ];
+
+        let currentScenario = 0;
+
+        const dialogueText = document.getElementById('dialogueText');
+        const optionsContainer = document.getElementById('optionsContainer');
+        const gameContainer = document.getElementById('gameContainer');
+
+        function updateScenario() {
+            const scenario = scenarios[currentScenario];
+            dialogueText.textContent = scenario.dialogue;
+
+            optionsContainer.innerHTML = '';
+            scenario.options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.textContent = option;
+                button.className = 'option-btn';
+                button.addEventListener('click', () => checkAnswer(index));
+                optionsContainer.appendChild(button);
+            });
+        }
+
+        function checkAnswer(selectedIndex) {
+            const buttons = document.querySelectorAll('.option-btn');
+            const scenario = scenarios[currentScenario];
+
+            if (selectedIndex === scenario.correctOption) {
+                buttons[selectedIndex].classList.add('correct');
+                currentScenario++;
+
+                if (currentScenario < scenarios.length) {
+                    setTimeout(updateScenario, 1000);
+                } else {
+                    showCongratulations();
+                }
+            } else {
+                buttons[selectedIndex].classList.add('incorrect');
+            }
+        }
+
+        function showCongratulations() {
+            gameContainer.innerHTML = `
+                <div class="congratulations">
+                    <h2>Parabéns!</h2>
+                    <p>Você completou o exercício de cumprimentos em inglês!</p>
+                    <button class="home-btn" onclick="window.location.href='../index.html'">Home</button>
+                </div>
+            `;
+        }
+
+        function resetGame() {
+            currentScenario = 0;
+            updateScenario();
+        }
+
+        // Inicializa o jogo
+        updateScenario();
+    </script>
+</body>
+</html>

@@ -158,8 +158,8 @@
             flex-grow: 1;
         }
 
-         /* Navigation Styles */
-         .navigation {
+        /* Navigation Styles */
+        .navigation {
             display: flex;
             justify-content: space-between;
             margin-top: 20px;
@@ -179,6 +179,40 @@
 
         .nav-button:hover {
             background-color: #0056b3;
+        }
+
+        /* Translation Icon Styles */
+        .translate-button {
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            padding: 8px;
+            transition: color 0.3s;
+        }
+
+        .translate-button:hover {
+            color: #333;
+        }
+
+        .translation-reveal {
+            position: absolute;
+            background: #2c3e50;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-left: 10px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+            white-space: nowrap;
+            z-index: 1000;
+        }
+
+        .translation-reveal.visible {
+            opacity: 1;
+            visibility: visible;
         }
     </style>
 </head>
@@ -200,9 +234,15 @@
                     <button class="show-answer-button" onclick="toggleAnswer(this)">
                         <i class="fas fa-eye"></i>
                     </button>
+                    <!-- Botão de tradução -->
+                    <button class="translate-button" onclick="toggleTranslation(this, 'Como você está?')">
+                        <i class="fas fa-language"></i>
+                    </button>
                 </div>
                 <div class="feedback"></div>
                 <div class="answer-reveal">How are you?</div>
+                <!-- Revelação da tradução -->
+                <div class="translation-reveal">Como você está?</div>
             </div>
         </div>
 
@@ -219,9 +259,15 @@
                     <button class="show-answer-button" onclick="toggleAnswer(this)">
                         <i class="fas fa-eye"></i>
                     </button>
+                    <!-- Botão de tradução -->
+                    <button class="translate-button" onclick="toggleTranslation(this, 'Qual é o seu nome?')">
+                        <i class="fas fa-language"></i>
+                    </button>
                 </div>
                 <div class="feedback"></div>
                 <div class="answer-reveal">What's your name?</div>
+                <!-- Revelação da tradução -->
+                <div class="translation-reveal">Qual é o seu nome?</div>
             </div>
         </div>
 
@@ -238,9 +284,15 @@
                     <button class="show-answer-button" onclick="toggleAnswer(this)">
                         <i class="fas fa-eye"></i>
                     </button>
+                    <!-- Botão de tradução -->
+                    <button class="translate-button" onclick="toggleTranslation(this, 'De onde você é?')">
+                        <i class="fas fa-language"></i>
+                    </button>
                 </div>
                 <div class="feedback"></div>
                 <div class="answer-reveal">Where are you from?</div>
+                <!-- Revelação da tradução -->
+                <div class="translation-reveal">De onde você é?</div>
             </div>
         </div>
 
@@ -257,9 +309,15 @@
                     <button class="show-answer-button" onclick="toggleAnswer(this)">
                         <i class="fas fa-eye"></i>
                     </button>
+                    <!-- Botão de tradução -->
+                    <button class="translate-button" onclick="toggleTranslation(this, 'Bom dia')">
+                        <i class="fas fa-language"></i>
+                    </button>
                 </div>
                 <div class="feedback"></div>
                 <div class="answer-reveal">Good Morning</div>
+                <!-- Revelação da tradução -->
+                <div class="translation-reveal">Bom dia</div>
             </div>
         </div>
 
@@ -276,9 +334,15 @@
                     <button class="show-answer-button" onclick="toggleAnswer(this)">
                         <i class="fas fa-eye"></i>
                     </button>
+                    <!-- Botão de tradução -->
+                    <button class="translate-button" onclick="toggleTranslation(this, 'Boa tarde')">
+                        <i class="fas fa-language"></i>
+                    </button>
                 </div>
                 <div class="feedback"></div>
                 <div class="answer-reveal">Good Afternoon</div>
+                <!-- Revelação da tradução -->
+                <div class="translation-reveal">Boa tarde</div>
             </div>
         </div>
 
@@ -295,9 +359,15 @@
                     <button class="show-answer-button" onclick="toggleAnswer(this)">
                         <i class="fas fa-eye"></i>
                     </button>
+                    <!-- Botão de tradução -->
+                    <button class="translate-button" onclick="toggleTranslation(this, 'Boa noite')">
+                        <i class="fas fa-language"></i>
+                    </button>
                 </div>
                 <div class="feedback"></div>
                 <div class="answer-reveal">Good Night</div>
+                <!-- Revelação da tradução -->
+                <div class="translation-reveal">Boa noite</div>
             </div>
         </div>
 
@@ -314,9 +384,15 @@
                     <button class="show-answer-button" onclick="toggleAnswer(this)">
                         <i class="fas fa-eye"></i>
                     </button>
+                    <!-- Botão de tradução -->
+                    <button class="translate-button" onclick="toggleTranslation(this, 'Eu não entendo')">
+                        <i class="fas fa-language"></i>
+                    </button>
                 </div>
                 <div class="feedback"></div>
                 <div class="answer-reveal">I don´t understand</div>
+                <!-- Revelação da tradução -->
+                <div class="translation-reveal">Eu não entendo</div>
             </div>
         </div>
 
@@ -333,10 +409,17 @@
                     <button class="show-answer-button" onclick="toggleAnswer(this)">
                         <i class="fas fa-eye"></i>
                     </button>
+                    <!-- Botão de tradução -->
+                    <button class="translate-button" onclick="toggleTranslation(this, 'Onde fica o banheiro?')">
+                        <i class="fas fa-language"></i>
+                    </button>
                 </div>
                 <div class="feedback"></div>
                 <div class="answer-reveal">Where is the restroom?</div>
+                <!-- Revelação da tradução -->
+                <div class="translation-reveal">Onde fica o banheiro?</div>
             </div>            
+        </div>
     </div>
     <div class="navigation">
         <a href=".././index.html" class="nav-button">Home</a>
@@ -345,6 +428,7 @@
     <script>
         let currentAudio = null;
         let currentReveal = null;
+        let currentTranslation = null;
 
         function playAudio(filename) {
             if (currentAudio) {
@@ -394,7 +478,6 @@
             }
         }
 
-
         function toggleAnswer(button) {
             // Hide previous reveal if exists
             if (currentReveal && currentReveal !== button.parentElement.nextElementSibling.nextElementSibling) {
@@ -408,6 +491,24 @@
             // Hide answer after 2 seconds
             setTimeout(() => {
                 answerReveal.classList.remove('visible');
+            }, 2000);
+        }
+
+        // Função para mostrar a tradução
+        function toggleTranslation(button, translation) {
+            // Hide previous translation if exists
+            if (currentTranslation && currentTranslation !== button.parentElement.nextElementSibling.nextElementSibling.nextElementSibling) {
+                currentTranslation.classList.remove('visible');
+            }
+
+            const translationReveal = button.parentElement.nextElementSibling.nextElementSibling.nextElementSibling;
+            translationReveal.textContent = translation; // Define o texto da tradução
+            translationReveal.classList.toggle('visible');
+            currentTranslation = translationReveal;
+
+            // Hide translation after 2 seconds
+            setTimeout(() => {
+                translationReveal.classList.remove('visible');
             }, 2000);
         }
     </script>

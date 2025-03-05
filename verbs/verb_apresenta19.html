@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Go</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f8f9fa;
+        }
+
+        header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #ffffff;
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+            width: 100%;
+            margin: 0 auto;
+            max-width: 960px;
+        }
+
+        .logo-container {
+            margin-bottom: 1rem;
+        }
+
+        .header-content {
+            width: 100%;
+            text-align: center;
+        }
+
+        .logo {
+            height: 50px;
+            display: block;
+        }
+
+        .course-name {
+            font-weight: bold;
+            color: #007bff;
+            font-size: 1.2rem;
+        }
+
+        .module-name {
+            color: #007bff;
+            font-size: 1.2rem;
+        }
+
+        main {
+            flex-grow: 1;
+            padding: 2rem;
+            width: 100%;
+            padding-bottom: 40px;
+        }
+
+        .content {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 2rem;
+            background-color: #ffffff;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            border-radius: 0.5rem;
+        }
+
+        .nav-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        .navigation-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            margin: 0 auto;
+            max-width: 960px;
+            margin-bottom: 1rem;
+        }
+
+        .nav-button img {
+            width: 24px;
+            height: 24px;
+        }
+
+        #slide-title {
+            color: #007bff;
+            margin-top: 0;
+            margin-bottom: 1.0rem;
+            margin-left: 0;
+            margin-right: 0;
+            font-size: 2rem;
+            text-align: center;
+        }
+
+        #topics-container .topic,
+        #topics-container .subtopic {
+            margin-bottom: 1rem;
+        }
+
+        .topic {
+            color: #343a40;
+            font-size: 1.4rem;
+            font-weight: bold;
+        }
+
+        .subtopic {
+            color: #343a40;
+            font-size: 1.2rem;
+            margin-left: 20px;
+        }
+
+        .progress-container {
+            flex-grow: 1;
+            margin: 0 2rem;
+            font-family: monospace;
+            font-size: 24px;
+            text-align: center;
+            color: #e0e0e0;
+        }
+
+        #translations-container .translation {
+            color: #6c757d;
+            font-style: italic;
+            margin-bottom: 1rem;
+            text-align: center;
+            font-size: 1.2rem;
+        }
+
+        #examples-container .example {
+            color: #28a745;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .image-container {
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .image-container img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+            border-radius: 0.5rem;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+        }
+
+        footer {
+            background-color: #007bff;
+            color: #ffffff;
+            text-align: center;
+            padding: 0.5rem;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <img src="logoWTS.png" alt="World Teaching School Logo" class="logo">
+        </div>
+        <div class="header-content">
+            <div class="course-info">
+                <span class="course-name">Inglês Básico I</span> - 
+                <span class="module-name" id="module-name">Verbos</span>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="content-wrapper">
+            <div class="content">
+                <h1 id="slide-title">Play</h1>
+
+                <div id="translations-container">
+                    <div class="translation">Brincar/Tocar/Jogar</div>
+                </div>
+
+                <div class="image-container" id="image-container">
+                    <img src="verbsIMG_slide19.png" alt="Go">
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="navigation-bar">
+        <button class="nav-button prev-button" onclick="prevPage()">
+            <img src="volta.png" alt="Voltar">
+        </button>
+
+        <div class="progress-container">
+            <span class="progress-text" style="color: #007bff;">███████████████████▒▒▒</span>
+        </div>
+
+        <button class="nav-button next-button" onclick="nextPage()">
+            <img src="avanca.png" alt="Avançar">
+        </button>
+    </div>
+    <footer>
+        <p>© 2025 World Teaching School</p>
+    </footer>
+
+    <script>
+        const moduleName = "Verbos";
+        document.getElementById('module-name').textContent = moduleName;
+
+        let currentPage = 17; // Página atual
+        const totalPages = 22;  // Total de páginas do módulo
+
+        function nextPage() {
+            window.location.href = 'verb_apresenta20.html';
+        }
+
+        function prevPage() {
+            window.location.href = 'verb_apresenta18.html';
+        }
+    </script>
+</body>
+</html>

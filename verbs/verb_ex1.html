@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Course - Verb Translation Exercise</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Estilos Base (Mobile-First) */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            color: #343a40;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+            font-size: 16px; /* Tamanho base legível */
+        }
+
+        .container {
+            width: 100%; /* Ocupa toda a largura em mobile */
+            margin: 0 auto; /* Centraliza sem margem fixa */
+            padding: 10px; /* Padding menor para mobile */
+            flex: 1;
+        }
+
+        h1, h2, h3 {
+            color: #007bff;
+            font-size: 1.5rem; /* Tamanho relativo */
+        }
+
+        .exercise-box {
+            background-color: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra mais leve */
+            margin-bottom: 15px;
+        }
+
+        .exercise-header {
+            margin-bottom: 15px;
+        }
+
+        .exercise-tips {
+            margin-bottom: 15px;
+        }
+
+        .tip-item {
+            color: #6c757d;
+            font-style: italic;
+            margin-bottom: 8px;
+            padding-left: 10px;
+        }
+
+        .question {
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        .question-content {
+            display: flex;
+            flex-wrap: wrap; /* Permite quebra em mobile */
+            align-items: center;
+            gap: 5px;
+        }
+
+        .input-field {
+            padding: 8px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            transition: border-color 0.3s;
+            width: 100%; /* Largura total em mobile */
+            min-height: 44px; /* Tamanho mínimo para touch (WCAG) */
+            font-size: 1rem;
+        }
+
+        .input-field:focus {
+            border-color: #80bdff;
+            outline: none;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+        .translation-container {
+            display: inline-block;
+            position: relative;
+            margin-left: 5px;
+        }
+
+        .translation {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: #f8f9fa;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            padding: 5px 10px;
+            z-index: 100;
+            font-size: 0.9rem;
+        }
+
+        .translation-icon {
+            cursor: pointer;
+            color: #007bff;
+        }
+
+        .results {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+            background-color: #f2f2f2;
+            font-size: 0.9rem;
+        }
+
+        .correct { color: #28a745; }
+        .incorrect { color: #dc3545; }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+
+        .button {
+            background-color: #007bff;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.3s;
+            width: 100%; /* Botão largo em mobile */
+            max-width: 150px; /* Limite máximo */
+            min-height: 44px; /* Tamanho mínimo para touch */
+            font-size: 1rem;
+        }
+
+        .button:hover {
+            background-color: #0056b3;
+        }
+
+        footer {
+            background-color: #343a40;
+            color: white;
+            text-align: center;
+            padding: 8px 0;
+            font-size: 0.9rem;
+        }
+
+        /* Ajustes Progressivos para Telas Maiores */
+        @media (min-width: 768px) {
+            .container {
+                max-width: 800px; /* Limite para desktop */
+                padding: 20px; /* Mais espaço */
+            }
+
+            h1, h2, h3 {
+                font-size: 2rem; /* Títulos maiores */
+            }
+
+            .exercise-box {
+                padding: 20px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                margin-bottom: 20px;
+            }
+
+            .input-field {
+                width: 200px; /* Largura fixa em desktop */
+            }
+
+            .button {
+                width: auto; /* Botão ajusta ao conteúdo */
+                padding: 10px 20px;
+            }
+
+            .question-content {
+                flex-wrap: nowrap; /* Sem quebra em desktop */
+                gap: 10px;
+            }
+        }
+
+        /* Remover hover em dispositivos touch */
+        @media (hover: none) {
+            .button:hover {
+                background-color: #007bff;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="exercise-box">
+            <div class="exercise-header">
+                <h2 id="exercise-title">Verb Translation Exercise</h2>
+                <p id="exercise-description">Translate the following Portuguese verbs into English.<br>(Traduza os verbos a seguir para o Inglês)</p>
+                <!-- p id="translation-instruction">Click the language icon for a hint (if available)</p -->
+            </div>
+
+            <div class="exercise-tips" id="exercise-tips"></div>
+            <div id="questions-container"></div>
+
+            <button class="button" onclick="checkAnswers()">Check Answers</button>
+            <div id="result" class="results"></div>
+        </div>
+
+        <div class="navigation">
+            <a href="../index.html" class="button">Home</a>
+        </div>
+    </div>
+
+    <script>
+        const exerciseConfig = {
+            title: "Verb Translation Exercise",
+            description: "Traduza os seguintes verbos para o inglês. Veja o resultado no final.",
+            translationInstruction: "Clique no ícone para dica",
+            tips: [
+                { text: "", emphasis: true },
+                { text: "", emphasis: false }
+            ],
+            questions: [
+                { id: "q1", text: "Estudar", translation: "To study", correctAnswer: "study", type: "text" },
+                { id: "q2", text: "Amar", translation: "To love", correctAnswer: "love", type: "text" },
+                { id: "q3", text: "Falar", translation: "To speak", correctAnswer: "speak", type: "text" },
+                { id: "q4", text: "Dirigir", translation: "To drive", correctAnswer: "drive", type: "text" },
+                { id: "q5", text: "Comer", translation: "To eat", correctAnswer: "eat", type: "text" },
+                { id: "q6", text: "Jogar", translation: "To play", correctAnswer: "play", type: "text" },
+                { id: "q7", text: "Pegar", translation: "To take", correctAnswer: "take", type: "text" },
+                { id: "q8", text: "Parar", translation: "To stop", correctAnswer: "stop", type: "text" },
+                { id: "q9", text: "Começar", translation: "To start", correctAnswer: "start", type: "text" },
+                { id: "q10", text: "Pensar", translation: "To think", correctAnswer: "think", type: "text" },
+                { id: "q11", text: "Conhecer", translation: "To know", correctAnswer: "know", type: "text" },
+                { id: "q12", text: "Gostar", translation: "To like", correctAnswer: "like", type: "text" },
+                { id: "q13", text: "Fechar", translation: "To close", correctAnswer: "close", type: "text" },
+                { id: "q14", text: "Ir", translation: "To go", correctAnswer: "go", type: "text" },
+                { id: "q15", text: "Abrir", translation: "To open", correctAnswer: "open", type: "text" }
+            ]
+        };
+
+        function initializeExercise(config) {
+            document.getElementById("exercise-title").textContent = config.title;
+            document.getElementById("exercise-description").textContent = config.description;
+            
+            const tipsContainer = document.getElementById("exercise-tips");
+            config.tips.forEach(tip => {
+                const tipElement = document.createElement("div");
+                tipElement.className = "tip-item";
+                tipElement.innerHTML = tip.emphasis ? `<strong>${tip.text}</strong>` : tip.text;
+                tipsContainer.appendChild(tipElement);
+            });
+
+            const questionsContainer = document.getElementById("questions-container");
+            config.questions.forEach(question => {
+                const questionElement = createQuestionElement(question);
+                questionsContainer.appendChild(questionElement);
+            });
+        }
+
+        function createQuestionElement(question) {
+            const div = document.createElement("div");
+            div.className = "question";
+            
+            const content = document.createElement("div");
+            content.className = "question-content";
+
+            const input = document.createElement("input");
+            input.className = "input-field";
+            input.id = question.id;
+            input.type = "text";
+
+            const textNode = document.createTextNode(` ${question.text}`);
+
+            const translationContainer = createTranslationElement(question.translation);
+
+            content.appendChild(input);
+            content.appendChild(textNode);
+            content.appendChild(translationContainer);
+            div.appendChild(content);
+
+            return div;
+        }
+
+        function createTranslationElement(translationText) {
+            const container = document.createElement("div");
+            container.className = "translation-container";
+
+            const icon = document.createElement("i");
+            icon.className = "fas fa-language translation-icon";
+            icon.tabIndex = "0";
+
+            const translation = document.createElement("span");
+            translation.className = "translation";
+            translation.textContent = translationText;
+
+            container.appendChild(icon);
+            container.appendChild(translation);
+
+            return container;
+        }
+
+        function checkAnswers() {
+            let score = 0;
+            const questions = exerciseConfig.questions;
+            
+            questions.forEach(question => {
+                const userAnswer = document.getElementById(question.id).value.trim().toLowerCase();
+                const questionElement = document.getElementById(question.id).parentElement.parentElement;
+
+                if (userAnswer === question.correctAnswer.toLowerCase()) {
+                    score++;
+                    questionElement.classList.add('correct');
+                    questionElement.classList.remove('incorrect');
+                } else {
+                    questionElement.classList.add('incorrect');
+                    questionElement.classList.remove('correct');
+                }
+            });
+
+            displayResults(score, questions.length);
+        }
+
+        function displayResults(score, total) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = `
+                <h3>Your result: ${score}/${total}</h3>
+                <p>Correct answers:</p>
+                <ul>
+                    ${exerciseConfig.questions.map(q => 
+                        `<li>${q.text}: <strong>${q.correctAnswer}</strong></li>`
+                    ).join('')}
+                </ul>
+            `;
+        }
+
+        function initializeTranslationHandlers() {
+            document.querySelectorAll('.translation-icon').forEach(icon => {
+                const showTranslation = () => {
+                    const translation = icon.nextElementSibling;
+                    if (translation) translation.style.display = 'block';
+                };
+                
+                const hideTranslation = () => {
+                    const translation = icon.nextElementSibling;
+                    if (translation) translation.style.display = 'none';
+                };
+
+                icon.addEventListener('mousedown', e => {
+                    e.preventDefault();
+                    showTranslation();
+                });
+                icon.addEventListener('mouseup', hideTranslation);
+                icon.addEventListener('mouseleave', hideTranslation);
+
+                icon.addEventListener('keydown', e => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        showTranslation();
+                    }
+                });
+                icon.addEventListener('keyup', e => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        hideTranslation();
+                    }
+                });
+
+                icon.addEventListener('touchstart', e => {
+                    e.preventDefault();
+                    showTranslation();
+                }, { passive: false });
+                icon.addEventListener('touchend', hideTranslation);
+                icon.addEventListener('touchcancel', hideTranslation);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeExercise(exerciseConfig);
+            initializeTranslationHandlers();
+        });
+    </script>
+
+    <footer>
+        © 2025 Word Teaching School
+    </footer>
+</body>
+</html>
