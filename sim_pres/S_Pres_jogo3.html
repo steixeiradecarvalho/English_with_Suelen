@@ -2,45 +2,55 @@
 <html>
 <head>
   <title>Fill in the Blanks - English Verbs</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
+    /* Estilos base para mobile */
     body {
       font-family: 'Segoe UI', sans-serif;
       background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
       min-height: 100vh;
       margin: 0;
       padding: 20px;
-      min-height: 100vh; /* Ensure footer sticks to bottom */
+      display: flex;
+      flex-direction: column;
     }
 
     /* Footer Style */
     footer {
-        background-color: #343a40;
-        color: white;
-        text-align: center;
-        padding: 10px 0;
-        margin-top: 20px; /* Space above footer */
+      background-color: #343a40;
+      color: white;
+      text-align: center;
+      padding: 10px 0;
+      margin-top: auto; /* Faz o footer ficar no final da página */
     }
 
     .container {
+      width: 100%;
       max-width: 800px;
       margin: 0 auto;
       padding: 20px;
     }
 
+    .voltar {
+      width: 100%;
+      padding: 10px;
+      text-align: center;
+    }
+
     .title {
       text-align: center;
       color: #2d3436;
-      font-size: 2em;
-      margin-bottom: 30px;
+      font-size: 1.5em;
+      margin-bottom: 20px;
       text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
     }
 
     .word-bank {
       background: white;
-      padding: 20px;
+      padding: 15px;
       border-radius: 15px;
       box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-      margin-bottom: 30px;
+      margin-bottom: 20px;
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
@@ -50,12 +60,14 @@
     .draggable-word {
       background: linear-gradient(45deg, #4facfe 0%, #00f2fe 100%);
       color: white;
-      padding: 10px 20px;
+      padding: 8px 15px;
       border-radius: 25px;
       cursor: grab;
       transition: all 0.3s ease;
       user-select: none;
       box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      font-size: 0.9em;
+      position: relative;
     }
 
     .draggable-word:hover {
@@ -68,30 +80,37 @@
       transform: scale(1.05);
     }
 
+    .draggable-word.selected {
+      background: linear-gradient(45deg, #ff6b6b 0%, #ff8e8e 100%);
+      transform: scale(1.05);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+    }
+
     .sentences {
       background: white;
-      padding: 30px;
+      padding: 20px;
       border-radius: 15px;
       box-shadow: 0 8px 16px rgba(0,0,0,0.1);
     }
 
     .sentence {
-      font-size: 1.2em;
-      margin: 20px 0;
-      padding: 15px;
+      font-size: 1.1em;
+      margin: 15px 0;
+      padding: 10px;
       background: #f8f9fa;
       border-radius: 10px;
       display: flex;
       align-items: center;
       gap: 10px;
       flex-wrap: wrap;
+      position: relative;
     }
 
     .dropzone {
       display: inline-block;
-      width: 120px;
-      height: 40px;
-      border: 3px dashed #4facfe;
+      width: 100px;
+      height: 35px;
+      border: 2px dashed #4facfe;
       border-radius: 20px;
       margin: 0 5px;
       vertical-align: middle;
@@ -139,64 +158,148 @@
     .feedback {
       text-align: center;
       margin-top: 20px;
-      font-size: 1.2em;
+      font-size: 1.1em;
       color: #2d3436;
       min-height: 30px;
     }
-    #backButton {
-      padding: 10px 20px;
-      font-size: 16px;
+
+    #backButton {      
       cursor: pointer;
-      margin-top: 15px;
-      background-color: #5bc0de; /* Cor de fundo azul */
-      color: white;          /* Cor do texto branca */
-      border: none;          /* Remove a borda padrão */
-      border-radius: 5px;    /* Arredonda os cantos */
-      text-decoration: none; /* Remove sublinhado do link */
-      display: inline-block; /* Permite estilizar como bloco */
+      background-color: #5bc0de;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      text-decoration: none;
+      display: inline-block;
+
+      padding: 10px 20px;
+      font-size: 1em;
     }
-    .draggable-word.selected {
-      background: linear-gradient(45deg, #ff6b6b 0%, #ff8e8e 100%);
-      transform: scale(1.05);
-      box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+
+
+    .translation-icon {
+      cursor: pointer;
+      margin-left: 10px;
+      font-size: 0.8em;
+    }
+
+    .translation-text {
+      display: none;
+      position: absolute;
+      background: rgba(0, 0, 0, 0.8);
+      color: white;
+      padding: 5px;
+      border-radius: 5px;
+      font-size: 0.8em;
+      z-index: 100;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .sentence:hover .translation-text,
+    .translation-icon:hover + .translation-text {
+      display: block;
+    }
+
+    .draggable-word .translation-text {
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .draggable-word:hover .translation-text {
+      display: block;
+    }
+
+    /* Media Queries para telas maiores (tablets e desktops) */
+    @media (min-width: 768px) {
+      .title {
+        font-size: 2em;
+        margin-bottom: 30px;
+      }
+
+      .word-bank {
+        padding: 20px;
+        margin-bottom: 30px;
+      }
+
+      .draggable-word {
+        padding: 10px 20px;
+        font-size: 1em;
+      }
+
+      .sentences {
+        padding: 30px;
+      }
+
+      .sentence {
+        font-size: 1.2em;
+        margin: 20px 0;
+        padding: 15px;
+      }
+
+      .dropzone {
+        width: 120px;
+        height: 40px;
+      }
+
+      .feedback {
+        font-size: 1.2em;
+      }
     }
   </style>
 </head>
 <body>
   <div class="container">
     <h1 class="title">🎯 Complete the Sentences</h1>
+
+    <div class="instructions">
+      Tap a word from the bank below, then tap the blank space in the sentence to place it.<br>
+      <p style="color: #FF6B6B;">Toque em uma palavra da lista abaixo (a tradução aparecerá) e depois toque no espaço em branco na frase para colocá-la.<br>Toque na bandeira para a tradução da frase.</p>
+    </div>
     
     <div class="word-bank" id="wordBank">
-      <div class="draggable-word" >WATCH</div>
-      <div class="draggable-word" >GO</div>
-      <div class="draggable-word" >WASH</div>
-      <div class="draggable-word" >SLEEP</div>
-      <div class="draggable-word" >DRIVE</div>
-      <div class="draggable-word" >GET</div>
-      <div class="draggable-word" >READ</div>
-      <div class="draggable-word" >WRITE</div>
-      <div class="draggable-word" >THINK</div>
-      <div class="draggable-word" >SEE</div>
+      <div class="draggable-word" data-word="WATCH">WATCH<span class="translation-text">ASSISTIR</span></div>
+      <div class="draggable-word" data-word="GO">GO<span class="translation-text">IR</span></div>
+      <div class="draggable-word" data-word="WASH">WASH<span class="translation-text">LAVAR</span></div>
+      <div class="draggable-word" data-word="SLEEP">SLEEP<span class="translation-text">DORMIR</span></div>
+      <div class="draggable-word" data-word="DRIVE">DRIVE<span class="translation-text">DIRIGIR</span></div>
+      <div class="draggable-word" data-word="GET">GET<span class="translation-text">OBTER</span></div>
+      <div class="draggable-word" data-word="READ">READ<span class="translation-text">LER</span></div>
+      <div class="draggable-word" data-word="WRITE">WRITE<span class="translation-text">ESCREVER</span></div>
+      <div class="draggable-word" data-word="THINK">THINK<span class="translation-text">PENSAR</span></div>
+      <div class="draggable-word" data-word="SEE">SEE<span class="translation-text">VER</span></div>
     </div>
 
     <div class="sentences">
       <div class="sentence">
         I need to <div class="dropzone" data-answer="WATCH"></div> this movie tonight.
+        <span class="translation-icon">🇧🇷</span>
+        <span class="translation-text">Eu preciso assistir este filme hoje à noite.</span>
       </div>
       <div class="sentence">
         Let's <div class="dropzone" data-answer="GO"></div> to the park.
+        <span class="translation-icon">🇧🇷</span>
+        <span class="translation-text">Vamos ao parque.</span>
       </div>
       <div class="sentence">
         She will <div class="dropzone" data-answer="DRIVE"></div> to work tomorrow.
+        <span class="translation-icon">🇧🇷</span>
+        <span class="translation-text">Ela vai dirigir para o trabalho amanhã.</span>
       </div>
       <div class="sentence">
         I must <div class="dropzone" data-answer="READ"></div> this book by Monday.
+        <span class="translation-icon">🇧🇷</span>
+        <span class="translation-text">Eu devo ler este livro até segunda-feira.</span>
       </div>
       <div class="sentence">
         They <div class="dropzone" data-answer="THINK"></div> it's a good idea.
+        <span class="translation-icon">🇧🇷</span>
+        <span class="translation-text">Eles pensam que é uma boa ideia.</span>
       </div>
     </div>
-    <div>
+    <div class="voltar">
       <a id="backButton" href=".././index.html">Home</a>
     </div>
     <div class="feedback" id="feedback"></div>
@@ -225,7 +328,7 @@
         if (!selectedWord || this.classList.contains('correct')) return;
 
         const correctAnswer = this.dataset.answer;
-        const selectedText = selectedWord.textContent;
+        const selectedText = selectedWord.dataset.word; // Usar dataset.word para comparação
 
         if (selectedText === correctAnswer) {
           this.textContent = selectedText;

@@ -118,8 +118,43 @@
             font-size: 0.9rem;
         }
 
-        .correct { color: #28a745; }
-        .incorrect { color: #dc3545; }
+        .correct { 
+            color: #28a745; 
+            border-color: #28a745;
+        }
+
+        .incorrect { 
+            color: #dc3545; 
+            border-color: #dc3545;
+            animation: shake 0.5s;
+        }
+
+        .voltar {
+            width: 100%;
+            padding: 10px;
+            text-align: center;
+        }
+
+        #backButton {      
+            cursor: pointer;
+            background-color: #5bc0de;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
+
+            padding: 10px 20px;
+            font-size: 1em;
+        }
+
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+            100% { transform: translateX(0); }
+        }
 
         .navigation {
             display: flex;
@@ -210,16 +245,15 @@
             <div id="result" class="results"></div>
         </div>
 
-        <div class="navigation">
-            <a href="../index.html" class="button">Home</a>
+        <div class="voltar">
+            <a id="backButton" href=".././index.html">Home</a>
         </div>
     </div>
 
     <script>
         const exerciseConfig = {
             title: "Verb Translation Exercise",
-            description: "Traduza os seguintes verbos para o inglês. Veja o resultado no final.",
-            translationInstruction: "Clique no ícone para dica",
+            description: "Traduza os seguintes verbos para o Inglês. Clique no ícone para dica",
             tips: [
                 { text: "", emphasis: true },
                 { text: "", emphasis: false }
@@ -259,6 +293,24 @@
             config.questions.forEach(question => {
                 const questionElement = createQuestionElement(question);
                 questionsContainer.appendChild(questionElement);
+            });
+
+            // Adiciona o evento de input para feedback imediato
+            document.querySelectorAll('.input-field').forEach(input => {
+                input.addEventListener('input', () => {
+                    const questionId = input.id;
+                    const question = config.questions.find(q => q.id === questionId);
+                    const userAnswer = input.value.trim().toLowerCase();
+                    const questionElement = input.parentElement.parentElement;
+
+                    if (userAnswer === question.correctAnswer.toLowerCase()) {
+                        questionElement.classList.add('correct');
+                        questionElement.classList.remove('incorrect');
+                    } else {
+                        questionElement.classList.add('incorrect');
+                        questionElement.classList.remove('correct');
+                    }
+                });
             });
         }
 

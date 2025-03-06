@@ -2,7 +2,9 @@
 <html>
 <head>
   <title>Interactive English Quiz</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
+    /* Estilos base para mobile */
     :root {
       --primary: #FF61D8;
       --secondary: #41E9D5;
@@ -28,10 +30,12 @@
     }
 
     .container {
-      width: 100%;
+      width: 90%;
+      max-width: 800px;
       padding: 10px;
       text-align: center;
       flex: 1;
+      margin: 0 auto; /* Adiciona centralização */
     }
 
     .voltar {
@@ -44,8 +48,8 @@
       font-size: 1.5em;
       margin-bottom: 15px;
       background: linear-gradient(45deg, var(--primary), var(--secondary));
-      -webkit-background-clip: text; /* For older Webkit browsers */
-      background-clip: text;         /* Standard property for modern browsers */
+      -webkit-background-clip: text;
+      background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
@@ -65,6 +69,7 @@
       cursor: pointer;
       transition: all 0.3s ease;
       font-size: 0.9em;
+      position: relative;
     }
 
     .clickable-word:hover {
@@ -79,8 +84,8 @@
 
     .quiz-card {
       background: rgba(255,255,255,0.1);
-      padding: 20px;
-      border-radius: 15px;
+      padding: 15px;
+      border-radius: 10px;
       margin: 10px 0;
     }
 
@@ -88,12 +93,13 @@
       font-size: 1.1em;
       margin: 15px 0;
       line-height: 1.4;
+      position: relative;
     }
 
     .dropzone {
       display: inline-block;
-      width: 100px;
-      height: 35px;
+      width: 80px;
+      height: 30px;
       border: 2px dashed var(--secondary);
       border-radius: 20px;
       margin: 0 5px;
@@ -107,9 +113,10 @@
       background: linear-gradient(45deg, #00ff88, #00ffcc);
       color: var(--background);
       font-weight: bold;
-      display: flex;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
+      padding: 0 10px;
     }
 
     .dropzone.incorrect {
@@ -216,7 +223,29 @@
       display: inline-block;
     }
 
-    /* Media Queries for Larger Screens */
+    .translation-icon {
+      cursor: pointer;
+      margin-left: 10px;
+      font-size: 0.8em;
+    }
+
+    .translation-text {
+      display: none;
+      position: absolute;
+      background: rgba(0, 0, 0, 0.8);
+      color: white;
+      padding: 5px;
+      border-radius: 5px;
+      font-size: 0.8em;
+      z-index: 100;
+    }
+
+    .clickable-word:hover .translation-text,
+    .translation-icon:hover + .translation-text {
+      display: block;
+    }
+
+    /* Media Queries para telas maiores (tablets e desktops) */
     @media (min-width: 768px) {
       .container {
         width: 90%;
@@ -225,114 +254,66 @@
       }
 
       .title {
-        /*font-size: 2.5em;
-        margin-bottom: 30px;*/
-        font-size: 1.8em; /* Aumentar o tamanho do título */
-        margin-bottom: 10px;
+        font-size: 2em;
+        margin-bottom: 20px;
       }
 
       .word-bank {
         gap: 15px;
-        margin-bottom: 40px;
+        margin-bottom: 30px;
       }
 
       .clickable-word {
-        /* padding: 12px 25px;
-        font-size: 1em; */
-
-        padding: 10px 20px; /* Aumentar o padding dos botões de palavras */
-        font-size: 1em; /* Aumentar o tamanho da fonte */
+        padding: 10px 20px;
+        font-size: 1em;
       }
 
       .quiz-card {
-        /* padding: 40px;
-        border-radius: 20px;*/
-
-        padding: 15px; /* Reduzir o padding do card do quiz */
-        border-radius: 10px;
+        padding: 20px;
+        border-radius: 15px;
       }
 
       .sentence {
-        /*font-size: 1.4em;
-        margin: 20px 0; */
-        line-height: 1.6;
-
-        font-size: 1.2em; /* Aumentar o tamanho da fonte da frase */
-        margin: 10px 0;
+        font-size: 1.2em;
+        margin: 20px 0;
       }
 
       .dropzone {
-        /* width: 140px;
-        height: 45px;
-        border: 3px dashed var(--secondary);
-        border-radius: 25px;
-        margin: 0 10px;
-        */
-        width: 100px; /* Ajustar o tamanho da área de drop */
-        height: 40px;
-        border: 2px dashed var(--secondary);
-        border-radius: 20px;
-        margin: 0 5px;
+        width: 100px;
+        height: 35px;
       }
 
       .navigation {
-        /* gap: 20px;
-        margin-top: 30px;
-        */
-        gap: 10px;
+        gap: 20px;
         margin-top: 20px;
       }
 
       .nav-button {
-        /*padding: 12px 25px;
-        font-size: 1.1em;
-'       */
-        padding: 10px 20px; /* Aumentar o tamanho dos botões de navegação */
+        padding: 10px 20px;
         font-size: 1em;
       }
 
       .progress {
-        position: absolute;
-        top: 20px;
-        right: 20px;
-        /* font-size: 1.2em; */
-
-        font-size: 1em; /* Aumentar o tamanho da fonte do progresso */
+        font-size: 1em;
         margin-top: 15px;
       }
 
       .feedback {
-        /* padding: 15px 30px;
-        font-size: 1.2em;
-        */
-        padding: 10px 20px;
-        font-size: 1em; /* Aumentar o tamanho da fonte do feedback */
+        padding: 15px 30px;
+        font-size: 1em;
       }
 
       .instructions {
-        /* padding: 15px;
-        font-size: 1.1em; */
-        line-height: 1.4;
-
-        font-size: 1em; /* Aumentar o tamanho das instruções */
-        padding: 8px;
-        margin-bottom: 10px;
+        font-size: 1em;
+        padding: 15px;
+        margin-bottom: 20px;
       }
 
       footer {
-        /* padding: 20px;
-        */
-        padding: 10px; /* Reduzir o padding do footer */
-        font-size: 0.9em; /* Ajustar o tamanho da fonte do footer */
+        padding: 20px;
+        font-size: 1em;
       }
 
-      #backButton {
-        /*padding: 10px 20px;
-        font-size: 1em;
-        */
-        padding: 8px 15px; /* Ajustar o tamanho do botão de voltar */
-        font-size: 0.9em;
-      }
     }
   </style>
 </head>
@@ -342,20 +323,20 @@
     
     <div class="instructions">
       Tap a word from the bank below, then tap the blank space in the sentence to place it.<br>
-      (Toque em uma palavra da lista abaixo e depois toque no espaço em branco na frase para colocá-la)
+      <p style="color: #FF6B6B;">Toque em uma palavra da lista abaixo (a tradução aparecerá) e depois toque no espaço em branco na frase para colocá-la.<br>Toque na bandeira para a tradução da frase.</p>
     </div>
     
     <div class="word-bank" id="wordBank">
-      <div class="clickable-word">WATCH</div>
-      <div class="clickable-word">GO</div>
-      <div class="clickable-word">WASH</div>
-      <div class="clickable-word">SLEEP</div>
-      <div class="clickable-word">DRIVE</div>
-      <div class="clickable-word">GET</div>
-      <div class="clickable-word">READ</div>
-      <div class="clickable-word">WRITE</div>
-      <div class="clickable-word">THINK</div>
-      <div class="clickable-word">SEE</div>
+      <div class="clickable-word" data-word="WATCH">WATCH<span class="translation-text">ASSISTIR</span></div>
+      <div class="clickable-word" data-word="GO">GO<span class="translation-text">IR</span></div>
+      <div class="clickable-word" data-word="WASH">WASH<span class="translation-text">LAVAR</span></div>
+      <div class="clickable-word" data-word="SLEEP">SLEEP<span class="translation-text">DORMIR</span></div>
+      <div class="clickable-word" data-word="DRIVE">DRIVE<span class="translation-text">DIRIGIR</span></div>
+      <div class="clickable-word" data-word="GET">GET<span class="translation-text">OBTER</span></div>
+      <div class="clickable-word" data-word="READ">READ<span class="translation-text">LER</span></div>
+      <div class="clickable-word" data-word="WRITE">WRITE<span class="translation-text">ESCREVER</span></div>
+      <div class="clickable-word" data-word="THINK">THINK<span class="translation-text">PENSAR</span></div>
+      <div class="clickable-word" data-word="SEE">SEE<span class="translation-text">VER</span></div>
     </div>
 
     <div id="quizContainer" class="quiz-card">
@@ -378,22 +359,27 @@
     const questions = [
       {
         sentence: "I need to _____ this movie tonight.",
+        translation: "Eu preciso assistir este filme hoje à noite.",
         answer: "WATCH"
       },
       {
         sentence: "Let's _____ to the park.",
+        translation: "Vamos ao parque.",
         answer: "GO"
       },
       {
         sentence: "She will _____ to work tomorrow.",
+        translation: "Ela vai dirigir para o trabalho amanhã.",
         answer: "DRIVE"
       },
       {
         sentence: "I must _____ this book by Monday.",
+        translation: "Eu devo ler este livro até segunda-feira.",
         answer: "READ"
       },
       {
         sentence: "They _____ it's a good idea.",
+        translation: "Eles pensam que é uma boa ideia.",
         answer: "THINK"
       }
     ];
@@ -415,6 +401,8 @@
       container.innerHTML = `
         <div class="sentence">
           ${question.sentence.replace('_____', '<div class="dropzone" data-answer="' + question.answer + '"></div>')}
+          <span class="translation-icon">🇧🇷</span>
+          <span class="translation-text">${question.translation}</span>
         </div>
       `;
 
@@ -441,7 +429,7 @@
         document.querySelectorAll('.clickable-word').forEach(w => w.classList.remove('selected'));
         word.classList.add('selected');
         selectedWord = word;
-        showFeedback(`"${word.textContent}" selected`, false, 800);
+        showFeedback(`"${word.dataset.word}" selected`, false, 800);
       }
     }
 
@@ -449,10 +437,13 @@
       const dropzone = e.target;
       if (!selectedWord || dropzone.classList.contains('correct')) return;
 
-      const isCorrect = selectedWord.textContent === dropzone.dataset.answer;
+      // Use the data-word attribute for comparison
+      const selectedWordText = selectedWord.dataset.word;
+
+      const isCorrect = selectedWordText === dropzone.dataset.answer;
       
       if (isCorrect) {
-        dropzone.textContent = selectedWord.textContent;
+        dropzone.textContent = selectedWordText;
         dropzone.classList.add('correct');
         selectedWord.style.display = 'none';
         showFeedback('Correct! 🎉', true);

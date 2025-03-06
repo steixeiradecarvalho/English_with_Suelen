@@ -122,6 +122,25 @@
             animation: slideIn 0.8s ease-out forwards;
         }
 
+        .voltar {
+            width: 100%;
+            padding: 10px;
+            text-align: center;
+        }
+
+        #backButton {      
+            cursor: pointer;
+            background-color: #5bc0de;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
+
+            padding: 10px 20px;
+            font-size: 1em;
+        }
+
         /* Desktop */
         @media (min-width: 768px) {
             .title {
@@ -193,13 +212,17 @@
         </button>
     </div>
     
+    <div class="voltar">
+        <a id="backButton" href=".././index.html">Home</a>
+    </div>
+
     <footer>
         <p>© 2025 World Teaching School</p>
     </footer>
 
     <script>
         // Configuração inicial
-        const moduleName = "Months";
+        const moduleName = "Seasons";
         document.getElementById('module-name').textContent = moduleName;
 
         let currentPage = 4;

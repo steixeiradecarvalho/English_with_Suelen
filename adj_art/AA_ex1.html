@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Add viewport for responsiveness -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Drag and Drop Exercise</title>
     <style>
         :root {
@@ -17,19 +17,19 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: var(--background-color);
             margin: 0;
-            padding: 10px; /* Reduce padding for smaller screens */
+            padding: 10px;
             min-height: 100vh;
         }
 
         h2 {
             color: var(--primary-color);
             text-align: center;
-            font-size: 1.5em; /* Smaller heading for mobile */
+            font-size: 1.5em;
             margin-bottom: 20px;
         }
 
         .container {
-            max-width: 100%; /* Full width on mobile */
+            max-width: 100%;
             margin: 0 auto;
             padding: 10px;
         }
@@ -51,9 +51,10 @@
             color: white;
             padding: 8px 16px;
             border-radius: 20px;
-            cursor: pointer; /* Change to pointer for tap */
+            cursor: pointer;
             transition: all 0.3s ease;
             font-weight: bold;
+            position: relative;
         }
 
         .word:hover, .word.selected {
@@ -63,12 +64,12 @@
 
         .word.used {
             opacity: 0.3;
-            pointer-events: none; /* Disable used words */
+            pointer-events: none;
         }
 
         .images-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Adjust for smaller screens */
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px;
             justify-items: center;
         }
@@ -80,20 +81,22 @@
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             text-align: center;
             width: 100%;
-            max-width: 250px; /* Slightly smaller for mobile */
+            max-width: 250px;
             transition: all 0.3s ease;
+            position: relative;
         }
 
         .image-box img {
             width: 100%;
-            height: 150px; /* Reduce height for mobile */
+            height: 150px;
             object-fit: cover;
             border-radius: 8px;
             margin-bottom: 10px;
+            cursor: pointer;
         }
 
         .label {
-            font-size: 1em; /* Slightly smaller text */
+            font-size: 1em;
             color: #333;
             margin-top: 8px;
             padding: 8px;
@@ -153,7 +156,53 @@
         .nav-button:hover {
             background-color: #0056b3;
         }
+
+        .title {
+            text-align: center;
+            color: #2d3436;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
         
+        .voltar {
+            width: 100%;
+            padding: 10px;
+            text-align: center;
+        }
+
+        #backButton {      
+            cursor: pointer;
+            background-color: #5bc0de;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 1em;
+        }
+
+        .translation-text {
+            display: none;
+            position: absolute;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 5px;
+            border-radius: 5px;
+            font-size: 0.9em;
+            z-index: 100;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .image-box:hover .translation-text,
+        .word:hover .translation-text {
+            display: block;
+        }
+
         /* Media query for mobile */
         @media (max-width: 600px) {
             .words-container {
@@ -172,53 +221,64 @@
         }
     </style>
 </head>
-<body>
-    <h2>Complete os labels tocando nas palavras e nos destinos</h2>
-    
+<body>    
     <div class="container">
+        <div style="text-align: center;">
+            <h1 class="title"> Complete the Sentences</h1>
+            <div class="instructions">
+                Tap a word from the bank below, then tap the blank space in the sentence to place it.<br>
+                <p style="color: #FF6B6B;">Toque em uma palavra da lista abaixo (a tradução aparecerá) e depois toque no espaço em branco na frase para colocá-la.<br>Toque na foto para a tradução da frase.</p>
+            </div>
+        </div>
         <div class="words-container">
-            <div class="word">small</div>
-            <div class="word">big</div>
-            <div class="word">new</div>
-            <div class="word">old</div>
-            <div class="word">clean</div>
-            <div class="word">dirty</div>
-            <div class="word">deep</div>
-            <div class="word">shallow</div>
-            <div class="word">expensive</div>
-            <div class="word">cheap</div>
-            <div class="word">quiet</div>
-            <div class="word">noisy</div>
+            <div class="word" data-word="small">small<span class="translation-text">pequeno</span></div>
+            <div class="word" data-word="big">big<span class="translation-text">grande</span></div>
+            <div class="word" data-word="new">new<span class="translation-text">novo</span></div>
+            <div class="word" data-word="old">old<span class="translation-text">velho</span></div>
+            <div class="word" data-word="clean">clean<span class="translation-text">limpo</span></div>
+            <div class="word" data-word="dirty">dirty<span class="translation-text">sujo</span></div>
+            <div class="word" data-word="deep">deep<span class="translation-text">profundo</span></div>
+            <div class="word" data-word="shallow">shallow<span class="translation-text">raso</span></div>
+            <div class="word" data-word="expensive">expensive<span class="translation-text">caro</span></div>
+            <div class="word" data-word="cheap">cheap<span class="translation-text">barato</span></div>
+            <div class="word" data-word="quiet">quiet<span class="translation-text">silencioso</span></div>
+            <div class="word" data-word="noisy">noisy<span class="translation-text">barulhento</span></div>
         </div>
 
         <div class="images-grid">
             <div class="image-box" data-correct="deep">
                 <img src="./images/deepocean.jpeg" alt="Deep ocean">
                 <div class="label">The ______ ocean has many mysterious creatures.</div>
+                <span class="translation-text">O oceano profundo tem muitas criaturas misteriosas.</span>
             </div>
             <div class="image-box" data-correct="dirty">
                 <img src="./images/dirtyroom.jpeg" alt="Dirty room">
                 <div class="label">This ______ room needs to be cleaned.</div>
+                <span class="translation-text">Este quarto sujo precisa ser limpo.</span>
             </div>
             <div class="image-box" data-correct="expensive">
                 <img src="./images/expensiveap.jpeg" alt="Expensive apartment">
                 <div class="label">That's an ______ apartment in downtown.</div>
+                <span class="translation-text">Esse é um apartamento caro no centro.</span>
             </div>
             <div class="image-box" data-correct="new">
                 <img src="./images/newcar.jpeg" alt="New car">
                 <div class="label">Look at this ______ car in the showroom!</div>
+                <span class="translation-text">Olhe para este carro novo na vitrine!</span>
             </div>
             <div class="image-box" data-correct="quiet">
                 <img src="./images/quietforest.jpeg" alt="Quiet forest">
                 <div class="label">The ______ forest is perfect for meditation.</div>
+                <span class="translation-text">A floresta silenciosa é perfeita para meditação.</span>
             </div>
         </div>
     </div>
-    <div class="navigation">
-        <a href=".././index.html" class="nav-button">Home</a>
-    </div>
 
     <div id="message"></div>
+
+    <div class="voltar">
+        <a id="backButton" href=".././index.html">Home</a>
+    </div>
 
     <script>
         let selectedWord = null;
@@ -229,7 +289,7 @@
                 if (this.classList.contains('used')) return;
 
                 if (selectedWord) {
-                    selectedWord.classList.remove('selected'); // Deselect previous word
+                    selectedWord.classList.remove('selected');
                 }
                 selectedWord = this;
                 this.classList.add('selected');
@@ -242,7 +302,7 @@
                 if (!selectedWord || this.classList.contains('correct')) return;
 
                 const correctAnswer = this.parentElement.dataset.correct;
-                const answer = selectedWord.textContent.trim();
+                const answer = selectedWord.dataset.word;
 
                 if (answer === correctAnswer) {
                     this.classList.add('correct');
