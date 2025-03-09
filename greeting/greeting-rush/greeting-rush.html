@@ -13,6 +13,25 @@
             touch-action: manipulation;
         }
 
+        .voltar {
+            width: 100%;
+            padding: 10px;
+            text-align: center;
+        }
+
+        #backButton {      
+            cursor: pointer;
+            background-color: #5bc0de;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
+
+            padding: 10px 20px;
+            font-size: 1em;
+        }
+
         .game-container {
             max-width: 800px;
             margin: 0 auto;
@@ -185,6 +204,11 @@
             <p>Pontuação: <span id="final-score">0</span></p>
             <button id="retry">🔁 Repetir</button>
             <a href="./../../index.html" role="button">Home</a> <!-- Link estilizado como botão -->
+        </div>
+
+        <div class="voltar">
+            <br><br><br>
+            <a id="backButton" href="./../../index.html">Home</a>
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
