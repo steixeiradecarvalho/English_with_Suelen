@@ -36,6 +36,25 @@ header {
 
 }
 
+.voltar {
+    width: 100%;
+    padding: 10px;
+    text-align: center;
+}
+
+#backButton {      
+    cursor: pointer;
+    background-color: #5bc0de;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    display: inline-block;
+
+    padding: 10px 20px;
+    font-size: 1em;
+}
+
 
 .course-name {
     font-weight: bold;

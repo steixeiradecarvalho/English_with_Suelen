@@ -32,12 +32,6 @@
             align-items: center;
         }
     
-        .Xcontainer img {
-            width: 25%;
-            height: auto;
-            margin-bottom: 2rem;
-        }
-
         .progress-container {
             flex-grow: 1;
             margin: 0 2rem;
@@ -119,13 +113,6 @@
                 padding: 8px;
                 font-size: 0.9rem;
             }
-        }
-    
-        Xh1 {
-            font-size: 3.5rem;
-            margin-bottom: 2rem;
-            animation: fadeInDown 1s ease-out;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
         }
     
         .topic {
@@ -249,12 +236,31 @@
             display: block;  /* Ensures logo is centered correctly */
 
         }
+
+        .voltar {
+            width: 100%;
+            padding: 10px;
+            text-align: center;
+        }
+
+        #backButton {      
+            cursor: pointer;
+            background-color: #5bc0de;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
+
+            padding: 10px 20px;
+            font-size: 1em;
+        }
+
         .course-name {
             font-weight: bold;
             color: #007bff;
             font-size: 1.2rem;
         }
-
 
         .module-name {
             color: #007bff;
@@ -348,6 +354,11 @@
             <img src="avanca.png" alt="Avançar">
         </button>
     </div>
+
+    <div class="voltar">
+        <a id="backButton" href=".././index.html">Home</a>
+    </div>
+
     <footer>
         <p>© 2025 World Teaching School</p>
     </footer>

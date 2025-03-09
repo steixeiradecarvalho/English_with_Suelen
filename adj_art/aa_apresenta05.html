@@ -14,9 +14,30 @@
             min-height: 100vh;
             font-family: 'Arial Rounded MT Bold', Arial, sans-serif;
         }
+
+        .voltar {
+            width: 100%;
+            padding: 10px;
+            text-align: center;
+        }
+
+        #backButton {      
+            cursor: pointer;
+            background-color: #5bc0de;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
+
+            padding: 10px 20px;
+            font-size: 1em;
+        }
+
         .content-wrapper {
             padding: 15px;
         }
+        
         h1 { 
             color: #007bff; 
             font-size: 1.7em;
@@ -93,6 +114,10 @@
         <button class="nav-button next-button" onclick="nextPage()">
             <img src="avanca.png" alt="Avançar">
         </button>
+    </div>
+
+    <div class="voltar">
+        <a id="backButton" href=".././index.html">Home</a>
     </div>
     
     <footer>
