@@ -2,300 +2,567 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Complete English Course - World Teaching School</title>
+    <link rel="stylesheet" href="./css/all.min.css">
     <style>
         :root {
             --primary-color: #FFA01C; /* Orange */
             --secondary-color: #005cac; /* Custom dark blue */
             --accent-color: #25CED1; /* Turquoise */
             --background-color: #F9F7F3; /* Light beige */
+            --text-dark: #2D3748;
+            --text-light: #F7FAFC;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
         }
 
         body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background-color: var(--secondary-color); /* Dark blue background */
-            color: #333;
+            font-family: 'Segoe UI', Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #005cac 0%, #003c76 100%);
+            color: var(--text-dark);
             margin: 0;
             padding: 0;
+            min-height: 100vh;
+            line-height: 1.6;
         }
 
         .header {
-            background: #005cac;
-            padding: 1rem 2rem;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            background: linear-gradient(90deg, #004a92 0%, #005cac 100%);
+            padding: 1rem;
+            box-shadow: var(--shadow);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid #FFA01C;
+            border-bottom: 3px solid var(--primary-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
         .logo {
-            height: 50px;
+            height: 40px;
+            filter: drop-shadow(0 2px 2px rgba(0,0,0,0.2));
+            transition: var(--transition);
+        }
+        
+        .logo:hover {
+            transform: scale(1.05);
         }
 
         .container {
-            max-width: 1200px;
+            width: 100%;
+            max-width: 800px;
             margin: 2rem auto;
-            padding: 0 20px;
+            padding: 0 15px;
+            animation: fadeIn 0.6s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         h1 {
-            color: white; /* White title for contrast with blue background */
+            color: white;
             text-align: center;
-            font-size: 2.5rem;
-            margin-bottom: 2rem;
+            font-size: 1.8rem;
+            margin: 1.5rem 0 2.5rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        h1:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: var(--primary-color);
+            border-radius: 2px;
+        }
+
+        .modules-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
         }
 
         .module {
-            background: rgba(255,255,255,0.9);
-            border-radius: 10px;
-            margin-bottom: 1rem;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            background: white;
+            border-radius: 12px;
             overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .module:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 20px rgba(0,0,0,0.15);
         }
 
         .module-header {
-            background: var(--primary-color);
-            padding: 1rem;
+            background: linear-gradient(90deg, var(--primary-color) 0%, #FF8C00 100%);
+            padding: 1rem 1.5rem;
             color: white;
             cursor: pointer;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            transition: background 0.3s ease;
+            transition: var(--transition);
+            font-weight: 600;
+            font-size: 1.1rem;
         }
 
         .module-header:hover {
-            background: #E55A28; /* Darker orange shade */
+            background: linear-gradient(90deg, #E55A28 0%, #FF7B00 100%);
+        }
+
+        .module-icon {
+            margin-right: 0.5rem;
+            font-size: 1.2rem;
         }
 
         .module-content {
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.3s ease-out;
-            padding: 0 1rem;
+            transition: max-height 0.4s ease-out;
+            padding: 0;
+        }
+
+        .lessons-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            padding: 1.25rem;
         }
 
         .lesson-link {
-            display: block;
-            padding: 0.8rem;
-            margin: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            padding: 0.8rem 1rem;
             background: #f8f9fa;
-            border-radius: 5px;
+            border-radius: 8px;
             color: var(--secondary-color);
-            transition: all 0.2s ease;
+            transition: var(--transition);
             text-decoration: none;
+            font-size: 0.95rem;
+            border-left: 3px solid transparent;
         }
 
         .lesson-link:hover {
-            background: var(--accent-color);
-            color: white;
+            background: #e9f7f8;
+            color: #004a92;
+            border-left: 3px solid var(--accent-color);
             transform: translateX(5px);
+        }
+
+        .lesson-icon {
+            margin-right: 0.7rem;
+            color: var(--primary-color);
+            font-size: 1rem;
+        }
+        
+        .game-link {
+            background: #f0f9ff;
+        }
+        
+        .game-link .lesson-icon {
+            color: #25CED1;
         }
 
         .login-btn {
             background: var(--primary-color);
             color: white;
-            padding: 0.5rem 1.5rem;
-            border-radius: 20px;
+            padding: 0.5rem 1.2rem;
+            border-radius: 50px;
             text-decoration: none;
-            transition: background 0.3s ease;
+            transition: var(--transition);
+            font-weight: 600;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
         }
 
         .login-btn:hover {
             background: #E55A28;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 2rem 1rem;
+            color: rgba(255,255,255,0.7);
+            font-size: 0.9rem;
+            margin-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* Media Queries for larger screens */
+        @media (min-width: 768px) {
+            .header {
+                padding: 1rem 2rem;
+            }
+
+            .logo {
+                height: 50px;
+            }
+
+            .container {
+                padding: 0 30px;
+                margin: 3rem auto;
+            }
+
+            h1 {
+                font-size: 2.5rem;
+                margin-bottom: 3rem;
+            }
+
+            .module-header {
+                padding: 1.2rem 1.5rem;
+                font-size: 1.2rem;
+            }
         }
     </style>
 </head>
 <body>
     <nav class="header">
         <img src="logo_capa.webp" alt="World Teaching School" class="logo">
-        <!-- <a href="#" class="login-btn">Student Area</a> -->
+        <a href="#" class="login-btn"><i class="fas fa-user-circle" style="margin-right: 8px;"></i> Student Area</a>
     </nav>
 
     <div class="container">
         <h1>Curso de Inglês - Básico I</h1>
 
-        <!-- Module Greeting -->
-        <div class="module">
-            <div class="module-header" onclick="toggleModule(this)">
-                <span>Module 1: Greeting</span>
-                <span>▶</span>
+        <div class="modules-container">
+            <!-- Module Greeting -->
+            <div class="module">
+                <div class="module-header" onclick="toggleModule(this)">
+                    <span><i class="fas fa-handshake module-icon"></i>Module 1: Greeting</span>
+                    <span><i class="fas fa-chevron-right"></i></span>
+                </div>
+                <div class="module-content">
+                    <div class="lessons-grid">
+                        <a class="lesson-link" href="./greeting/greet_apresenta01.html">
+                            <i class="fas fa-book-open lesson-icon"></i>Introduction
+                        </a>
+                        <a class="lesson-link" href="./greeting/greet_ex01.html">
+                            <i class="fas fa-pencil-alt lesson-icon"></i>First Exercise
+                        </a>
+                        <a class="lesson-link" href="./greeting/greet_ex02.html">
+                            <i class="fas fa-pencil-alt lesson-icon"></i>Second Exercise
+                        </a>
+                        <a class="lesson-link" href="./greeting/greet_ex03.html">
+                            <i class="fas fa-pencil-alt lesson-icon"></i>Third Exercise
+                        </a>
+                        <a class="lesson-link game-link" href="./greeting/greeting-rush/greeting-rush.html">
+                            <i class="fas fa-gamepad lesson-icon"></i>Game: Spatial Greeting Rush
+                        </a>
+                    </div>
+                </div>
             </div>
-            <div class="module-content">
-                <a class="lesson-link" href="./greeting/greet_apresenta01.html">Introduction</a>
-                <a class="lesson-link" href="./greeting/greet_ex01.html">First Exercise</a>
-                <a class="lesson-link" href="./greeting/greet_ex02.html">Second Exercise</a>
-                <a class="lesson-link" href="./greeting/greet_ex03.html">Third Exercise</a>
-                <a class="lesson-link" href="./greeting/greeting-rush/greeting-rush.html">Game: Spatial Greeting Rush</a>
-            </div>
-        </div>
 
-        <!-- Module Verb To Be -->
-        <div class="module">
-            <div class="module-header" onclick="toggleModule(this)">
-                <span>Module 2: Verb "To Be"</span>
-                <span>▶</span>
+            <!-- Module Verb To Be -->
+            <div class="module">
+                <div class="module-header" onclick="toggleModule(this)">
+                    <span><i class="fas fa-language module-icon"></i>Module 2: Verb "To Be"</span>
+                    <span><i class="fas fa-chevron-right"></i></span>
+                </div>
+                <div class="module-content">
+                    <div class="lessons-grid">
+                        <a class="lesson-link" href="./tobe/tobe_apresenta01.html">
+                            <i class="fas fa-book-open lesson-icon"></i>Introduction
+                        </a>
+                        <a class="lesson-link" href="./tobe/tobe_listening.html">
+                            <i class="fas fa-headphones lesson-icon"></i>Listening
+                        </a>
+                        <a class="lesson-link" href="./tobe/tobe_ex1.html">
+                            <i class="fas fa-pencil-alt lesson-icon"></i>First Exercise
+                        </a>
+                        <a class="lesson-link" href="./tobe/tobe_ex2.html">
+                            <i class="fas fa-pencil-alt lesson-icon"></i>Second Exercise
+                        </a>
+                        <a class="lesson-link" href="./tobe/tobe_ex3.html">
+                            <i class="fas fa-pencil-alt lesson-icon"></i>Third Exercise
+                        </a>
+                        <a class="lesson-link game-link" href="./tobe/tobe_jogo01.html">
+                            <i class="fas fa-gamepad lesson-icon"></i>Game: Word Order
+                        </a>
+                        <a class="lesson-link game-link" href="./tobe/tobe_jogo02.html">
+                            <i class="fas fa-gamepad lesson-icon"></i>Game: Complete with "To Be"
+                        </a>
+                        <a class="lesson-link game-link" href="./tobe/tobe_jogo04.html">
+                            <i class="fas fa-gamepad lesson-icon"></i>Game: Match "To Be" Conjugations
+                        </a>
+                        <a class="lesson-link game-link" href="./tobe/tobe_jogo05.html">
+                            <i class="fas fa-gamepad lesson-icon"></i>Game: Pronoun Agreement
+                        </a>
+                        <a class="lesson-link game-link" href="./tobe/tobe_jogo07b.html">
+                            <i class="fas fa-gamepad lesson-icon"></i>Game: Memory Game
+                        </a>
+                    </div>
+                </div>
             </div>
-            <div class="module-content">
-                <a class="lesson-link" href="./tobe/tobe_apresenta01.html">Introduction</a>
-                <a class="lesson-link" href="./tobe/tobe_listening.html">Listening</a>
-                <a class="lesson-link" href="./tobe/tobe_ex1.html">First Exercise</a>
-                <a class="lesson-link" href="./tobe/tobe_ex2.html">Second Exercise</a>
-                <a class="lesson-link" href="./tobe/tobe_ex3.html">Third Exercise</a>
-                <a class="lesson-link" href="./tobe/tobe_jogo01.html">Game: Word Order</a>
-                <a class="lesson-link" href="./tobe/tobe_jogo02.html">Game: Complete with "To Be"</a>
-                <a class="lesson-link" href="./tobe/tobe_jogo04.html">Game: Match "To Be" Conjugations</a>
-                <a class="lesson-link" href="./tobe/tobe_jogo05.html">Game: Pronoun Agreement</a>
-                <a class="lesson-link" href="./tobe/tobe_jogo07b.html">Game: Memory Game</a>
-            </div>
-        </div>
 
-        <!-- Module Simple Present -->
-        <div class="module">
-            <div class="module-header" onclick="toggleModule(this)">
-                <span>Module 3: Simple Present</span>
-                <span>▶</span>
+            <!-- Module Simple Present -->
+            <div class="module">
+                <div class="module-header" onclick="toggleModule(this)">
+                    <span><i class="fas fa-clock module-icon"></i>Module 3: Simple Present</span>
+                    <span><i class="fas fa-chevron-right"></i></span>
+                </div>
+                <div class="module-content">
+                    <div class="lessons-grid">
+                        <a class="lesson-link" href="./sim_pres/simpres_apresenta01.html">
+                            <i class="fas fa-book-open lesson-icon"></i>Introduction
+                        </a>
+                        <a class="lesson-link" href="./sim_pres/S_Pres_Ex1.html">
+                            <i class="fas fa-pencil-alt lesson-icon"></i>First Exercise
+                        </a>
+                        <a class="lesson-link" href="./sim_pres/S_Pres_Ex2.html">
+                            <i class="fas fa-pencil-alt lesson-icon"></i>Second Exercise
+                        </a>
+                        <a class="lesson-link" href="./sim_pres/S_Pres_Ex3.html">
+                            <i class="fas fa-pencil-alt lesson-icon"></i>Third Exercise
+                        </a>
+                        <a class="lesson-link" href="./sim_pres/S_Pres_Ex4.html">
+                            <i class="fas fa-pencil-alt lesson-icon"></i>Fourth Exercise
+                        </a>
+                        <a class="lesson-link" href="./sim_pres/S_Pres_Ex5.html">
+                            <i class="fas fa-pencil-alt lesson-icon"></i>Fifth Exercise
+                        </a>
+                        <a class="lesson-link game-link" href="./sim_pres/S_Pres_Jogo1.html">
+                            <i class="fas fa-gamepad lesson-icon"></i>Game: Do/Does
+                        </a>
+                        <a class="lesson-link game-link" href="./sim_pres/S_Pres_jogo2.html">
+                            <i class="fas fa-gamepad lesson-icon"></i>Game: Verb Word Search
+                        </a>
+                        <a class="lesson-link game-link" href="./sim_pres/S_Pres_jogo3.html">
+                            <i class="fas fa-gamepad lesson-icon"></i>Game: Complete the Sentences
+                        </a>
+                        <a class="lesson-link game-link" href="./sim_pres/S_Pres_jogo4.html">
+                            <i class="fas fa-gamepad lesson-icon"></i>Game: English Verbs Quiz
+                        </a>
+                    </div>
+                </div>
             </div>
-            <div class="module-content">
-                <a class="lesson-link" href="./sim_pres/simpres_apresenta01.html">Introduction</a>
-                <a class="lesson-link" href="./sim_pres/S_Pres_Ex1.html">First Exercise</a>
-                <a class="lesson-link" href="./sim_pres/S_Pres_Ex2.html">Second Exercise</a>
-                <a class="lesson-link" href="./sim_pres/S_Pres_Ex3.html">Third Exercise</a>
-                <a class="lesson-link" href="./sim_pres/S_Pres_Ex4.html">Fourth Exercise</a>
-                <a class="lesson-link" href="./sim_pres/S_Pres_Ex5.html">Fifth Exercise</a>
-                <a class="lesson-link" href="./sim_pres/S_Pres_Jogo1.html">Game: Do/Does</a>
-                <a class="lesson-link" href="./sim_pres/S_Pres_jogo2.html">Game: Verb Word Search</a>
-                <a class="lesson-link" href="./sim_pres/S_Pres_jogo3.html">Game: Complete the Sentences</a>
-                <a class="lesson-link" href="./sim_pres/S_Pres_jogo4.html">Game: English Verbs Quiz</a>
-            </div>
-        </div>
 
-        <!-- Module WH Questions -->
-        <div class="module">
-            <div class="module-header" onclick="toggleModule(this)">
-                <span>Module 4: WH Questions (with Auxiliary and Verb "To Be")</span>
-                <span>▶</span>
+            <!-- Module WH Questions -->
+            <div class="module">
+                <div class="module-header" onclick="toggleModule(this)">
+                    <span><i class="fas fa-question-circle module-icon"></i>Module 4: WH Questions</span>
+                    <span><i class="fas fa-chevron-right"></i></span>
+                </div>
+                <div class="module-content">
+                    <div class="lessons-grid">
+                        <a class="lesson-link" href="./wh_quest/whquest_apresenta01.html">
+                            <i class="fas fa-book-open lesson-icon"></i>Introduction
+                        </a>
+                        <a class="lesson-link" href="./wh_quest/wh_quest_ex1.html">
+                            <i class="fas fa-pencil-alt lesson-icon"></i>First Exercise
+                        </a>
+                        <a class="lesson-link" href="./wh_quest/wh_quest_ex2.html">
+                            <i class="fas fa-pencil-alt lesson-icon"></i>Second Exercise
+                        </a>
+                        <a class="lesson-link" href="./wh_quest/wh_quest_ex3.html">
+                            <i class="fas fa-pencil-alt lesson-icon"></i>Third Exercise
+                        </a>
+                    </div>
+                </div>
             </div>
-            <div class="module-content">
-                <a class="lesson-link" href="./wh_quest/whquest_apresenta01.html">Introduction</a>
-                <a class="lesson-link" href="./wh_quest/wh_quest_ex1.html">First Exercise</a>
-                <a class="lesson-link" href="./wh_quest/wh_quest_ex2.html">Second Exercise</a>
-                <a class="lesson-link" href="./wh_quest/wh_quest_ex3.html">Third Exercise</a>
-            </div>
-        </div>
 
-        <!-- Module Magic Words I -->
-        <div class="module">
-            <div class="module-header" onclick="toggleModule(this)">
-                <span>Module 5: Magic Words I (Colors, Numbers, Clothes, Food, Accessories, Animals)</span>
-                <span>▶</span>
+            <!-- Module Magic Words I -->
+            <div class="module">
+                <div class="module-header" onclick="toggleModule(this)">
+                    <span><i class="fas fa-magic module-icon"></i>Module 5: Magic Words I</span>
+                    <span><i class="fas fa-chevron-right"></i></span>
+                </div>
+                <div class="module-content">
+                    <div class="lessons-grid">
+                        <a class="lesson-link" href="./palavras_I/pamag1_apresenta01.html">
+                            <i class="fas fa-book-open lesson-icon"></i>Introduction
+                        </a>
+                        <a class="lesson-link" href="./palavras_I/P_MagI_Ex1.html">
+                            <i class="fas fa-pencil-alt lesson-icon"></i>First Exercise
+                        </a>
+                        <a class="lesson-link" href="./palavras_I/P_MagI_Ex2.html">
+                            <i class="fas fa-pencil-alt lesson-icon"></i>Second Exercise
+                        </a>
+                        <a class="lesson-link" href="./palavras_I/P_MagI_Ex2.html">
+                            <i class="fas fa-pencil-alt lesson-icon"></i>Third Exercise
+                        </a>
+                    </div>
+                </div>
             </div>
-            <div class="module-content">
-                <a class="lesson-link" href="./palavras_I/pamag1_apresenta01.html">Introduction</a>
-                <a class="lesson-link" href="./palavras_I/P_MagI_Ex1.html">First Exercise</a>
-                <a class="lesson-link" href="./palavras_I/P_MagI_Ex2.html">Second Exercise</a>
-                <a class="lesson-link" href="./palavras_I/P_MagI_Ex2.html">Third Exercise</a>
-            </div>
-        </div>
 
-        <!-- Module Magic Words II -->
-        <div class="module">
-            <div class="module-header" onclick="toggleModule(this)">
-                <span>Module 6: Magic Words II (Months, Year, Seasons)</span>
-                <span>▶</span>
+            <!-- Module Magic Words II -->
+            <div class="module">
+                <div class="module-header" onclick="toggleModule(this)">
+                    <span><i class="fas fa-wand-magic-sparkles module-icon"></i>Module 6: Magic Words II</span>
+                    <span><i class="fas fa-chevron-right"></i></span>
+                </div>
+                <div class="module-content">
+                    <div class="lessons-grid">
+                        <a class="lesson-link" href="./palavras_II/pamag2_apresenta01.html">
+                            <i class="fas fa-book-open lesson-icon"></i>Introduction
+                        </a>
+                        <a class="lesson-link" href="./palavras_II/P_MagII_Ex1.html">
+                            <i class="fas fa-pencil-alt lesson-icon"></i>First Exercise
+                        </a>
+                        <a class="lesson-link" href="./palavras_II/P_MagII_Ex2.html">
+                            <i class="fas fa-pencil-alt lesson-icon"></i>Second Exercise
+                        </a>
+                        <a class="lesson-link" href="./palavras_II/P_MagII_Ex3.html">
+                            <i class="fas fa-pencil-alt lesson-icon"></i>Third Exercise
+                        </a>
+                        <a class="lesson-link" href="./palavras_II/P_MagII_Ex4.html">
+                            <i class="fas fa-pencil-alt lesson-icon"></i>Fourth Exercise
+                        </a>
+                    </div>
+                </div>
             </div>
-            <div class="module-content">
-                <a class="lesson-link" href="./palavras_II/pamag2_apresenta01.html">Introduction</a>
-                <a class="lesson-link" href="./palavras_II/P_MagII_Ex1.html">First Exercise</a>
-                <a class="lesson-link" href="./palavras_II/P_MagII_Ex2.html">Second Exercise</a>
-                <a class="lesson-link" href="./palavras_II/P_MagII_Ex3.html">Third Exercise</a>
-                <a class="lesson-link" href="./palavras_II/P_MagII_Ex4.html">Fourth Exercise</a>
-            </div>
-        </div>
 
-        <!-- Module Adjectives and Articles -->
-        <div class="module">
-            <div class="module-header" onclick="toggleModule(this)">
-                <span>Module 7: Adjectives and Definite/Indefinite Articles</span>
-                <span>▶</span>
+            <!-- Module Adjectives and Articles -->
+            <div class="module">
+                <div class="module-header" onclick="toggleModule(this)">
+                    <span><i class="fas fa-font module-icon"></i>Module 7: Adjectives and Articles</span>
+                    <span><i class="fas fa-chevron-right"></i></span>
+                </div>
+                <div class="module-content">
+                    <div class="lessons-grid">
+                        <a class="lesson-link" href="./adj_art/aa_apresenta01.html">
+                            <i class="fas fa-book-open lesson-icon"></i>Introduction
+                        </a>
+                        <a class="lesson-link" href="./adj_art/AA_ex1.html">
+                            <i class="fas fa-pencil-alt lesson-icon"></i>First Exercise
+                        </a>
+                        <a class="lesson-link" href="./adj_art/AA_ex2.html">
+                            <i class="fas fa-pencil-alt lesson-icon"></i>Second Exercise
+                        </a>
+                        <a class="lesson-link" href="./adj_art/AA_ex3.html">
+                            <i class="fas fa-pencil-alt lesson-icon"></i>Third Exercise
+                        </a>
+                        <a class="lesson-link" href="./adj_art/AA_listening.html">
+                            <i class="fas fa-headphones lesson-icon"></i>Listening
+                        </a>
+                        <a class="lesson-link game-link" href="./adj_art/AA_jogo1.html">
+                            <i class="fas fa-gamepad lesson-icon"></i>First Game
+                        </a>
+                        <a class="lesson-link game-link" href="./adj_art/AA_jogo2.html">
+                            <i class="fas fa-gamepad lesson-icon"></i>Second Game
+                        </a>
+                    </div>
+                </div>
             </div>
-            <div class="module-content">
-                <a class="lesson-link" href="./adj_art/aa_apresenta01.html">Introduction</a>
-                <a class="lesson-link" href="./adj_art/AA_ex1.html">First Exercise</a>
-                <a class="lesson-link" href="./adj_art/AA_ex2.html">Second Exercise</a>
-                <a class="lesson-link" href="./adj_art/AA_ex3.html">Third Exercise</a>
-                <a class="lesson-link" href="./adj_art/AA_listening.html">Listening</a>
-                <a class="lesson-link" href="./adj_art/AA_jogo1.html">First Game</a>
-                <a class="lesson-link" href="./adj_art/AA_jogo2.html">Second Game</a>
-            </div>
-        </div>
 
-        <!-- Module Prepositions -->
-        <div class="module">
-            <div class="module-header" onclick="toggleModule(this)">
-                <span>Module 8: Prepositions</span>
-                <span>▶</span>
+            <!-- Module Prepositions -->
+            <div class="module">
+                <div class="module-header" onclick="toggleModule(this)">
+                    <span><i class="fas fa-map-marker-alt module-icon"></i>Module 8: Prepositions</span>
+                    <span><i class="fas fa-chevron-right"></i></span>
+                </div>
+                <div class="module-content">
+                    <div class="lessons-grid">
+                        <a class="lesson-link" href="./prepo/prepo_apresenta01.html">
+                            <i class="fas fa-book-open lesson-icon"></i>Introduction
+                        </a>
+                        <a class="lesson-link" href="./prepo/prepo_ex1.html">
+                            <i class="fas fa-pencil-alt lesson-icon"></i>First Exercise
+                        </a>
+                        <a class="lesson-link" href="./prepo/prepo_ex2.html">
+                            <i class="fas fa-pencil-alt lesson-icon"></i>Second Exercise
+                        </a>
+                        <a class="lesson-link game-link" href="./prepo/prepo_jogo1.html">
+                            <i class="fas fa-gamepad lesson-icon"></i>Game: In-On-At
+                        </a>
+                        <a class="lesson-link game-link" href="./prepo/prepo_jogo2.html">
+                            <i class="fas fa-gamepad lesson-icon"></i>Game: City Preposition Drive
+                        </a>
+                    </div>
+                </div>
             </div>
-            <div class="module-content">
-                <a class="lesson-link" href="./prepo/prepo_apresenta01.html">Introduction</a>
-                <a class="lesson-link" href="./prepo/prepo_ex1.html">First Exercise</a>
-                <a class="lesson-link" href="./prepo/prepo_ex2.html">Second Exercise</a>
-                <a class="lesson-link" href="./prepo/prepo_jogo1.html">Game: In-On-At</a>
-                <a class="lesson-link" href="./prepo/prepo_jogo2.html">Game: City Preposition Drive</a>
-            </div>
-        </div>
 
-        <!-- Module Verbs -->
-        <div class="module">
-            <div class="module-header" onclick="toggleModule(this)">
-                <span>Module 9: Verbs</span>
-                <span>▶</span>
+            <!-- Module Verbs -->
+            <div class="module">
+                <div class="module-header" onclick="toggleModule(this)">
+                    <span><i class="fas fa-running module-icon"></i>Module 9: Verbs</span>
+                    <span><i class="fas fa-chevron-right"></i></span>
+                </div>
+                <div class="module-content">
+                    <div class="lessons-grid">
+                        <a class="lesson-link" href="./verbs/verb_apresenta01.html">
+                            <i class="fas fa-book-open lesson-icon"></i>Introduction
+                        </a>
+                        <a class="lesson-link" href="./verbs/verb_ex1.html">
+                            <i class="fas fa-pencil-alt lesson-icon"></i>First Exercise
+                        </a>
+                        <a class="lesson-link" href="./verbs/verb_ex2.html">
+                            <i class="fas fa-pencil-alt lesson-icon"></i>Second Exercise
+                        </a>
+                        <a class="lesson-link" href="./verbs/verb_listening.html">
+                            <i class="fas fa-headphones lesson-icon"></i>Listening
+                        </a>
+                    </div>
+                </div>
             </div>
-            <div class="module-content">
-                <a class="lesson-link" href="./verbs/verb_apresenta01.html">Introduction</a>
-                <a class="lesson-link" href="./verbs/verb_ex1.html">First Exercise</a>
-                <a class="lesson-link" href="./verbs/verb_ex2.html">Second Exercise</a>
-                <a class="lesson-link" href="./verbs/verb_listening.html">Listening</a>
-            </div>
-        </div>
 
-        <!-- Module Bonus -->
-        <div class="module">
-            <div class="module-header" onclick="toggleModule(this)">
-                <span>Module 10: Bonus</span>
-                <span>▶</span>
-            </div>
-            <div class="module-content">
-                <a class="lesson-link" href="./bonus/first_bonus.html">First Bonus</a>
-                <a class="lesson-link" href="./bonus/second_bonus.html">Second Bonus</a>
-                <a class="lesson-link" href="./bonus/third_bonus.html">Third Bonus</a>
-                <a class="lesson-link" href="./bonus/fourth_bonus.html">Fourth Bonus</a>
+            <!-- Module Bonus -->
+            <div class="module">
+                <div class="module-header" onclick="toggleModule(this)">
+                    <span><i class="fas fa-gift module-icon"></i>Module 10: Bonus</span>
+                    <span><i class="fas fa-chevron-right"></i></span>
+                </div>
+                <div class="module-content">
+                    <div class="lessons-grid">
+                        <a class="lesson-link" href="./bonus/first_bonus.html">
+                            <i class="fas fa-star lesson-icon"></i>First Bonus
+                        </a>
+                        <a class="lesson-link" href="./bonus/second_bonus.html">
+                            <i class="fas fa-star lesson-icon"></i>Second Bonus
+                        </a>
+                        <a class="lesson-link" href="./bonus/third_bonus.html">
+                            <i class="fas fa-star lesson-icon"></i>Third Bonus
+                        </a>
+                        <a class="lesson-link" href="./bonus/fourth_bonus.html">
+                            <i class="fas fa-star lesson-icon"></i>Fourth Bonus
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+    
+    <footer>
+        <p>© 2025 World Teaching School</p>
+    </footer>
 
     <script>
         function toggleModule(header) {
             const module = header.parentElement;
             const content = module.querySelector('.module-content');
+            const arrow = header.querySelector('span:last-child i');
             const isOpen = content.style.maxHeight;
 
             // Close all modules first
             document.querySelectorAll('.module-content').forEach(item => {
                 item.style.maxHeight = null;
-                item.parentElement.querySelector('.module-header span:last-child').textContent = '▶';
+                const moduleArrow = item.parentElement.querySelector('.module-header span:last-child i');
+                moduleArrow.className = 'fas fa-chevron-right';
             });
 
             // Open the clicked module if it wasn't open
             if (!isOpen) {
                 content.style.maxHeight = content.scrollHeight + "px";
-                header.querySelector('span:last-child').textContent = '▼';
+                arrow.className = 'fas fa-chevron-down';
             }
         }
 
         // Open the first module by default
         document.querySelector('.module-header').click();
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'91dcfe4efb917bd5',t:'MTc0MTU0ODY5NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</body>
 </html>
